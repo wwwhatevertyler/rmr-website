@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advisor Network — Roll My Retirement</title>
+  <meta name="description" content="Join a selective advisor network built around rollover opportunities. Roll My Retirement connects growth-focused advisors with pre-screened individuals." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fafaf8;
+      color: #111110;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ─── SCROLL PROGRESS ─────────────────────────────────────────── */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 1.5px;
+      background: #111110;
+      transform-origin: left center;
+      transform: scaleX(0);
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* ─── TOKENS ───────────────────────────────────────────────────── */
+    :root {
+      --bg: #fafaf8;
+      --bg-card: #f4f3ef;
+      --bg-dark: #111110;
+      --text: #111110;
+      --text-muted: #6b6b66;
+      --text-light: #9b9b94;
+      --border: #e4e3de;
+      --border-strong: #c8c7c0;
+      --accent: #111110;
+      --radius-card: 18px;
+      --radius-sm: 10px;
+      --max-w: 1120px;
+      --pad-x: clamp(24px, 5vw, 64px);
+      --section-gap: clamp(72px, 10vw, 104px);
+    }
+
+    /* ─── TYPOGRAPHY ───────────────────────────────────────────────── */
+    .serif { font-family: 'Instrument Serif', Georgia, serif; }
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    h1 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    p { color: var(--text-muted); font-size: 15px; line-height: 1.7; }
+    .lead { font-size: 17px; line-height: 1.65; color: var(--text-muted); max-width: 640px; }
+
+    /* ─── LAYOUT ───────────────────────────────────────────────────── */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--pad-x);
+    }
+    section { padding: var(--section-gap) 0; }
+
+    /* ─── BUTTONS ──────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      transition: box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                  background 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn-primary {
+      background: var(--bg-dark);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #222220;
+      box-shadow: 0 8px 24px rgba(17,17,16,0.18);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+    }
+    .btn-secondary:hover { background: var(--bg-card); }
+    .btn-arrow::after { display: none; }
+    .btn-arrow .arrow {
+      display: inline-flex;
+      transition: transform 0.2s;
+    }
+    .btn-arrow:hover .arrow { transform: translateX(3px); }
+
+    /* ─── NAV ──────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 var(--pad-x);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(250, 250, 248, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    nav.scrolled {
+      border-bottom-color: var(--border);
+      box-shadow: 0 1px 0 var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max-w);
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--text-muted); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { margin-left: 8px; }
+    .nav-cta .btn { padding: 9px 20px; font-size: 13px; }
+    .nav-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      padding: 8px;
+      color: var(--text);
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────────────── */
+    #hero {
+      padding-top: calc(64px + clamp(56px, 8vw, 96px));
+      padding-bottom: clamp(56px, 8vw, 96px);
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 48px;
+      align-items: start;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    .hero-headline { margin-bottom: 24px; }
+    .hero-sub { margin-bottom: 32px; }
+    .hero-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .hero-bullets li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .hero-bullets li::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--text-light);
+      flex-shrink: 0;
+    }
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .hero-microcopy {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* ─── HERO CARD ────────────────────────────────────────────────── */
+    .hero-card {
+      background: var(--bg-dark);
+      color: #fff;
+      border-radius: var(--radius-card);
+      padding: 32px;
+      position: sticky;
+      top: 88px;
+    }
+    .hero-card-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 20px;
+    }
+    .hero-card h3 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .hero-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 24px;
+      line-height: 1.65;
+    }
+    .hero-card-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .hero-card-bullets li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+    }
+    .hero-card-bullets li::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      flex-shrink: 0;
+    }
+    .hero-card .btn-primary {
+      background: #fff;
+      color: var(--bg-dark);
+      width: 100%;
+      justify-content: center;
+    }
+    .hero-card .btn-primary:hover {
+      background: #f0efeb;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    .hero-card-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 24px 0;
+    }
+
+    /* ─── VALUE STRIP ──────────────────────────────────────────────── */
+    #value-strip {
+      padding: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    #value-strip .container { padding: 0; }
+    .value-strip-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .value-item {
+      padding: 36px 32px;
+      border-right: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .value-item:last-child { border-right: none; }
+    .value-item:hover { background: var(--bg-card); }
+    .value-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .value-item-sub {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    /* ─── WHY RMR ──────────────────────────────────────────────────── */
+    .section-header { margin-bottom: clamp(40px, 5vw, 64px); }
+    .section-header .eyebrow { margin-bottom: 16px; }
+    .section-header h2 { margin-bottom: 16px; }
+    .cards-2x2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .card:hover {
+      box-shadow: 0 12px 40px rgba(17,17,16,0.07);
+      background: #fff;
+    }
+    .card h3 { margin-bottom: 10px; }
+    .card p { font-size: 14px; }
+
+    /* ─── HOW IT WORKS ─────────────────────────────────────────────── */
+    #how-it-works { background: var(--bg-dark); color: #fff; }
+    #how-it-works .section-header h2 { color: #fff; }
+    #how-it-works .section-header .eyebrow { color: rgba(255,255,255,0.4); }
+    #how-it-works .lead { color: rgba(255,255,255,0.55); }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      margin-top: 48px;
+    }
+    .step {
+      background: var(--bg-dark);
+      padding: 36px 32px;
+      transition: background 0.2s;
+    }
+    .step:hover { background: #1a1a18; }
+    .step-num {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+    .step h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .step p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+    }
+    .steps-note {
+      margin-top: 24px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+    }
+
+    /* ─── STANDARDS ────────────────────────────────────────────────── */
+    .standards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .standards-left h2 { margin-bottom: 20px; }
+    .standards-left p { max-width: 440px; margin-bottom: 20px; }
+    .standards-note {
+      font-size: 13px;
+      color: var(--text-light);
+      font-style: italic;
+    }
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li:hover { background: var(--bg-card); }
+    .check-icon {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .check-icon svg { width: 10px; height: 10px; }
+
+    /* ─── AFTER APPLY ──────────────────────────────────────────────── */
+    .after-apply-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .after-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    .after-card:hover {
+      box-shadow: 0 12px 40px rgba(17,17,16,0.07);
+    }
+    .after-card-num {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 28px;
+      color: var(--border-strong);
+      margin-bottom: 16px;
+    }
+    .after-card h3 { margin-bottom: 8px; }
+    .after-card p { font-size: 14px; }
+    .after-note {
+      margin-top: 28px;
+      font-size: 13px;
+      color: var(--text-light);
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ─── FAQ ──────────────────────────────────────────────────────── */
+    #faq { background: var(--bg-card); }
+    .faq-list {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 0;
+      background: none;
+      border: none;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+    .faq-question:hover { color: var(--text-muted); }
+    .faq-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .faq-icon svg { width: 10px; height: 10px; transition: stroke 0.2s; }
+    .faq-item.open .faq-icon svg { stroke: #fff; }
+    .faq-answer {
+      overflow: hidden;
+      height: 0;
+    }
+    .faq-answer-inner {
+      padding-bottom: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ─── APPLY FORM ───────────────────────────────────────────────── */
+    #apply { background: var(--bg); }
+    .apply-form-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border);
+      padding: clamp(32px, 5vw, 56px);
+    }
+    .form-group-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 16px;
+      margin-top: 36px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-group-label:first-child { margin-top: 0; }
+    .form-field {
+      margin-bottom: 16px;
+    }
+    .form-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--text);
+      box-shadow: 0 0 0 3px rgba(17,17,16,0.06);
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: var(--text-light);
+    }
+    .form-field select {
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b6b66' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .form-field textarea { resize: vertical; min-height: 100px; }
+    .radio-group {
+      display: flex;
+      gap: 8px;
+    }
+    .radio-option {
+      flex: 1;
+      position: relative;
+    }
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+    .radio-option label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.18s;
+      margin: 0;
+    }
+    .radio-option input[type="radio"]:checked + label {
+      background: var(--bg-dark);
+      color: #fff;
+      border-color: var(--bg-dark);
+    }
+    .radio-option label:hover { background: var(--bg-card); }
+    .form-submit-area {
+      margin-top: 32px;
+      text-align: center;
+    }
+    .form-submit-area .btn {
+      padding: 15px 40px;
+      font-size: 15px;
+    }
+    .form-microcopy {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* ─── FOOTER CTA ───────────────────────────────────────────────── */
+    .footer-cta {
+      background: var(--bg-dark);
+      padding: clamp(56px, 8vw, 88px) 0;
+      text-align: center;
+    }
+    .footer-cta h2 {
+      color: #fff;
+      max-width: 640px;
+      margin: 0 auto 20px;
+    }
+    .footer-cta p {
+      color: rgba(255,255,255,0.5);
+      max-width: 480px;
+      margin: 0 auto 32px;
+    }
+    .footer-cta .btn-primary {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .footer-cta .btn-primary:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.35);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    }
+
+    /* ─── FOOTER ───────────────────────────────────────────────────── */
+    footer {
+      background: var(--bg-dark);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 32px var(--pad-x);
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .footer-logo {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ─── MOBILE NAV MENU ──────────────────────────────────────────── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(250,250,248,0.97);
+      backdrop-filter: blur(16px);
+      z-index: 99;
+      padding: 24px var(--pad-x) 32px;
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      gap: 0;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      display: block;
+      padding: 14px 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--text); }
+    .mobile-menu .btn {
+      margin-top: 20px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ─── RESPONSIVE ───────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr 340px;
+        gap: 32px;
+      }
+      .standards-grid { gap: 48px; }
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-card { position: static; }
+      .value-strip-inner {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .value-item:nth-child(2) { border-right: none; }
+      .value-item:nth-child(3) { border-top: 1px solid var(--border); }
+      .value-item:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+      .cards-2x2 { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .standards-grid { grid-template-columns: 1fr; gap: 40px; }
+      .after-apply-cards { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-mobile-toggle { display: flex; }
+    }
+
+    @media (max-width: 560px) {
+      .value-strip-inner { grid-template-columns: 1fr; }
+      .value-item { border-right: none; border-top: 1px solid var(--border); }
+      .value-item:first-child { border-top: none; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .hero-cta-row { flex-direction: column; align-items: flex-start; }
+      .hero-cta-row .btn { width: 100%; justify-content: center; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+
+    /* ─── PAGE CURTAIN ─────────────────────────────────────────────── */
+    #page-curtain {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      transform: scaleY(1);
+      transform-origin: top center;
+      z-index: 500;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── PAGE CURTAIN ─────────────────────────────────────────────────── -->
+<div id="page-curtain"></div>
+
+<!-- ─── SCROLL PROGRESS ───────────────────────────────────────────────── -->
+<div id="scroll-progress"></div>
+
+<!-- ─── NAV ─────────────────────────────────────────────────────────── -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="rmr-home.html" class="nav-logo">Roll My Retirement</a>
+    <ul class="nav-links">
+      <li><a href="#why-rmr">Why RMR</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#standards">Standards</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="rmr-home.html" style="font-size:12px; color: var(--text-light);">← Home</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#apply" class="btn btn-primary btn-arrow">
+        Apply to Join <span class="arrow">→</span>
+      </a>
+    </div>
+    <button class="nav-mobile-toggle" id="mobile-toggle" aria-label="Menu">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+        <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── MOBILE MENU ──────────────────────────────────────────────────── -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#why-rmr" class="mobile-link">Why RMR</a>
+  <a href="#how-it-works" class="mobile-link">How It Works</a>
+  <a href="#standards" class="mobile-link">Standards</a>
+  <a href="#faq" class="mobile-link">FAQ</a>
+  <a href="rmr-home.html" class="mobile-link">← Home</a>
+  <a href="#apply" class="btn btn-primary">Apply to Join</a>
+</div>
+
+<!-- ─── HERO ─────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+
+      <!-- Left -->
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          <span class="eyebrow">Limited Advisor Openings by Metro</span>
+        </div>
+        <h1 class="hero-headline">
+          Join a selective advisor network built around rollover opportunities
+        </h1>
+        <p class="lead hero-sub">
+          Roll My Retirement connects growth-focused advisors with pre-screened individuals actively seeking help during retirement and asset transitions. Accepted opportunities are reserved to your practice for 7 days, giving your team a meaningful window to convert.
+        </p>
+        <ul class="hero-bullets">
+          <li>Pre-screened retirement rollover opportunities</li>
+          <li>Exclusive 7-day lead window</li>
+          <li>Limited metro availability</li>
+          <li>Live transfer or direct scheduling</li>
+        </ul>
+        <div class="hero-cta-row">
+          <a href="#apply" class="btn btn-primary btn-arrow">
+            Apply to Join <span class="arrow">→</span>
+          </a>
+          <a href="#how-it-works" class="btn btn-secondary">
+            See How It Works
+          </a>
+        </div>
+        <p class="hero-microcopy">
+          Private partnership pricing is shared after application review.
+        </p>
+      </div>
+
+      <!-- Right: Card -->
+      <div class="hero-right">
+        <div class="hero-card">
+          <span class="hero-card-tag">Advisor Openings</span>
+          <h3>Limited spots available in qualified metro areas</h3>
+          <p>We are onboarding a limited number of advisors in qualified metro areas. Apply to see whether there is a fit.</p>
+          <div class="hero-card-divider"></div>
+          <ul class="hero-card-bullets">
+            <li>Exclusive 7-day lead window</li>
+            <li>Limited metro availability</li>
+            <li>Application review required</li>
+            <li>Private pricing discussion</li>
+          </ul>
+          <a href="#apply" class="btn btn-primary btn-arrow">
+            Apply to Join <span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── VALUE STRIP ──────────────────────────────────────────────────── -->
+<div id="value-strip">
+  <div class="container">
+    <div class="value-strip-inner">
+      <div class="value-item">
+        <div class="value-item-title">Pre-Screened Opportunities</div>
+        <div class="value-item-sub">Qualified before connection</div>
+      </div>
+      <div class="value-item">
+        <div class="value-item-title">7-Day Exclusivity</div>
+        <div class="value-item-sub">Reserved to your practice</div>
+      </div>
+      <div class="value-item">
+        <div class="value-item-title">Limited Metro Openings</div>
+        <div class="value-item-sub">Selective advisor participation</div>
+      </div>
+      <div class="value-item">
+        <div class="value-item-title">Live Transfers</div>
+        <div class="value-item-sub">Human handoff or direct scheduling</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── WHY RMR ──────────────────────────────────────────────────────── -->
+<section id="why-rmr">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow">Why advisors join</p>
+      <h2>Why advisors join Roll My Retirement</h2>
+      <p class="lead">We act as a focused growth partner for advisors who want qualified rollover opportunities without building a full outbound sales engine.</p>
+    </div>
+    <div class="cards-2x2">
+      <div class="card">
+        <h3>People in transition</h3>
+        <p>We focus on individuals navigating job changes, inherited assets, dissatisfaction with a current advisor, and rollover decisions.</p>
+      </div>
+      <div class="card">
+        <h3>Qualified before connection</h3>
+        <p>We pre-screen opportunities before introducing them to your team, helping reduce wasted time and improve fit.</p>
+      </div>
+      <div class="card">
+        <h3>Built for focused growth</h3>
+        <p>We support the front end of business development so your team can stay focused on converting and serving clients.</p>
+      </div>
+      <div class="card">
+        <h3>Selective network</h3>
+        <p>This is a curated advisor network, not an open marketplace. We prioritize quality, fit, and professionalism.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─────────────────────────────────────────────────── -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow">Process</p>
+      <h2>How the advisor partnership works</h2>
+      <p class="lead">A simple process designed around fit, speed, and a stronger advisor-client handoff.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Apply to join</h3>
+        <p>Submit your practice information for review.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>We review fit</h3>
+        <p>We evaluate service model, practice quality, responsiveness, rollover alignment, and overall network fit.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Metro placement</h3>
+        <p>Approved advisors are considered for available metro openings.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>We pre-screen opportunities</h3>
+        <p>We qualify individuals who are actively seeking support during retirement or asset transitions.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <h3>You receive a 7-day window</h3>
+        <p>Accepted opportunities are reserved to your practice for 7 days, giving your team time to convert.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <h3>You follow up and give feedback</h3>
+        <p>After the introduction, your team continues the conversation and can share feedback to improve future matching.</p>
+      </div>
+    </div>
+    <p class="steps-note">Advisor feedback helps improve routing and fit over time.</p>
+  </div>
+</section>
+
+<!-- ─── STANDARDS ────────────────────────────────────────────────────── -->
+<section id="standards">
+  <div class="container">
+    <div class="standards-grid">
+      <div class="standards-left">
+        <p class="eyebrow" style="margin-bottom: 16px;">Standards</p>
+        <h2>Who we look for</h2>
+        <p>We review applications holistically based on practice quality, client experience, responsiveness, rollover expertise, regulatory standing, and overall fit for our network.</p>
+        <p class="standards-note">We are building a high-quality advisor network, not a volume-based directory.</p>
+      </div>
+      <div class="standards-right">
+        <ul class="checklist">
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 10 8" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 4l3 3 5-6"/>
+              </svg>
+            </span>
+            Retirement and rollover planning focus
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 10 8" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 4l3 3 5-6"/>
+              </svg>
+            </span>
+            Active registration or equivalent licensing
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 10 8" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 4l3 3 5-6"/>
+              </svg>
+            </span>
+            Clean compliance history
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 10 8" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 4l3 3 5-6"/>
+              </svg>
+            </span>
+            Strong client service model
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 10 8" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 4l3 3 5-6"/>
+              </svg>
+            </span>
+            Ability to respond quickly to opportunities
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── AFTER APPLY ──────────────────────────────────────────────────── -->
+<section id="after-apply" style="background: var(--bg-card);">
+  <div class="container">
+    <div class="section-header" style="text-align: center; max-width: 560px; margin: 0 auto clamp(40px,5vw,64px);">
+      <p class="eyebrow">Next steps</p>
+      <h2>What happens after you apply</h2>
+    </div>
+    <div class="after-apply-cards">
+      <div class="after-card">
+        <div class="after-card-num">01</div>
+        <h3>Application review</h3>
+        <p>We review your practice details and evaluate fit within our advisor network.</p>
+      </div>
+      <div class="after-card">
+        <div class="after-card-num">02</div>
+        <h3>Private conversation</h3>
+        <p>Qualified advisors are invited to discuss market fit, partnership structure, and pricing privately.</p>
+      </div>
+      <div class="after-card">
+        <div class="after-card-num">03</div>
+        <h3>Onboarding</h3>
+        <p>Approved advisors are placed into an available metro and prepared for opportunity flow.</p>
+      </div>
+    </div>
+    <p class="after-note">If we are not currently expanding in your metro, we may retain your application for future openings.</p>
+  </div>
+</section>
+
+<!-- ─── FAQ ──────────────────────────────────────────────────────────── -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header" style="text-align: center; max-width: 560px; margin: 0 auto clamp(40px,5vw,64px);">
+      <p class="eyebrow">FAQ</p>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How are opportunities qualified?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Each opportunity is pre-screened before being introduced to an advisor. Our goal is to create a stronger fit before the handoff happens.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Are opportunities exclusive?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Accepted opportunities are reserved to your practice for 7 days, giving your team a dedicated conversion window.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How long does exclusivity last?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">The advisor exclusivity window lasts 7 days from the time the opportunity is assigned.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What markets are currently open?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Advisor availability is managed by metro area and may change as we expand. Applications are reviewed based on current and upcoming openings.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Is pricing public?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">No. Partnership pricing is discussed privately after application review.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What kinds of advisors can apply?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">We consider advisors and firms that manage retirement-related assets and can support clients through rollover and asset-transition decisions.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How are introductions made?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Introductions may happen through a live transfer or direct scheduling, depending on the opportunity and situation.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── APPLY FORM ────────────────────────────────────────────────────── -->
+<section id="apply">
+  <div class="container">
+    <div class="section-header" style="text-align: center; max-width: 640px; margin: 0 auto clamp(40px,5vw,56px);">
+      <p class="eyebrow">Application</p>
+      <h2>Apply to join the advisor network</h2>
+      <p class="lead" style="margin: 0 auto;">Tell us about your practice and we'll review whether there is a fit in your market.</p>
+    </div>
+
+    <div class="apply-form-wrap">
+      <form id="advisor-form" novalidate>
+
+        <div class="form-group-label">Contact Information</div>
+
+        <div class="form-field">
+          <label for="full-name">Full Name</label>
+          <input type="text" id="full-name" name="full_name" placeholder="Jane Smith" />
+        </div>
+        <div class="form-field">
+          <label for="work-email">Work Email</label>
+          <input type="email" id="work-email" name="work_email" placeholder="jane@yourfirm.com" />
+        </div>
+        <div class="form-field">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" />
+        </div>
+        <div class="form-field">
+          <label for="firm-name">Company / Firm Name</label>
+          <input type="text" id="firm-name" name="firm_name" placeholder="Smith Wealth Advisors" />
+        </div>
+        <div class="form-field">
+          <label for="website">Website</label>
+          <input type="url" id="website" name="website" placeholder="https://yourfirm.com" />
+        </div>
+        <div class="form-field">
+          <label for="metro">Primary Metro Area</label>
+          <input type="text" id="metro" name="metro" placeholder="e.g. Dallas, TX" />
+        </div>
+
+        <div class="form-group-label">Practice Information</div>
+
+        <div class="form-field">
+          <label for="book-size">Book Size</label>
+          <select id="book-size" name="book_size">
+            <option value="" disabled selected>Select range</option>
+            <option value="under-25m">Under $25M</option>
+            <option value="25m-50m">$25M – $50M</option>
+            <option value="50m-100m">$50M – $100M</option>
+            <option value="100m-250m">$100M – $250M</option>
+            <option value="250m-500m">$250M – $500M</option>
+            <option value="over-500m">$500M+</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>Standard of Care</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="fiduciary" name="standard_of_care" value="fiduciary" />
+              <label for="fiduciary">Fiduciary</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="suitability" name="standard_of_care" value="suitability" />
+              <label for="suitability">Suitability</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="experience">Experience</label>
+          <select id="experience" name="experience">
+            <option value="" disabled selected>Select range</option>
+            <option value="0-2">0–2 years</option>
+            <option value="2-5">2–5 years</option>
+            <option value="5-10">5–10 years</option>
+            <option value="10+">10+ years</option>
+          </select>
+        </div>
+
+        <div class="form-group-label">Qualification Questions</div>
+
+        <div class="form-field">
+          <label>Active registration of Series 65 / 66 or equivalent?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="reg-yes" name="registration" value="yes" />
+              <label for="reg-yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="reg-no" name="registration" value="no" />
+              <label for="reg-no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Clean compliance history?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="compliance-yes" name="compliance" value="yes" />
+              <label for="compliance-yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="compliance-no" name="compliance" value="no" />
+              <label for="compliance-no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Do you actively handle rollovers and retirement planning?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="rollovers-yes" name="rollovers" value="yes" />
+              <label for="rollovers-yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="rollovers-no" name="rollovers" value="no" />
+              <label for="rollovers-no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-label">Optional</div>
+
+        <div class="form-field">
+          <label for="about-practice">Tell us about your practice and the types of clients you serve</label>
+          <textarea id="about-practice" name="about_practice" placeholder="Share a brief overview of your practice, client focus, and what you're looking for in a partnership…"></textarea>
+        </div>
+
+        <div class="form-submit-area">
+          <button type="submit" class="btn btn-primary btn-arrow">
+            Submit Application <span class="arrow">→</span>
+          </button>
+          <p class="form-microcopy">Private partnership pricing is discussed on a follow-up call for qualified advisors.</p>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER CTA ────────────────────────────────────────────────────── -->
+<div class="footer-cta">
+  <div class="container">
+    <h2>Selective openings. Private partnership. Focused growth.</h2>
+    <p>Apply to join the Roll My Retirement advisor network and we'll review whether there is a fit in your market.</p>
+    <a href="#apply" class="btn btn-primary btn-arrow">
+      Apply to Join <span class="arrow">→</span>
+    </a>
+  </div>
+</div>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Roll My Retirement</span>
+    <span class="footer-copy" style="font-size:12px; color: rgba(255,255,255,0.25);"><a href="rmr-home.html" style="color: rgba(255,255,255,0.35); margin-right: 20px;">← Home</a>© 2025 Roll My Retirement. All rights reserved.</span>
+  </div>
+</footer>
+
+<!-- ─── CDN SCRIPTS ───────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── Page curtain — lift on entry
+  gsap.to('#page-curtain', { scaleY: 0, duration: 0.6, ease: 'power3.inOut', delay: 0.05 });
+
+  // ── Lenis smooth scroll + GSAP ticker integration
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    direction: 'vertical',
+    smooth: true,
+    smoothTouch: false,
+  });
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+  lenis.on('scroll', ScrollTrigger.update);
+
+  // ── Scroll progress bar
+  gsap.to('#scroll-progress', {
+    scaleX: 1,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: 'body',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.3
+    }
+  });
+
+  // ── Nav scroll state
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+
+  // ── Mobile menu toggle
+  const toggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  toggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  document.querySelectorAll('.mobile-link, .mobile-menu .btn').forEach(el => {
+    el.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  // ── Anchor scroll via Lenis (with nav offset)
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: -80, duration: 1.2 });
+      }
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────
+  // HERO ENTRANCE — page load stagger
+  // ──────────────────────────────────────────────────────────────────
+  gsap.set('.hero-eyebrow', { opacity: 0, y: 20, filter: 'blur(6px)' });
+  gsap.set('.hero-headline', { opacity: 0, y: 40 });
+  gsap.set('.hero-sub', { opacity: 0, y: 24 });
+  gsap.set('.hero-bullets li', { opacity: 0, y: 16, x: -8 });
+  gsap.set('.hero-cta-row', { opacity: 0, y: 16 });
+  gsap.set('.hero-microcopy', { opacity: 0 });
+  gsap.set('.hero-card', { opacity: 0, x: 48, scale: 0.97 });
+
+  const heroTl = gsap.timeline({ delay: 0.5, defaults: { ease: 'power3.out' } });
+  heroTl
+    .to('.hero-eyebrow', {
+      opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75,
+      clearProps: 'filter'
+    })
+    .to('.hero-headline', { opacity: 1, y: 0, duration: 0.85 }, '-=0.5')
+    .to('.hero-sub', { opacity: 1, y: 0, duration: 0.7 }, '-=0.55')
+    .to('.hero-bullets li', { opacity: 1, y: 0, x: 0, stagger: 0.07, duration: 0.55 }, '-=0.45')
+    .to('.hero-cta-row', { opacity: 1, y: 0, duration: 0.5 }, '-=0.35')
+    .to('.hero-microcopy', { opacity: 1, duration: 0.45 }, '-=0.25')
+    .to('.hero-card', { opacity: 1, x: 0, scale: 1, duration: 1.05, ease: 'power3.out' }, 0.3);
+
+  // ──────────────────────────────────────────────────────────────────
+  // VALUE STRIP — staggered scroll entrance
+  // ──────────────────────────────────────────────────────────────────
+  gsap.from('.value-item', {
+    scrollTrigger: { trigger: '#value-strip', start: 'top 88%', toggleActions: 'play none none none', once: true },
+    y: 28, opacity: 0, stagger: 0.08, duration: 0.65, ease: 'power3.out'
+  });
+
+  // ──────────────────────────────────────────────────────────────────
+  // WHY RMR — header + 2x2 card stagger
+  // ──────────────────────────────────────────────────────────────────
+  const whyTl = gsap.timeline({
+    scrollTrigger: { trigger: '#why-rmr', start: 'top 80%', toggleActions: 'play none none none', once: true }
+  });
+  whyTl
+    .from('#why-rmr .eyebrow', { y: 16, opacity: 0, duration: 0.55, ease: 'power3.out' })
+    .from('#why-rmr h2', { y: 32, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.35')
+    .from('#why-rmr .lead', { y: 18, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+    .from('.card', { y: 36, opacity: 0, scale: 0.97, stagger: 0.09, duration: 0.7, ease: 'power3.out' }, '-=0.25');
+
+  // ──────────────────────────────────────────────────────────────────
+  // HOW IT WORKS — header + sequential step reveals
+  // ──────────────────────────────────────────────────────────────────
+  const howTl = gsap.timeline({
+    scrollTrigger: { trigger: '#how-it-works', start: 'top 80%', toggleActions: 'play none none none', once: true }
+  });
+  howTl
+    .from('#how-it-works .eyebrow', { y: 16, opacity: 0, duration: 0.55, ease: 'power3.out' })
+    .from('#how-it-works h2', { y: 32, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.35')
+    .from('#how-it-works .lead', { y: 18, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+    .from('.step', { y: 32, opacity: 0, stagger: 0.07, duration: 0.65, ease: 'power3.out' }, '-=0.25')
+    .from('.steps-note', { opacity: 0, y: 8, duration: 0.45, ease: 'power3.out' }, '-=0.1');
+
+  // ──────────────────────────────────────────────────────────────────
+  // STANDARDS — split entrance + checklist stagger + SVG draw-in
+  // ──────────────────────────────────────────────────────────────────
+  const standardsTl = gsap.timeline({
+    scrollTrigger: { trigger: '#standards', start: 'top 78%', toggleActions: 'play none none none', once: true }
+  });
+  standardsTl
+    .from('.standards-left .eyebrow', { y: 16, opacity: 0, duration: 0.5, ease: 'power3.out' })
+    .from('.standards-left h2', { y: 32, opacity: 0, x: -20, duration: 0.75, ease: 'power3.out' }, '-=0.3')
+    .from('.standards-left > p', { y: 18, opacity: 0, x: -12, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.45')
+    .from('.checklist li', { y: 22, opacity: 0, stagger: 0.07, duration: 0.55, ease: 'power3.out' }, '-=0.35');
+
+  // SVG checkmark stroke draw-in
+  ScrollTrigger.create({
+    trigger: '#standards',
+    start: 'top 78%',
+    once: true,
+    onEnter() {
+      document.querySelectorAll('.check-icon svg path').forEach((path, i) => {
+        const length = path.getTotalLength ? path.getTotalLength() : 18;
+        gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+        gsap.to(path, {
+          strokeDashoffset: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          delay: 0.55 + i * 0.08
+        });
+      });
+    }
+  });
+
+  // ──────────────────────────────────────────────────────────────────
+  // AFTER APPLY — stagger + large number count-up
+  // ──────────────────────────────────────────────────────────────────
+  const afterTl = gsap.timeline({
+    scrollTrigger: { trigger: '#after-apply', start: 'top 80%', toggleActions: 'play none none none', once: true }
+  });
+  afterTl
+    .from('#after-apply .eyebrow', { y: 16, opacity: 0, duration: 0.55, ease: 'power3.out' })
+    .from('#after-apply h2', { y: 32, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.35')
+    .from('.after-card', { y: 36, opacity: 0, scale: 0.97, stagger: 0.1, duration: 0.7, ease: 'power3.out' }, '-=0.2')
+    .from('.after-note', { opacity: 0, y: 8, duration: 0.45, ease: 'power3.out' }, '-=0.1');
+
+  // After-card number count-up
+  ScrollTrigger.create({
+    trigger: '#after-apply',
+    start: 'top 80%',
+    once: true,
+    onEnter() {
+      document.querySelectorAll('.after-card-num').forEach((el, i) => {
+        const target = parseInt(el.textContent, 10);
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 0.8,
+          ease: 'power2.out',
+          delay: 0.45 + i * 0.1,
+          onUpdate() { el.textContent = String(Math.round(obj.val)).padStart(2, '0'); }
+        });
+      });
+    }
+  });
+
+  // ──────────────────────────────────────────────────────────────────
+  // FAQ — section entrance + spring accordion
+  // ──────────────────────────────────────────────────────────────────
+  const faqTl = gsap.timeline({
+    scrollTrigger: { trigger: '#faq', start: 'top 80%', toggleActions: 'play none none none', once: true }
+  });
+  faqTl
+    .from('#faq .eyebrow', { y: 16, opacity: 0, duration: 0.55, ease: 'power3.out' })
+    .from('#faq h2', { y: 32, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.35')
+    .from('.faq-item', { y: 22, opacity: 0, stagger: 0.06, duration: 0.55, ease: 'power3.out' }, '-=0.25');
+
+  // FAQ spring accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const answer = item.querySelector('.faq-answer');
+      const icon = item.querySelector('.faq-icon');
+      const isOpen = item.classList.contains('open');
+
+      // Close all open items
+      document.querySelectorAll('.faq-item.open').forEach(openItem => {
+        openItem.classList.remove('open');
+        gsap.to(openItem.querySelector('.faq-answer'), {
+          height: 0, duration: 0.35, ease: 'power2.inOut'
+        });
+        gsap.to(openItem.querySelector('.faq-icon'), {
+          rotation: 0,
+          backgroundColor: 'transparent',
+          borderColor: '#c8c7c0',
+          duration: 0.3, ease: 'back.out(1.7)'
+        });
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        // Measure natural height
+        answer.style.height = 'auto';
+        const h = answer.offsetHeight;
+        answer.style.height = '0px';
+        gsap.to(answer, { height: h, duration: 0.38, ease: 'power2.inOut' });
+        gsap.to(icon, {
+          rotation: 45,
+          backgroundColor: '#111110',
+          borderColor: '#111110',
+          duration: 0.3, ease: 'back.out(1.7)'
+        });
+      }
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────
+  // APPLY FORM — section fade-up
+  // ──────────────────────────────────────────────────────────────────
+  const applyTl = gsap.timeline({
+    scrollTrigger: { trigger: '#apply', start: 'top 80%', toggleActions: 'play none none none', once: true }
+  });
+  applyTl
+    .from('#apply .eyebrow', { y: 16, opacity: 0, duration: 0.55, ease: 'power3.out' })
+    .from('#apply h2', { y: 32, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.35')
+    .from('#apply .lead', { y: 18, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+    .from('.apply-form-wrap', { y: 44, opacity: 0, scale: 0.985, duration: 0.8, ease: 'power3.out' }, '-=0.25');
+
+  // ──────────────────────────────────────────────────────────────────
+  // FOOTER CTA — scale entrance
+  // ──────────────────────────────────────────────────────────────────
+  const footerCtaTl = gsap.timeline({
+    scrollTrigger: { trigger: '.footer-cta', start: 'top 85%', toggleActions: 'play none none none', once: true }
+  });
+  footerCtaTl
+    .from('.footer-cta h2', { scale: 0.95, opacity: 0, y: 24, duration: 0.8, ease: 'power3.out' })
+    .from('.footer-cta p', { opacity: 0, y: 14, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+    .from('.footer-cta .btn', { opacity: 0, y: 14, scale: 0.95, duration: 0.5, ease: 'power3.out' }, '-=0.3');
+
+  // ──────────────────────────────────────────────────────────────────
+  // CARD 3D TILT — hover interaction
+  // ──────────────────────────────────────────────────────────────────
+  if (window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.card, .after-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(card, {
+          rotateX: -y * 5,
+          rotateY: x * 5,
+          y: -5,
+          scale: 1.01,
+          duration: 0.35,
+          ease: 'power2.out',
+          transformPerspective: 900
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          rotateX: 0, rotateY: 0,
+          y: 0, scale: 1,
+          duration: 0.65,
+          ease: 'power3.out'
+        });
+      });
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────────
+  // FORM SUBMIT — spring feedback
+  // ──────────────────────────────────────────────────────────────────
+  document.getElementById('advisor-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('[type="submit"]');
+    gsap.to(btn, {
+      scale: 0.96,
+      duration: 0.12,
+      yoyo: true,
+      repeat: 1,
+      ease: 'power2.inOut',
+      onComplete() {
+        btn.textContent = 'Application Submitted';
+        gsap.to(btn, { backgroundColor: '#2a5c45', duration: 0.4, ease: 'power2.out' });
+        btn.disabled = true;
+      }
+    });
+  });
+
+  // ── Page curtain — intercept internal navigation
+  document.querySelectorAll('a[href]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
+    if (!href.endsWith('.html') && !href.includes('.html#')) return;
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = this.href;
+      gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
+      gsap.to('#page-curtain', {
+        scaleY: 1, duration: 0.42, ease: 'power3.in',
+        onComplete: () => { window.location.href = target; }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

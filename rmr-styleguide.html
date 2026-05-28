@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RMR Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fafaf8;
+      color: #111110;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ── TOKENS ───────────────────────────────────────────────────── */
+    :root {
+      --bg: #fafaf8;
+      --bg-card: #f4f3ef;
+      --bg-dark: #111110;
+      --text: #111110;
+      --text-muted: #6b6b66;
+      --text-light: #9b9b94;
+      --border: #e4e3de;
+      --border-strong: #c8c7c0;
+      --radius-card: 18px;
+      --radius-sm: 10px;
+      --max-w: 1120px;
+      --pad-x: clamp(24px, 5vw, 64px);
+    }
+
+    /* ── GUIDE LAYOUT ─────────────────────────────────────────────── */
+    .guide-header {
+      padding: 56px var(--pad-x) 0;
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .guide-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+    .guide-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .guide-meta {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    /* ── STICKY SECTION NAV ───────────────────────────────────────── */
+    .section-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 var(--pad-x);
+      margin-top: 36px;
+    }
+    .section-nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .section-nav-inner::-webkit-scrollbar { display: none; }
+    .section-nav a {
+      display: inline-block;
+      padding: 14px 18px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-light);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .section-nav a:hover { color: var(--text); border-bottom-color: var(--border-strong); }
+
+    /* ── GUIDE SECTION ────────────────────────────────────────────── */
+    .guide-section {
+      padding: 64px var(--pad-x);
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-section:last-child { border-bottom: none; }
+    .guide-section-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .guide-section-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .guide-section-desc {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 40px;
+    }
+    .guide-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .guide-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+    .guide-spec {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--text-light);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 7px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    /* ── 1. COLORS ────────────────────────────────────────────────── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .color-swatch {
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .color-swatch-block {
+      height: 80px;
+    }
+    .color-swatch-info {
+      padding: 12px 14px;
+      background: #fff;
+    }
+    .color-swatch-name {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .color-swatch-hex {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+    .color-swatch-use {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ── 2. TYPOGRAPHY ────────────────────────────────────────────── */
+    .type-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: baseline;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .type-row:last-child { border-bottom: none; }
+    .type-specs {
+      text-align: right;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+    /* Live type samples */
+    .t-h1 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+    .t-h1 em { font-style: italic; color: var(--text-muted); }
+    .t-h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+    .t-h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.3; }
+    .t-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .t-lead { font-size: 17px; line-height: 1.65; color: var(--text-muted); }
+    .t-body { font-size: 15px; line-height: 1.7; color: var(--text-muted); }
+    .t-small { font-size: 13px; color: var(--text-muted); }
+    .t-micro { font-size: 12px; color: var(--text-light); }
+    .t-nav { font-size: 13px; font-weight: 500; color: var(--text-muted); letter-spacing: -0.01em; }
+    .t-btn { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
+    .t-card-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); }
+    .t-serif-num {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 28px;
+      color: var(--border-strong);
+    }
+
+    /* ── 3. SPACING & RADIUS ──────────────────────────────────────── */
+    .spacing-demo-row {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .spacing-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .spacing-bar {
+      background: var(--bg-dark);
+      height: 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .spacing-bar-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      min-width: 120px;
+    }
+    .spacing-bar-spec {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+    .radius-grid {
+      display: flex;
+      gap: 24px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .radius-demo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .radius-box {
+      width: 80px;
+      height: 80px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-strong);
+    }
+    .radius-box-label {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .max-w-demo {
+      width: 100%;
+      height: 36px;
+      background: var(--bg-card);
+      border: 1.5px dashed var(--border-strong);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      position: relative;
+      margin-top: 32px;
+    }
+    .max-w-demo::before,
+    .max-w-demo::after {
+      content: '|';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--border-strong);
+    }
+    .max-w-demo::before { left: 0; }
+    .max-w-demo::after { right: 0; }
+
+    /* ── 4. BUTTONS ───────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      transition: box-shadow 0.22s, background 0.22s;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn-primary { background: var(--bg-dark); color: #fff; }
+    .btn-primary:hover { background: #222220; box-shadow: 0 8px 24px rgba(17,17,16,0.18); }
+    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
+    .btn-secondary:hover { background: var(--bg-card); }
+    .btn-ghost { background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.35); }
+    .btn-white { background: #fff; color: var(--bg-dark); }
+    .btn-white:hover { background: #f0efeb; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-sm { padding: 9px 20px; font-size: 13px; }
+    .btn-arrow::after { display: none; }
+    .btn-arrow .arrow { display: inline-flex; transition: transform 0.2s; }
+    .btn-arrow:hover .arrow { transform: translateX(3px); }
+
+    .btn-dark-bg {
+      background: var(--bg-dark);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      margin-top: 16px;
+    }
+
+    /* ── 5. CARDS ─────────────────────────────────────────────────── */
+    .cards-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.25s, background 0.2s;
+      transform-style: preserve-3d;
+    }
+    .card:hover { box-shadow: 0 12px 40px rgba(17,17,16,0.07); background: #fff; }
+    .card h3 { margin-bottom: 10px; }
+    .card p { font-size: 14px; color: var(--text-muted); }
+
+    .hero-card-demo {
+      background: var(--bg-dark);
+      color: #fff;
+      border-radius: var(--radius-card);
+      padding: 32px;
+    }
+    .hero-card-demo .card-tag {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      margin-bottom: 20px; display: block;
+    }
+    .hero-card-demo h3 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 22px; font-weight: 400; color: #fff;
+      margin-bottom: 12px; letter-spacing: -0.01em;
+    }
+    .hero-card-demo p { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 24px; line-height: 1.65; }
+    .card-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 20px 0; }
+    .card-bullets { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+    .card-bullets li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.65); }
+    .card-bullets li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; }
+
+    .after-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      border: 1px solid var(--border);
+    }
+    .after-card-num {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 28px; color: var(--border-strong); margin-bottom: 16px;
+    }
+    .after-card h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .after-card p { font-size: 14px; color: var(--text-muted); }
+
+    .value-strip-demo {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      margin-top: 16px;
+    }
+    .value-item-demo {
+      padding: 28px 24px;
+      border-right: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .value-item-demo:last-child { border-right: none; }
+    .value-item-demo:hover { background: #fff; }
+    .value-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
+    .value-sub { font-size: 13px; color: var(--text-light); }
+
+    /* ── 6. FORMS ─────────────────────────────────────────────────── */
+    .form-demo {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 40px;
+      max-width: 560px;
+    }
+    .form-group-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-light);
+      margin-bottom: 16px; margin-top: 32px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+    .form-group-label:first-child { margin-top: 0; }
+    .form-field { margin-bottom: 16px; }
+    .form-field label {
+      display: block; font-size: 13px; font-weight: 500;
+      color: var(--text); margin-bottom: 6px; letter-spacing: -0.01em;
+    }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%; padding: 12px 16px;
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-family: inherit; font-size: 14px; color: var(--text);
+      background: var(--bg); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+      border-color: var(--text);
+      box-shadow: 0 0 0 3px rgba(17,17,16,0.06);
+    }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: var(--text-light); }
+    .form-field select {
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b6b66' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+    }
+    .form-field textarea { resize: vertical; min-height: 80px; }
+    .radio-group { display: flex; gap: 8px; }
+    .radio-option { flex: 1; position: relative; }
+    .radio-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .radio-option label {
+      display: flex; align-items: center; justify-content: center;
+      padding: 11px 16px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer; transition: all 0.18s; margin: 0;
+    }
+    .radio-option input[type="radio"]:checked + label { background: var(--bg-dark); color: #fff; border-color: var(--bg-dark); }
+    .radio-option label:hover { background: var(--bg-card); }
+
+    /* ── 7. FAQ ───────────────────────────────────────────────────── */
+    .faq-demo {
+      max-width: 640px;
+    }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-question {
+      width: 100%; display: flex; align-items: center;
+      justify-content: space-between; gap: 16px;
+      padding: 22px 0; background: none; border: none;
+      text-align: left; font-size: 15px; font-weight: 500;
+      color: var(--text); letter-spacing: -0.01em; transition: color 0.2s;
+    }
+    .faq-question:hover { color: var(--text-muted); }
+    .faq-icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1px solid var(--border-strong);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .faq-icon svg { width: 10px; height: 10px; transition: stroke 0.2s; }
+    .faq-item.open .faq-icon svg { stroke: #fff; }
+    .faq-answer { overflow: hidden; height: 0; }
+    .faq-answer-inner {
+      padding-bottom: 20px; font-size: 14px;
+      color: var(--text-muted); line-height: 1.7; max-width: 560px;
+    }
+
+    /* ── 8. DARK SECTION ──────────────────────────────────────────── */
+    .dark-preview {
+      background: var(--bg-dark);
+      border-radius: var(--radius-card);
+      padding: 48px;
+      color: #fff;
+    }
+    .dark-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .dark-h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 400; letter-spacing: -0.02em;
+      color: #fff; margin-bottom: 16px;
+    }
+    .dark-lead { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.65; margin-bottom: 32px; max-width: 480px; }
+    .dark-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .dark-step { background: var(--bg-dark); padding: 28px 24px; transition: background 0.2s; }
+    .dark-step:hover { background: #1a1a18; }
+    .dark-step-num { font-family: 'Instrument Serif', Georgia, serif; font-size: 12px; color: rgba(255,255,255,0.25); margin-bottom: 12px; }
+    .dark-step h4 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+    .dark-step p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+    /* ── 9. MOTION ────────────────────────────────────────────────── */
+    .motion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .motion-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px;
+    }
+    .motion-card h4 {
+      font-size: 14px; font-weight: 600; letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+    .ease-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px; color: var(--text-muted);
+    }
+    .ease-row:last-child { border-bottom: none; }
+    .ease-name { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: var(--text); }
+    .ease-use { font-size: 12px; color: var(--text-light); }
+    .duration-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+    }
+    .duration-row:last-child { border-bottom: none; }
+    .duration-bar-wrap { flex: 1; height: 4px; background: var(--border); border-radius: 2px; }
+    .duration-bar { height: 100%; background: var(--bg-dark); border-radius: 2px; }
+    .duration-label { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--text-light); min-width: 36px; }
+    .duration-use { font-size: 12px; color: var(--text-muted); min-width: 120px; }
+
+    .motion-demo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 40px;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .motion-demo-target {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px;
+      margin: 24px auto;
+      max-width: 360px;
+    }
+    .motion-demo-target .demo-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+    .motion-demo-target .demo-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 22px; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 8px;
+    }
+    .motion-demo-target .demo-body { font-size: 14px; color: var(--text-muted); }
+    .motion-demo-note { font-size: 12px; color: var(--text-light); }
+
+    /* ── 10. ICONS & MICRO ────────────────────────────────────────── */
+    .micro-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .micro-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .micro-item-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-light);
+    }
+    .micro-item-demo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    /* Pulsing dot */
+    .pulse-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    /* FAQ icon */
+    .faq-icon-demo {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1px solid var(--border-strong);
+      display: flex; align-items: center; justify-content: center;
+    }
+    /* Check icon */
+    .check-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--bg-dark);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .check-icon svg { width: 10px; height: 10px; }
+    /* Scroll progress demo */
+    .progress-demo {
+      width: 100%; height: 1.5px;
+      background: var(--border);
+      border-radius: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-fill {
+      position: absolute; top: 0; left: 0;
+      height: 100%; width: 60%;
+      background: var(--bg-dark);
+    }
+    /* City pulse */
+    .city-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--text); position: relative;
+    }
+    .city-dot::after {
+      content: ''; position: absolute; inset: -4px;
+      border-radius: 50%; border: 1px solid var(--text);
+      opacity: 0.25; animation: city-pulse 3s ease-in-out infinite;
+    }
+    @keyframes city-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.25; }
+      50% { transform: scale(1.8); opacity: 0; }
+    }
+    /* Eyebrow row */
+    .eyebrow-demo {
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    /* ── PAGE FOOTER ──────────────────────────────────────────────── */
+    .guide-footer {
+      background: var(--bg-dark);
+      padding: 32px var(--pad-x);
+      text-align: center;
+    }
+    .guide-footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .guide-footer span {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.4);
+    }
+    .guide-footer-links {
+      display: flex; gap: 20px; list-style: none;
+    }
+    .guide-footer-links a {
+      font-size: 12px; color: rgba(255,255,255,0.3);
+      transition: color 0.2s;
+    }
+    .guide-footer-links a:hover { color: rgba(255,255,255,0.6); }
+
+    @media (max-width: 860px) {
+      .cards-showcase { grid-template-columns: 1fr; }
+      .value-strip-demo { grid-template-columns: 1fr 1fr; }
+      .motion-grid { grid-template-columns: 1fr; }
+      .dark-steps { grid-template-columns: 1fr; }
+      .guide-footer-inner { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 560px) {
+      .value-strip-demo { grid-template-columns: 1fr; }
+      .type-row { grid-template-columns: 1fr; }
+      .type-specs { text-align: left; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────────────────── -->
+<div class="guide-header">
+  <p class="guide-eyebrow">Roll My Retirement</p>
+  <h1 class="guide-title">Design System</h1>
+  <p class="guide-meta">Version 1.0 &nbsp;·&nbsp; May 2025 &nbsp;·&nbsp; Cream palette · Instrument Serif + Inter</p>
+</div>
+
+<!-- ── STICKY NAV ──────────────────────────────────────────────────── -->
+<nav class="section-nav">
+  <div class="section-nav-inner">
+    <a href="#colors">Colors</a>
+    <a href="#typography">Typography</a>
+    <a href="#spacing">Spacing</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#cards">Cards</a>
+    <a href="#forms">Forms</a>
+    <a href="#faq-demo">FAQ</a>
+    <a href="#dark-section">Dark Mode</a>
+    <a href="#motion">Motion</a>
+    <a href="#micro">Micro-elements</a>
+  </div>
+</nav>
+
+<!-- ══ 1. COLORS ══════════════════════════════════════════════════════ -->
+<section class="guide-section" id="colors">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Colors</h2>
+    <p class="guide-section-desc">All colors are CSS custom properties defined on <code>:root</code>. Use the token name, never the raw hex.</p>
+
+    <p class="guide-label" style="margin-bottom: 16px;">Light Surface</p>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #fafaf8;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--bg</div>
+          <div class="color-swatch-hex">#fafaf8</div>
+          <div class="color-swatch-use">Site background</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #f4f3ef;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--bg-card</div>
+          <div class="color-swatch-hex">#f4f3ef</div>
+          <div class="color-swatch-use">Card & FAQ section bg</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #111110;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--bg-dark</div>
+          <div class="color-swatch-hex">#111110</div>
+          <div class="color-swatch-use">Dark sections, footer</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="guide-label" style="margin-top: 32px; margin-bottom: 16px;">Text</p>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #111110;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--text</div>
+          <div class="color-swatch-hex">#111110</div>
+          <div class="color-swatch-use">Headings, primary text</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #6b6b66;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--text-muted</div>
+          <div class="color-swatch-hex">#6b6b66</div>
+          <div class="color-swatch-use">Body copy, eyebrows</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #9b9b94;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--text-light</div>
+          <div class="color-swatch-hex">#9b9b94</div>
+          <div class="color-swatch-use">Placeholder, microcopy</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="guide-label" style="margin-top: 32px; margin-bottom: 16px;">Borders</p>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #e4e3de;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--border</div>
+          <div class="color-swatch-hex">#e4e3de</div>
+          <div class="color-swatch-use">Default dividers & card borders</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-block" style="background: #c8c7c0;"></div>
+        <div class="color-swatch-info">
+          <div class="color-swatch-name">--border-strong</div>
+          <div class="color-swatch-hex">#c8c7c0</div>
+          <div class="color-swatch-use">Stronger dividers, FAQ icon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2. TYPOGRAPHY ═══════════════════════════════════════════════════ -->
+<section class="guide-section" id="typography">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Typography</h2>
+    <p class="guide-section-desc">Two typefaces. Instrument Serif for display. Inter for everything else.</p>
+
+    <div class="type-row">
+      <div>
+        <div class="t-h1">Your wealth.<br><em>Your way.</em></div>
+      </div>
+      <div class="type-specs">
+        <span class="guide-spec">Instrument Serif</span>
+        <span class="guide-spec">clamp(36px → 64px)</span>
+        <span class="guide-spec">weight 400</span>
+        <span class="guide-spec">-0.02em tracking</span>
+        <span class="guide-spec">1.08 leading</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="t-h2">Why advisors join Roll My Retirement</div>
+      <div class="type-specs">
+        <span class="guide-spec">Instrument Serif</span>
+        <span class="guide-spec">clamp(28px → 48px)</span>
+        <span class="guide-spec">weight 400</span>
+        <span class="guide-spec">-0.02em tracking</span>
+        <span class="guide-spec">1.12 leading</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="t-h3">Pre-screened rollover opportunities</div>
+      <div class="type-specs">
+        <span class="guide-spec">Inter</span>
+        <span class="guide-spec">16px</span>
+        <span class="guide-spec">weight 600</span>
+        <span class="guide-spec">-0.01em tracking</span>
+        <span class="guide-spec">1.3 leading</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div>
+        <div class="eyebrow-demo">
+          <span class="pulse-dot"></span>
+          <span class="t-eyebrow">Limited Advisor Openings by Metro</span>
+        </div>
+      </div>
+      <div class="type-specs">
+        <span class="guide-spec">Inter</span>
+        <span class="guide-spec">11px</span>
+        <span class="guide-spec">weight 500</span>
+        <span class="guide-spec">0.12em tracking</span>
+        <span class="guide-spec">uppercase</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="t-lead" style="max-width: 600px;">We help you take control of your retirement funds by connecting you with a trusted network of financial professionals.</div>
+      <div class="type-specs">
+        <span class="guide-spec">Inter</span>
+        <span class="guide-spec">17px</span>
+        <span class="guide-spec">weight 400</span>
+        <span class="guide-spec">1.65 leading</span>
+        <span class="guide-spec">color: --text-muted</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="t-body" style="max-width: 560px;">We act as a focused growth partner for advisors who want qualified rollover opportunities without building a full outbound sales engine.</div>
+      <div class="type-specs">
+        <span class="guide-spec">Inter</span>
+        <span class="guide-spec">15px</span>
+        <span class="guide-spec">weight 400</span>
+        <span class="guide-spec">1.7 leading</span>
+        <span class="guide-spec">color: --text-muted</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="t-small">Supporting copy and secondary labels at this scale.</div>
+      <div class="type-specs">
+        <span class="guide-spec">Inter</span>
+        <span class="guide-spec">13px</span>
+        <span class="guide-spec">weight 400</span>
+        <span class="guide-spec">color: --text-muted</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="t-micro">Private partnership pricing is shared after application review.</div>
+      <div class="type-specs">
+        <span class="guide-spec">Inter</span>
+        <span class="guide-spec">12px</span>
+        <span class="guide-spec">weight 400</span>
+        <span class="guide-spec">color: --text-light</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div style="display: flex; gap: 32px; align-items: center; flex-wrap: wrap;">
+        <span class="t-nav">Nav Link</span>
+        <span class="t-btn">Button Label</span>
+        <span class="t-card-tag">Card Tag / Label</span>
+        <span class="t-serif-num">01</span>
+      </div>
+      <div class="type-specs">
+        <span class="guide-spec">Nav: 13px 500 -0.01em</span>
+        <span class="guide-spec">Btn: 14px 500 -0.01em</span>
+        <span class="guide-spec">Tag: 10px 600 0.1em caps</span>
+        <span class="guide-spec">Num: Serif 28px 400</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3. SPACING & RADIUS ═════════════════════════════════════════════ -->
+<section class="guide-section" id="spacing">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Spacing & Layout</h2>
+    <p class="guide-section-desc">All spacing uses fluid <code>clamp()</code> values that scale between viewport widths.</p>
+
+    <div class="spacing-demo-row">
+      <div class="spacing-item">
+        <div class="spacing-bar-label">--pad-x</div>
+        <div class="spacing-bar" style="width: clamp(24px, 5vw, 64px);"></div>
+        <span class="spacing-bar-spec">clamp(24px, 5vw, 64px)</span>
+      </div>
+      <div class="spacing-item">
+        <div class="spacing-bar-label">--section-gap</div>
+        <div class="spacing-bar" style="width: clamp(72px, 10vw, 104px);"></div>
+        <span class="spacing-bar-spec">clamp(72px, 10vw, 104px)</span>
+      </div>
+      <div class="spacing-item">
+        <div class="spacing-bar-label">Nav height</div>
+        <div class="spacing-bar" style="width: 64px;"></div>
+        <span class="spacing-bar-spec">64px fixed</span>
+      </div>
+      <div class="spacing-item">
+        <div class="spacing-bar-label">Card padding</div>
+        <div class="spacing-bar" style="width: 32px;"></div>
+        <span class="spacing-bar-spec">32px</span>
+      </div>
+      <div class="spacing-item">
+        <div class="spacing-bar-label">Card gap</div>
+        <div class="spacing-bar" style="width: 16px;"></div>
+        <span class="spacing-bar-spec">16px</span>
+      </div>
+    </div>
+
+    <div class="max-w-demo">
+      <span>max-width: 1120px (--max-w)</span>
+    </div>
+
+    <div class="radius-grid">
+      <div class="radius-demo">
+        <div class="radius-box" style="border-radius: 18px;"></div>
+        <div class="radius-box-label">--radius-card: 18px</div>
+      </div>
+      <div class="radius-demo">
+        <div class="radius-box" style="border-radius: 10px;"></div>
+        <div class="radius-box-label">--radius-sm: 10px</div>
+      </div>
+      <div class="radius-demo">
+        <div class="radius-box" style="border-radius: 100px; width: 80px; height: 40px;"></div>
+        <div class="radius-box-label">btn: 100px pill</div>
+      </div>
+      <div class="radius-demo">
+        <div class="radius-box" style="border-radius: 50%; width: 40px; height: 40px;"></div>
+        <div class="radius-box-label">circle: 50%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4. BUTTONS ══════════════════════════════════════════════════════ -->
+<section class="guide-section" id="buttons">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Buttons</h2>
+    <p class="guide-section-desc">All buttons use the pill shape (100px border-radius). Hover to see interaction states.</p>
+
+    <p class="guide-label">Light background</p>
+    <div class="guide-row" style="margin-bottom: 32px;">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-primary btn-arrow">Apply to Join <span class="arrow">→</span></button>
+      <button class="btn btn-secondary btn-arrow">Learn More <span class="arrow">→</span></button>
+      <button class="btn btn-primary btn-sm">Small Primary</button>
+    </div>
+
+    <p class="guide-label">Dark background</p>
+    <div class="btn-dark-bg">
+      <div class="guide-row">
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-white">White</button>
+        <button class="btn btn-ghost btn-arrow">Let's Talk <span class="arrow">→</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5. CARDS ════════════════════════════════════════════════════════ -->
+<section class="guide-section" id="cards">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Cards</h2>
+    <p class="guide-section-desc">Four card variants used across the site. Hover over light cards to see the elevation effect.</p>
+
+    <p class="guide-label" style="margin-bottom: 16px;">Standard card (.card)</p>
+    <div class="cards-showcase" style="margin-bottom: 40px;">
+      <div class="card">
+        <h3>People in transition</h3>
+        <p>We focus on individuals navigating job changes, inherited assets, dissatisfaction with a current advisor, and rollover decisions.</p>
+      </div>
+      <div class="card">
+        <h3>Qualified before connection</h3>
+        <p>We pre-screen opportunities before introducing them to your team, helping reduce wasted time and improve fit.</p>
+      </div>
+      <div class="card">
+        <h3>Selective network</h3>
+        <p>This is a curated advisor network, not an open marketplace. We prioritize quality, fit, and professionalism.</p>
+      </div>
+    </div>
+
+    <p class="guide-label" style="margin-bottom: 16px;">Dark hero card</p>
+    <div style="max-width: 360px; margin-bottom: 40px;">
+      <div class="hero-card-demo">
+        <span class="card-tag">Advisor Openings</span>
+        <h3>Limited spots in qualified metro areas</h3>
+        <p>Apply to see whether there is a fit in your market.</p>
+        <div class="card-divider"></div>
+        <ul class="card-bullets">
+          <li>Exclusive 7-day lead window</li>
+          <li>Limited metro availability</li>
+          <li>Application review required</li>
+        </ul>
+        <button class="btn btn-white btn-arrow" style="width:100%; justify-content:center;">Apply to Join <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <p class="guide-label" style="margin-bottom: 16px;">After-apply card (numbered)</p>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px;">
+      <div class="after-card">
+        <div class="after-card-num">01</div>
+        <h3>Application review</h3>
+        <p>We review your practice details and evaluate fit within our advisor network.</p>
+      </div>
+      <div class="after-card">
+        <div class="after-card-num">02</div>
+        <h3>Private conversation</h3>
+        <p>Qualified advisors are invited to discuss market fit and partnership structure.</p>
+      </div>
+      <div class="after-card">
+        <div class="after-card-num">03</div>
+        <h3>Onboarding</h3>
+        <p>Approved advisors are placed into an available metro and prepared for opportunity flow.</p>
+      </div>
+    </div>
+
+    <p class="guide-label" style="margin-bottom: 16px;">Value strip</p>
+    <div class="value-strip-demo">
+      <div class="value-item-demo">
+        <div class="value-title">Free to You</div>
+        <div class="value-sub">We're paid by the advisors we vet</div>
+      </div>
+      <div class="value-item-demo">
+        <div class="value-title">No Obligation</div>
+        <div class="value-sub">Move at your own pace</div>
+      </div>
+      <div class="value-item-demo">
+        <div class="value-title">24/7 Support</div>
+        <div class="value-sub">Real humans, always available</div>
+      </div>
+      <div class="value-item-demo">
+        <div class="value-title">Nationwide</div>
+        <div class="value-sub">Trusted advisors in your area</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6. FORMS ════════════════════════════════════════════════════════ -->
+<section class="guide-section" id="forms">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Forms</h2>
+    <p class="guide-section-desc">Form fields live inside a white card container. Click a field to see focus state.</p>
+
+    <div class="form-demo">
+      <div class="form-group-label">Contact Information</div>
+      <div class="form-field">
+        <label for="demo-name">Full Name</label>
+        <input type="text" id="demo-name" placeholder="Jane Smith" />
+      </div>
+      <div class="form-field">
+        <label for="demo-email">Email Address</label>
+        <input type="email" id="demo-email" placeholder="jane@example.com" />
+      </div>
+
+      <div class="form-group-label">Preferences</div>
+      <div class="form-field">
+        <label for="demo-select">Account Type</label>
+        <select id="demo-select">
+          <option value="" disabled selected>Select type</option>
+          <option>401(k)</option>
+          <option>IRA</option>
+          <option>Money Market</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Standard of Care</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="r1" name="care" value="a" />
+            <label for="r1">Fiduciary</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="r2" name="care" value="b" />
+            <label for="r2">Suitability</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="r3" name="care" value="c" />
+            <label for="r3">Either</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="demo-textarea">Notes</label>
+        <textarea id="demo-textarea" placeholder="Any additional context you'd like to share…"></textarea>
+      </div>
+      <div style="margin-top: 24px; text-align: center;">
+        <button class="btn btn-primary btn-arrow">Submit Application <span class="arrow">→</span></button>
+        <p style="font-size: 12px; color: var(--text-light); margin-top: 10px;">Private partnership pricing is discussed on a follow-up call.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. FAQ ACCORDION ════════════════════════════════════════════════ -->
+<section class="guide-section" id="faq-demo" style="background: var(--bg-card);">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">FAQ Accordion</h2>
+    <p class="guide-section-desc">GSAP spring accordion — height animates to measured natural height, icon rotates 45° with <code>back.out(1.7)</code>.</p>
+
+    <div class="faq-demo">
+      <div class="faq-item">
+        <button class="faq-question">
+          What does this service cost?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Our service is completely free to you. We're paid by the advisors we partner with — but only after they pass a careful vetting process. If we don't feel confident recommending them, they're out.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          What does 'rolling over' an IRA or 401(k) actually mean?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">"Rolling over" means moving money from one retirement account to another without paying taxes or penalties. It's like switching bank accounts, but for your future.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          How are introductions made?
+          <span class="faq-icon">
+            <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Introductions may happen through a live transfer or direct scheduling, depending on the opportunity and situation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8. DARK SECTION ════════════════════════════════════════════════ -->
+<section class="guide-section" id="dark-section">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Dark Section</h2>
+    <p class="guide-section-desc">Used for process / how-it-works sections. Eyebrow, heading, lead, steps grid, and CTA button all adapt.</p>
+
+    <div class="dark-preview">
+      <p class="dark-eyebrow">Our Process</p>
+      <h2 class="dark-h2">Three steps to financial clarity</h2>
+      <p class="dark-lead">We do the heavy lifting so you can focus on what matters — understanding your options and making the right call for your future.</p>
+
+      <div class="dark-steps">
+        <div class="dark-step">
+          <div class="dark-step-num">01</div>
+          <h4>Get Matched</h4>
+          <p>We introduce you to a trusted, well-vetted professional in your area.</p>
+        </div>
+        <div class="dark-step">
+          <div class="dark-step-num">02</div>
+          <h4>Understand Your Options</h4>
+          <p>Your pro walks you through your choices in plain English.</p>
+        </div>
+        <div class="dark-step">
+          <div class="dark-step-num">03</div>
+          <h4>Meet Your Advisors</h4>
+          <p>Connect with 1–3 local advisors via short live calls.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-ghost btn-arrow">Let's Talk <span class="arrow">→</span></button>
+        <button class="btn btn-white">Get Started</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9. MOTION ═══════════════════════════════════════════════════════ -->
+<section class="guide-section" id="motion">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Motion</h2>
+    <p class="guide-section-desc">GSAP 3 + ScrollTrigger + Lenis. All eases, durations, and stagger values are consistent across pages.</p>
+
+    <div class="motion-grid">
+      <div class="motion-card">
+        <h4>Easing</h4>
+        <div class="ease-row">
+          <span class="ease-name">power3.out</span>
+          <span class="ease-use">Section entrances</span>
+        </div>
+        <div class="ease-row">
+          <span class="ease-name">power2.inOut</span>
+          <span class="ease-use">State changes, FAQ height</span>
+        </div>
+        <div class="ease-row">
+          <span class="ease-name">back.out(1.7)</span>
+          <span class="ease-use">Spring moments — icon, scale pops</span>
+        </div>
+        <div class="ease-row">
+          <span class="ease-name">none</span>
+          <span class="ease-use">Scroll progress bar (scrub)</span>
+        </div>
+        <div class="ease-row">
+          <span class="ease-name">power2.out</span>
+          <span class="ease-use">Count-ups, SVG draw-in</span>
+        </div>
+      </div>
+
+      <div class="motion-card">
+        <h4>Durations</h4>
+        <div class="duration-row">
+          <span class="duration-label">0.75s</span>
+          <div class="duration-bar-wrap"><div class="duration-bar" style="width: 75%;"></div></div>
+          <span class="duration-use">Hero eyebrow blur-in</span>
+        </div>
+        <div class="duration-row">
+          <span class="duration-label">0.85s</span>
+          <div class="duration-bar-wrap"><div class="duration-bar" style="width: 85%;"></div></div>
+          <span class="duration-use">H1 headline entrance</span>
+        </div>
+        <div class="duration-row">
+          <span class="duration-label">0.70s</span>
+          <div class="duration-bar-wrap"><div class="duration-bar" style="width: 70%;"></div></div>
+          <span class="duration-use">Section h2, cards</span>
+        </div>
+        <div class="duration-row">
+          <span class="duration-label">0.55s</span>
+          <div class="duration-bar-wrap"><div class="duration-bar" style="width: 55%;"></div></div>
+          <span class="duration-use">Staggered items</span>
+        </div>
+        <div class="duration-row">
+          <span class="duration-label">0.38s</span>
+          <div class="duration-bar-wrap"><div class="duration-bar" style="width: 38%;"></div></div>
+          <span class="duration-use">FAQ open height</span>
+        </div>
+        <div class="duration-row">
+          <span class="duration-label">0.30s</span>
+          <div class="duration-bar-wrap"><div class="duration-bar" style="width: 30%;"></div></div>
+          <span class="duration-use">FAQ icon spring</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="motion-card" style="margin-top: 16px;">
+      <h4>Stagger values</h4>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;">
+        <span class="guide-spec">0.06s — FAQ items, checklist</span>
+        <span class="guide-spec">0.07s — bullets, steps</span>
+        <span class="guide-spec">0.08s — value strip</span>
+        <span class="guide-spec">0.09s — cards (2×2)</span>
+        <span class="guide-spec">0.10s — after-cards, steps (wide)</span>
+      </div>
+    </div>
+
+    <div class="motion-demo-card">
+      <p class="guide-label">Live demo — click to replay entrance</p>
+      <div class="motion-demo-target" id="motion-target">
+        <div class="demo-eyebrow">Advisors</div>
+        <div class="demo-title">Sample entrance animation</div>
+        <div class="demo-body">This is how a section card enters the viewport. Fade up + slight scale.</div>
+      </div>
+      <button class="btn btn-primary btn-sm" id="motion-play-btn">Play Animation</button>
+      <p class="motion-demo-note" style="margin-top: 12px;">
+        <code style="font-size:11px;">y: 40, opacity: 0, scale: 0.97 → power3.out, 0.75s</code>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10. MICRO-ELEMENTS ══════════════════════════════════════════════ -->
+<section class="guide-section" id="micro">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Icons & Micro-elements</h2>
+    <p class="guide-section-desc">Small details that make the design feel alive and considered.</p>
+
+    <div class="micro-grid">
+
+      <div class="micro-item">
+        <div class="micro-item-label">Pulsing dot</div>
+        <div class="micro-item-demo">
+          <span class="pulse-dot"></span>
+          <span style="font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);">Eyebrow text</span>
+        </div>
+        <span class="guide-spec">CSS animation: pulse 2.5s infinite</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">FAQ icon</div>
+        <div class="micro-item-demo">
+          <div class="faq-icon-demo">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 1v8M1 5h8"/>
+            </svg>
+          </div>
+          <span style="font-size: 13px; color: var(--text-muted);">Rotates 45° on open</span>
+        </div>
+        <span class="guide-spec">back.out(1.7) · 0.3s</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">SVG checkmark</div>
+        <div class="micro-item-demo">
+          <div class="check-icon" id="check-demo-icon">
+            <svg viewBox="0 0 10 8" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path id="check-path-demo" d="M1 4l3 3 5-6"/>
+            </svg>
+          </div>
+          <span style="font-size: 13px; color: var(--text-muted);">
+            <button onclick="replayCheck()" style="background:none; border:none; font-size:13px; color:var(--text-muted); cursor:pointer; text-decoration:underline;">Replay draw-in</button>
+          </span>
+        </div>
+        <span class="guide-spec">strokeDashoffset draw · power2.out · 0.5s</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">City pulse dot</div>
+        <div class="micro-item-demo">
+          <div style="position: relative; width: 28px; height: 28px; display:flex; align-items:center; justify-content:center;">
+            <div class="city-dot"></div>
+          </div>
+          <span style="font-size: 13px; color: var(--text-muted);">Network map nodes</span>
+        </div>
+        <span class="guide-spec">CSS: city-pulse 3s infinite</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">Scroll progress</div>
+        <div class="micro-item-demo" style="flex-direction: column; align-items: flex-start; gap: 8px; width: 100%;">
+          <div class="progress-demo">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span style="font-size: 12px; color: var(--text-light);">scaleX via GSAP scrub</span>
+        </div>
+        <span class="guide-spec">height: 1.5px · #111110</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">Button arrow</div>
+        <div class="micro-item-demo">
+          <button class="btn btn-primary btn-arrow btn-sm">Apply <span class="arrow">→</span></button>
+        </div>
+        <span class="guide-spec">translateX(3px) on hover · 0.2s</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">Nav — scrolled state</div>
+        <div class="micro-item-demo" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+          <div style="width: 100%; height: 2px; background: var(--border); border-radius: 1px;"></div>
+          <span style="font-size: 12px; color: var(--text-light);">border + box-shadow appear</span>
+        </div>
+        <span class="guide-spec">transition: 0.3s · .scrolled class</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">Nav backdrop</div>
+        <div class="micro-item-demo" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+          <div style="width:100%; height:32px; background: rgba(250,250,248,0.88); border:1px solid var(--border); border-radius:6px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:11px; color:var(--text-muted);">rgba + blur(16px)</span>
+          </div>
+        </div>
+        <span class="guide-spec">backdrop-filter: blur(16px)</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────── -->
+<div class="guide-footer">
+  <div class="guide-footer-inner">
+    <span>Roll My Retirement — Design System v1.0</span>
+    <ul class="guide-footer-links">
+      <li><a href="rmr-home.html">Home</a></li>
+      <li><a href="rmr-advisors-page.html">Advisors</a></li>
+      <li><a href="docs/project/brand.md">brand.md</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── SCRIPTS ──────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Native scroll with CSS smooth-scroll for the nav anchor jumps
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const t = document.querySelector(this.getAttribute('href'));
+      if (t) {
+        e.preventDefault();
+        const top = t.getBoundingClientRect().top + window.scrollY - 56;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const answer = item.querySelector('.faq-answer');
+      const icon = item.querySelector('.faq-icon');
+      const isOpen = item.classList.contains('open');
+
+      document.querySelectorAll('.faq-item.open').forEach(openItem => {
+        openItem.classList.remove('open');
+        gsap.to(openItem.querySelector('.faq-answer'), { height: 0, duration: 0.35, ease: 'power2.inOut' });
+        gsap.to(openItem.querySelector('.faq-icon'), {
+          rotation: 0, backgroundColor: 'transparent', borderColor: '#c8c7c0',
+          duration: 0.3, ease: 'back.out(1.7)'
+        });
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.style.height = 'auto';
+        const h = answer.offsetHeight;
+        answer.style.height = '0px';
+        gsap.to(answer, { height: h, duration: 0.38, ease: 'power2.inOut' });
+        gsap.to(icon, {
+          rotation: 45, backgroundColor: '#111110', borderColor: '#111110',
+          duration: 0.3, ease: 'back.out(1.7)'
+        });
+      }
+    });
+  });
+
+  // Motion demo button
+  const motionTarget = document.getElementById('motion-target');
+  document.getElementById('motion-play-btn').addEventListener('click', () => {
+    gsap.fromTo(motionTarget,
+      { y: 40, opacity: 0, scale: 0.97 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.75, ease: 'power3.out' }
+    );
+  });
+
+  // SVG checkmark draw-in (auto-play on load + replay function)
+  function replayCheck() {
+    const path = document.getElementById('check-path-demo');
+    const len = path.getTotalLength ? path.getTotalLength() : 18;
+    gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+    gsap.to(path, { strokeDashoffset: 0, duration: 0.5, ease: 'power2.out' });
+  }
+  // Auto-play on load
+  window.addEventListener('load', () => {
+    setTimeout(replayCheck, 600);
+  });
+
+  // Animate progress demo bar as a visual example
+  gsap.to('#progress-fill', {
+    width: '100%',
+    duration: 2,
+    ease: 'power1.inOut',
+    repeat: -1,
+    yoyo: true,
+    delay: 0.5
+  });
+</script>
+
+</body>
+</html>
