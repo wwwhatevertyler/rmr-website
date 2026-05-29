@@ -149,42 +149,41 @@
     /* ─── NAV ──────────────────────────────────────────────────────── */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
       z-index: 100;
-      padding: 0 var(--pad-x);
-      height: 64px;
+      height: 68px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       background: rgba(250, 250, 248, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: none;
+      box-shadow: none;
+      transition: box-shadow 0.3s;
     }
     nav.scrolled {
-      border-bottom-color: var(--border);
-      box-shadow: 0 1px 0 var(--border);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06);
     }
     .nav-inner {
-      max-width: var(--max-w);
       width: 100%;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0 clamp(16px, 3vw, 48px);
+      gap: 48px;
     }
-    .nav-logo {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 17px;
-      font-weight: 400;
-      letter-spacing: -0.01em;
-      color: var(--text);
-    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-img { height: 40px; width: auto; display: block; }
+    .nav-logo-text { font-family: 'Instrument Serif', Georgia, serif; font-size: 15px; color: #1a1a18; white-space: nowrap; }
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 24px;
       list-style: none;
     }
     .nav-links a {
@@ -200,8 +199,8 @@
       font-size: 12px;
     }
     .nav-links a.nav-advisors:hover { color: var(--text-muted); }
-    .nav-cta { margin-left: 8px; }
-    .nav-cta .btn { padding: 9px 20px; font-size: 13px; }
+    .nav-cta { margin-left: 0; }
+    .nav-cta .btn { padding: 10px 20px; font-size: 13px; }
     .nav-mobile-toggle {
       display: none;
       background: none;
@@ -212,15 +211,14 @@
 
     /* ─── HERO ─────────────────────────────────────────────────────── */
     #hero {
-      padding-top: calc(64px + clamp(56px, 8vw, 96px));
-      padding-bottom: clamp(56px, 8vw, 96px);
+      padding-top: calc(68px + clamp(72px, 10vw, 120px));
+      padding-bottom: clamp(80px, 11vw, 128px);
       overflow: hidden;
+      text-align: center;
     }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 48px;
-      align-items: start;
+    .hero-content {
+      max-width: 720px;
+      margin: 0 auto;
     }
     .hero-eyebrow {
       display: inline-flex;
@@ -239,107 +237,25 @@
       50% { opacity: 0.4; transform: scale(0.8); }
     }
     .hero-headline { margin-bottom: 24px; }
-    .hero-sub { margin-bottom: 32px; }
-    .hero-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 36px;
-    }
-    .hero-bullets li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-    .hero-bullets li::before {
-      content: '';
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--text-light);
-      flex-shrink: 0;
+    .hero-sub {
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 40px;
+      font-size: 17px;
+      line-height: 1.7;
     }
     .hero-cta-row {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .hero-microcopy {
       font-size: 12px;
       color: var(--text-light);
-    }
-
-    /* ─── HERO CARD ────────────────────────────────────────────────── */
-    .hero-card {
-      background: var(--bg-dark);
-      color: #fff;
-      border-radius: var(--radius-card);
-      padding: 32px;
-      position: sticky;
-      top: 88px;
-    }
-    .hero-card-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      margin-bottom: 20px;
-    }
-    .hero-card h3 {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 22px;
-      font-weight: 400;
-      color: #fff;
-      margin-bottom: 12px;
-      letter-spacing: -0.01em;
-    }
-    .hero-card p {
-      font-size: 14px;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 24px;
-      line-height: 1.65;
-    }
-    .hero-card-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-    .hero-card-bullets li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.65);
-    }
-    .hero-card-bullets li::before {
-      content: '';
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.35);
-      flex-shrink: 0;
-    }
-    .hero-card .btn-primary {
-      background: #fff;
-      color: var(--bg-dark);
-      width: 100%;
-      justify-content: center;
-    }
-    .hero-card .btn-primary:hover {
-      background: #f0efeb;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    }
-    .hero-card-divider {
-      height: 1px;
-      background: rgba(255,255,255,0.1);
-      margin: 24px 0;
     }
 
     /* ─── VALUE STRIP ──────────────────────────────────────────────── */
@@ -625,7 +541,11 @@
       font-family: 'Instrument Serif', Georgia, serif;
       font-size: 15px;
       color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
+    .footer-logo-img { height: 32px; width: auto; display: block; filter: brightness(0) invert(1); opacity: 0.5; }
     .footer-nav {
       display: flex;
       align-items: center;
@@ -647,12 +567,14 @@
     .mobile-menu {
       display: none;
       position: fixed;
-      top: 64px; left: 0; right: 0;
+      top: 80px; left: 16px; right: 16px;
       background: rgba(250,250,248,0.97);
       backdrop-filter: blur(16px);
       z-index: 99;
-      padding: 24px var(--pad-x) 32px;
-      border-bottom: 1px solid var(--border);
+      padding: 24px 24px 32px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       flex-direction: column;
       gap: 0;
     }
@@ -675,14 +597,11 @@
 
     /* ─── RESPONSIVE ───────────────────────────────────────────────── */
     @media (max-width: 1024px) {
-      .hero-grid { grid-template-columns: 1fr 320px; gap: 32px; }
       .about-grid { gap: 48px; }
       .network-grid { gap: 48px; }
     }
 
     @media (max-width: 860px) {
-      .hero-grid { grid-template-columns: 1fr; }
-      .hero-card { position: static; }
       .value-strip-inner { grid-template-columns: repeat(2, 1fr); }
       .value-item:nth-child(2) { border-right: none; }
       .value-item:nth-child(3) { border-top: 1px solid var(--border); }
@@ -699,7 +618,7 @@
       .value-strip-inner { grid-template-columns: 1fr; }
       .value-item { border-right: none; border-top: 1px solid var(--border); }
       .value-item:first-child { border-top: none; }
-      .hero-cta-row { flex-direction: column; align-items: flex-start; }
+      .hero-cta-row { flex-direction: column; align-items: center; }
       .hero-cta-row .btn { width: 100%; justify-content: center; }
       .footer-inner { flex-direction: column; text-align: center; }
       .footer-nav { justify-content: center; flex-wrap: wrap; gap: 16px; }
@@ -728,7 +647,9 @@
 <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
 <nav id="main-nav">
   <div class="nav-inner">
-    <a href="rmr-home.html" class="nav-logo">Roll My Retirement</a>
+    <a href="rmr-home.html" class="nav-logo">
+      <img src="rmr-logo.png" alt="Roll My Retirement" class="nav-logo-img">
+    </a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#process">Process</a></li>
@@ -762,58 +683,28 @@
 <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
 <section id="hero">
   <div class="container">
-    <div class="hero-grid">
-
-      <!-- Left -->
-      <div class="hero-left">
-        <div class="hero-eyebrow">
-          <span class="hero-eyebrow-dot"></span>
-          <span class="eyebrow">Retirement Account Rollovers — 24/7 Dedicated Support</span>
-        </div>
-        <h1 class="hero-headline">
-          Your wealth.<br><em>Your way.</em>
-        </h1>
-        <p class="lead hero-sub">
-          Changing jobs or have old 401(k)s with previous employers? We help you take control of your retirement funds by connecting you with a trusted network of financial professionals.
-        </p>
-        <ul class="hero-bullets">
-          <li>100% free to you</li>
-          <li>Pre-vetted financial professionals</li>
-          <li>No obligation, no pressure</li>
-          <li>24/7 dedicated support</li>
-        </ul>
-        <div class="hero-cta-row">
-          <a href="rmr-contact.html" class="btn btn-primary btn-arrow">
-            I want help with my retirement account <span class="arrow">→</span>
-          </a>
-          <a href="#process" class="btn btn-secondary">
-            Learn how it works
-          </a>
-        </div>
-        <p class="hero-microcopy">
-          No cost, no commitment. We're paid by the advisors we vet — not you.
-        </p>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        <span class="eyebrow">Retirement Account Rollovers — 24/7 Dedicated Support</span>
       </div>
-
-      <!-- Right: Card -->
-      <div class="hero-right">
-        <div class="hero-card">
-          <span class="hero-card-tag">Get Started Today</span>
-          <h3>Find a trusted rollover professional in your area</h3>
-          <p>Tell us where you are and what you need — we'll match you with a vetted local advisor, on your schedule.</p>
-          <div class="hero-card-divider"></div>
-          <ul class="hero-card-bullets">
-            <li>Free to you — no hidden fees</li>
-            <li>No obligation to move forward</li>
-            <li>24/7 support available</li>
-            <li>Nationwide advisor network</li>
-          </ul>
-          <a href="rmr-contact.html" class="btn btn-primary btn-arrow">
-            Let's Talk <span class="arrow">→</span>
-          </a>
-        </div>
+      <h1 class="hero-headline">
+        Your wealth.<br><em>Your way.</em>
+      </h1>
+      <p class="lead hero-sub">
+        Changing jobs or have old 401(k)s with previous employers? We help you take control of your retirement funds by connecting you with a trusted network of financial professionals.
+      </p>
+      <div class="hero-cta-row">
+        <a href="rmr-contact.html" class="btn btn-primary btn-arrow">
+          Let's Talk <span class="arrow">→</span>
+        </a>
+        <a href="#process" class="btn btn-secondary">
+          Learn how it works
+        </a>
       </div>
-
+      <p class="hero-microcopy">
+        No cost, no commitment. We're paid by the advisors we vet — not you.
+      </p>
     </div>
   </div>
 </section>
@@ -919,46 +810,34 @@
 
       <div class="network-visual">
         <svg class="network-map-svg" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-          <!-- Continental US outline -->
-          <path class="us-outline" d="M 155,78 C 300,65 450,58 500,58 C 600,58 700,65 760,70 L 780,75 L 800,70 L 815,78 L 822,90 L 816,102 L 826,108 L 840,108 L 848,120 L 843,132 L 852,135 L 865,138 L 872,148 L 878,162 L 886,175 L 892,188 L 896,200 L 900,215 L 905,224 C 910,230 916,236 922,240 L 918,248 C 922,252 928,256 924,262 L 912,268 L 908,280 L 905,292 L 907,306 L 908,318 L 906,330 L 904,342 L 899,350 L 904,357 L 906,365 L 903,374 L 898,384 L 896,396 L 898,410 L 900,424 L 901,435 C 898,448 890,462 882,474 C 874,486 864,498 856,512 C 852,522 852,532 860,540 C 866,546 874,546 880,538 C 884,530 882,520 876,510 C 868,498 858,486 848,475 C 838,465 826,457 814,453 L 800,457 L 785,461 L 774,457 L 762,460 L 748,456 L 734,459 L 718,463 L 708,472 L 700,480 L 694,472 L 686,462 L 674,460 L 660,462 L 646,458 L 633,460 L 620,458 L 608,462 L 596,460 L 584,464 L 572,472 L 559,480 L 548,488 L 537,494 L 525,496 L 515,492 L 504,487 L 495,490 L 485,483 C 465,475 440,468 415,462 C 388,456 362,450 334,444 C 306,438 278,430 250,424 C 222,418 196,410 180,402 C 168,388 158,370 150,350 C 142,330 136,310 130,290 C 124,270 120,250 116,230 C 112,210 110,190 110,170 C 110,150 113,130 118,116 C 123,102 132,92 143,85 Z"/>
+          <!-- Map outline -->
+          <rect class="us-outline" x="24" y="24" width="912" height="552" rx="16" ry="16"/>
           <!-- City dots -->
-          <circle class="city-dot" cx="155" cy="112" r="3"/>
-          <circle class="city-dot" cx="150" cy="148" r="3"/>
-          <circle class="city-dot" cx="114" cy="240" r="3"/>
-          <circle class="city-dot" cx="120" cy="298" r="3"/>
-          <circle class="city-dot" cx="238" cy="352" r="3"/>
-          <circle class="city-dot" cx="318" cy="228" r="3"/>
-          <circle class="city-dot" cx="590" cy="155" r="3"/>
-          <circle class="city-dot" cx="636" cy="195" r="3"/>
-          <circle class="city-dot" cx="722" cy="192" r="3"/>
-          <circle class="city-dot" cx="648" cy="320" r="3"/>
-          <circle class="city-dot" cx="492" cy="388" r="3"/>
-          <circle class="city-dot" cx="534" cy="418" r="3"/>
-          <circle class="city-dot" cx="648" cy="445" r="3"/>
-          <circle class="city-dot" cx="742" cy="382" r="3"/>
-          <circle class="city-dot" cx="868" cy="308" r="3"/>
-          <circle class="city-dot" cx="880" cy="275" r="3"/>
-          <circle class="city-dot" cx="916" cy="230" r="3"/>
-          <circle class="city-dot" cx="856" cy="490" r="3"/>
+          <circle class="city-dot" cx="200" cy="155" r="5"/>
+          <circle class="city-dot" cx="195" cy="330" r="5"/>
+          <circle class="city-dot" cx="350" cy="248" r="5"/>
+          <circle class="city-dot" cx="460" cy="408" r="5"/>
+          <circle class="city-dot" cx="540" cy="160" r="5"/>
+          <circle class="city-dot" cx="618" cy="215" r="5"/>
+          <circle class="city-dot" cx="655" cy="188" r="5"/>
+          <circle class="city-dot" cx="638" cy="335" r="5"/>
+          <circle class="city-dot" cx="710" cy="400" r="5"/>
+          <circle class="city-dot" cx="755" cy="450" r="5"/>
+          <circle class="city-dot" cx="810" cy="308" r="5"/>
+          <circle class="city-dot" cx="820" cy="248" r="5"/>
           <!-- Pulse rings -->
-          <circle class="city-ring" cx="155" cy="112" r="5" style="animation-delay:0s"/>
-          <circle class="city-ring" cx="150" cy="148" r="5" style="animation-delay:0.4s"/>
-          <circle class="city-ring" cx="114" cy="240" r="5" style="animation-delay:0.8s"/>
-          <circle class="city-ring" cx="120" cy="298" r="5" style="animation-delay:1.6s"/>
-          <circle class="city-ring" cx="238" cy="352" r="5" style="animation-delay:0.6s"/>
-          <circle class="city-ring" cx="318" cy="228" r="5" style="animation-delay:1.2s"/>
-          <circle class="city-ring" cx="590" cy="155" r="5" style="animation-delay:0.2s"/>
-          <circle class="city-ring" cx="636" cy="195" r="5" style="animation-delay:1.0s"/>
-          <circle class="city-ring" cx="722" cy="192" r="5" style="animation-delay:0.5s"/>
-          <circle class="city-ring" cx="648" cy="320" r="5" style="animation-delay:0.9s"/>
-          <circle class="city-ring" cx="492" cy="388" r="5" style="animation-delay:2.0s"/>
-          <circle class="city-ring" cx="534" cy="418" r="5" style="animation-delay:1.4s"/>
-          <circle class="city-ring" cx="648" cy="445" r="5" style="animation-delay:1.3s"/>
-          <circle class="city-ring" cx="742" cy="382" r="5" style="animation-delay:1.8s"/>
-          <circle class="city-ring" cx="868" cy="308" r="5" style="animation-delay:0.7s"/>
-          <circle class="city-ring" cx="880" cy="275" r="5" style="animation-delay:1.5s"/>
-          <circle class="city-ring" cx="916" cy="230" r="5" style="animation-delay:1.1s"/>
-          <circle class="city-ring" cx="856" cy="490" r="5" style="animation-delay:2.2s"/>
+          <circle class="city-ring" cx="200" cy="155" r="8" style="animation-delay:0s"/>
+          <circle class="city-ring" cx="195" cy="330" r="8" style="animation-delay:0.8s"/>
+          <circle class="city-ring" cx="350" cy="248" r="8" style="animation-delay:1.2s"/>
+          <circle class="city-ring" cx="460" cy="408" r="8" style="animation-delay:2.0s"/>
+          <circle class="city-ring" cx="540" cy="160" r="8" style="animation-delay:0.4s"/>
+          <circle class="city-ring" cx="618" cy="215" r="8" style="animation-delay:1.6s"/>
+          <circle class="city-ring" cx="655" cy="188" r="8" style="animation-delay:0.6s"/>
+          <circle class="city-ring" cx="638" cy="335" r="8" style="animation-delay:1.0s"/>
+          <circle class="city-ring" cx="710" cy="400" r="8" style="animation-delay:1.8s"/>
+          <circle class="city-ring" cx="755" cy="450" r="8" style="animation-delay:2.4s"/>
+          <circle class="city-ring" cx="810" cy="308" r="8" style="animation-delay:0.2s"/>
+          <circle class="city-ring" cx="820" cy="248" r="8" style="animation-delay:1.4s"/>
         </svg>
         <div class="network-label">Advisors across the US</div>
       </div>
@@ -1078,7 +957,9 @@
 <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-inner">
-    <span class="footer-logo">Roll My Retirement</span>
+    <span class="footer-logo">
+      <img src="rmr-logo.png" alt="Roll My Retirement" class="footer-logo-img">
+    </span>
     <ul class="footer-nav">
       <li><a href="rmr-home.html">Home</a></li>
       <li><a href="#about">About</a></li>

@@ -145,43 +145,41 @@
     /* ─── NAV ──────────────────────────────────────────────────────── */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
       z-index: 100;
-      padding: 0 var(--pad-x);
-      height: 64px;
+      height: 68px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       background: rgba(250, 250, 248, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: none;
+      box-shadow: none;
+      transition: box-shadow 0.3s;
     }
     nav.scrolled {
-      border-bottom-color: var(--border);
-      box-shadow: 0 1px 0 var(--border);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06);
     }
     .nav-inner {
-      max-width: var(--max-w);
       width: 100%;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0 clamp(16px, 3vw, 48px);
+      gap: 48px;
     }
-    .nav-logo {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 17px;
-      font-weight: 400;
-      letter-spacing: -0.01em;
-      color: var(--text);
-    }
-    .nav-logo span { color: var(--text-muted); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-img { height: 40px; width: auto; display: block; }
+    .nav-logo-text { font-family: 'Instrument Serif', Georgia, serif; font-size: 15px; color: #1a1a18; white-space: nowrap; }
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 24px;
       list-style: none;
     }
     .nav-links a {
@@ -192,8 +190,8 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--text); }
-    .nav-cta { margin-left: 8px; }
-    .nav-cta .btn { padding: 9px 20px; font-size: 13px; }
+    .nav-cta { margin-left: 0; }
+    .nav-cta .btn { padding: 10px 20px; font-size: 13px; }
     .nav-mobile-toggle {
       display: none;
       background: none;
@@ -204,7 +202,7 @@
 
     /* ─── HERO ─────────────────────────────────────────────────────── */
     #hero {
-      padding-top: calc(64px + clamp(56px, 8vw, 96px));
+      padding-top: calc(68px + clamp(56px, 8vw, 96px));
       padding-bottom: clamp(56px, 8vw, 96px);
       overflow: hidden;
     }
@@ -721,7 +719,11 @@
       font-family: 'Instrument Serif', Georgia, serif;
       font-size: 15px;
       color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
+    .footer-logo-img { height: 32px; width: auto; display: block; filter: brightness(0) invert(1); opacity: 0.5; }
     .footer-copy {
       font-size: 12px;
       color: rgba(255,255,255,0.25);
@@ -731,12 +733,14 @@
     .mobile-menu {
       display: none;
       position: fixed;
-      top: 64px; left: 0; right: 0;
+      top: 80px; left: 16px; right: 16px;
       background: rgba(250,250,248,0.97);
       backdrop-filter: blur(16px);
       z-index: 99;
-      padding: 24px var(--pad-x) 32px;
-      border-bottom: 1px solid var(--border);
+      padding: 24px 24px 32px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       flex-direction: column;
       gap: 0;
     }
@@ -759,17 +763,11 @@
 
     /* ─── RESPONSIVE ───────────────────────────────────────────────── */
     @media (max-width: 1024px) {
-      .hero-grid {
-        grid-template-columns: 1fr 340px;
-        gap: 32px;
-      }
       .standards-grid { gap: 48px; }
     }
 
     @media (max-width: 860px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
+      .hero-grid { grid-template-columns: 1fr; }
       .hero-card { position: static; }
       .value-strip-inner {
         grid-template-columns: repeat(2, 1fr);
@@ -791,8 +789,7 @@
       .value-item { border-right: none; border-top: 1px solid var(--border); }
       .value-item:first-child { border-top: none; }
       .steps-grid { grid-template-columns: 1fr; }
-      .hero-cta-row { flex-direction: column; align-items: flex-start; }
-      .hero-cta-row .btn { width: 100%; justify-content: center; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
       .footer-inner { flex-direction: column; text-align: center; }
     }
 
@@ -819,7 +816,9 @@
 <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
 <nav id="main-nav">
   <div class="nav-inner">
-    <a href="rmr-home.html" class="nav-logo">Roll My Retirement</a>
+    <a href="rmr-home.html" class="nav-logo">
+      <img src="rmr-logo.png" alt="Roll My Retirement" class="nav-logo-img">
+    </a>
     <ul class="nav-links">
       <li><a href="#why-rmr">Why RMR</a></li>
       <li><a href="#how-it-works">How It Works</a></li>
@@ -865,14 +864,8 @@
           Join a selective advisor network built around rollover opportunities
         </h1>
         <p class="lead hero-sub">
-          Roll My Retirement connects growth-focused advisors with pre-screened individuals actively seeking help during retirement and asset transitions. Accepted opportunities are reserved to your practice for 7 days, giving your team a meaningful window to convert.
+          Roll My Retirement connects growth-focused advisors with pre-screened individuals actively seeking help during retirement and asset transitions. Accepted opportunities are reserved to your practice for 7 days.
         </p>
-        <ul class="hero-bullets">
-          <li>Pre-screened retirement rollover opportunities</li>
-          <li>Exclusive 7-day lead window</li>
-          <li>Limited metro availability</li>
-          <li>Live transfer or direct scheduling</li>
-        </ul>
         <div class="hero-cta-row">
           <a href="#apply" class="btn btn-primary btn-arrow">
             Apply to Join <span class="arrow">→</span>
@@ -894,8 +887,10 @@
           <p>We are onboarding a limited number of advisors in qualified metro areas. Apply to see whether there is a fit.</p>
           <div class="hero-card-divider"></div>
           <ul class="hero-card-bullets">
+            <li>Pre-screened retirement rollover opportunities</li>
             <li>Exclusive 7-day lead window</li>
             <li>Limited metro availability</li>
+            <li>Live transfer or direct scheduling</li>
             <li>Application review required</li>
             <li>Private pricing discussion</li>
           </ul>
@@ -1359,7 +1354,9 @@
 <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-inner">
-    <span class="footer-logo">Roll My Retirement</span>
+    <span class="footer-logo">
+      <img src="rmr-logo.png" alt="Roll My Retirement" class="footer-logo-img">
+    </span>
     <span class="footer-copy" style="font-size:12px; color: rgba(255,255,255,0.25);"><a href="rmr-home.html" style="color: rgba(255,255,255,0.35); margin-right: 20px;">← Home</a>© 2025 Roll My Retirement. All rights reserved.</span>
   </div>
 </footer>
