@@ -5,15 +5,45 @@
  *   <script src="footer.js"></script>
  */
 (function () {
-  const nav = [
-    { label: 'Home',        href: 'rmr-home.html' },
-    { label: 'About',       href: 'rmr-home.html#about' },
-    { label: 'Process',     href: 'rmr-home.html#process' },
-    { label: 'Network',     href: 'rmr-home.html#network' },
-    { label: 'FAQ',         href: 'rmr-home.html#faq' },
-    { label: 'For Advisors',href: 'rmr-advisors-page.html' },
-    { label: 'Contact',     href: 'rmr-contact.html' },
-  ];
+  const A = 'anchor';   // in-page jump link  → 13px var(--text-muted)
+  const X = 'external'; // cross-page link    → 12px var(--text-light)
+  const S = 'sep';      // · dot separator
+
+  const page = window.location.pathname.split('/').pop() || 'rmr-home.html';
+
+  const linkSets = {
+    'rmr-home.html': [
+      { label: 'About',          href: '#about',                 type: A },
+      { label: 'Process',        href: '#process',               type: A },
+      { label: 'Network',        href: '#network',               type: A },
+      { label: 'FAQs',           href: '#faq',                   type: A },
+      { type: S },
+      { label: 'Insights →',     href: 'rmr-blog.html',          type: X },
+      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+    ],
+    'rmr-advisors-page.html': [
+      { label: 'Why RMR',        href: '#why-rmr',               type: A },
+      { label: 'How It Works',   href: '#how-it-works',          type: A },
+      { label: 'Standards',      href: '#standards',             type: A },
+      { label: 'FAQ',            href: '#faq',                   type: A },
+      { type: S },
+      { label: 'Insights →',     href: 'rmr-blog.html',          type: X },
+    ],
+    'rmr-contact.html': [
+      { label: 'Insights →',     href: 'rmr-blog.html',          type: X },
+      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+    ],
+    'rmr-blog.html': [
+      { label: '← Insights',     href: 'rmr-blog.html',          type: X },
+      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+    ],
+    'rmr-blog-post.html': [
+      { label: '← Insights',     href: 'rmr-blog.html',          type: X },
+      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+    ],
+  };
+
+  const nav = linkSets[page] || linkSets['rmr-home.html'];
 
   const css = `
     #site-footer {
@@ -60,6 +90,17 @@
       transition: color 0.35s ease;
     }
     .sf-nav a:hover { color: var(--text); }
+    .sf-nav a.sf-external {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    .sf-nav a.sf-external:hover { color: var(--text-muted); }
+    .sf-nav-sep {
+      font-size: 12px;
+      color: var(--border-strong);
+      pointer-events: none;
+      user-select: none;
+    }
     .sf-copy {
       font-size: 12px;
       color: var(--text-light);
@@ -74,9 +115,11 @@
   styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
-  const navItems = nav.map(item =>
-    `<li><a href="${item.href}">${item.label}</a></li>`
-  ).join('\n      ');
+  const navItems = nav.map(item => {
+    if (item.type === 'sep') return `<li class="sf-nav-sep" aria-hidden="true">·</li>`;
+    const cls = item.type === 'external' ? ' class="sf-external"' : '';
+    return `<li><a href="${item.href}"${cls}>${item.label}</a></li>`;
+  }).join('\n      ');
 
   const html = `
     <div class="sf-inner">

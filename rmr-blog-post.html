@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading… — Roll My Retirement</title>
+  <meta name="description" content="" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fafaf8;
+      color: #111110;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ─── SCROLL PROGRESS ───────────────────────────────────────────── */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 1.5px;
+      background: #111110;
+      transform-origin: left center;
+      transform: scaleX(0);
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    /* ─── TOKENS ────────────────────────────────────────────────────── */
+    :root {
+      --bg: #fafaf8;
+      --bg-card: #f4f3ef;
+      --bg-dark: #111110;
+      --text: #111110;
+      --text-muted: #6b6b66;
+      --text-light: #9b9b94;
+      --border: #e4e3de;
+      --border-strong: #c8c7c0;
+      --radius-card: 18px;
+      --radius-sm: 10px;
+      --max-w: 1120px;
+      --pad-x: clamp(24px, 5vw, 64px);
+      --section-gap: clamp(72px, 10vw, 104px);
+    }
+
+    /* ─── TYPOGRAPHY ────────────────────────────────────────────────── */
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── LAYOUT ────────────────────────────────────────────────────── */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--pad-x);
+    }
+
+    /* ─── BUTTONS ───────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      transition: box-shadow 0.22s cubic-bezier(0.4,0,0.2,1), background 0.22s cubic-bezier(0.4,0,0.2,1);
+      border: none;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn-primary { background: var(--bg-dark); color: #fff; }
+    .btn-primary:hover { background: #222220; box-shadow: 0 8px 24px rgba(17,17,16,0.18); }
+    .btn-ghost-light {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    .btn-ghost-light:hover { background: rgba(255,255,255,0.2); }
+    .btn-arrow::after { display: none; }
+    .btn-arrow .arrow { display: inline-flex; transition: transform 0.2s; }
+    .btn-arrow:hover .arrow { transform: translateX(3px); }
+
+    /* ─── NAV ───────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      width: 100%;
+      z-index: 100;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      background: rgba(250,250,248,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: background 0.35s ease, box-shadow 0.3s ease;
+    }
+    nav.scrolled { box-shadow: 0 1px 0 rgba(0,0,0,0.06); }
+    nav.nav-dark {
+      background: rgba(17,17,16,0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: none;
+    }
+    nav.nav-dark .nav-links a { color: rgba(255,255,255,0.65); }
+    nav.nav-dark .nav-links a:hover { color: #fff; }
+    nav.nav-dark .nav-logo-img { filter: brightness(0) invert(1); }
+    nav.nav-dark .btn-primary { background: #fff; color: var(--bg-dark); }
+    .nav-inner {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(16px, 3vw, 48px);
+      gap: 48px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-img { height: 40px; width: auto; display: block; transition: filter 0.35s ease; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+      transition: color 0.35s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.nav-active { color: var(--text); }
+    .nav-links a.nav-advisors { color: var(--text-light); font-size: 12px; }
+    .nav-links a.nav-advisors:hover { color: var(--text-muted); }
+    .nav-sep {
+      color: var(--border-strong);
+      font-size: 12px;
+      pointer-events: none;
+      user-select: none;
+      list-style: none;
+    }
+    .nav-cta .btn { padding: 10px 20px; font-size: 13px; }
+    .nav-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      padding: 8px;
+      color: var(--text);
+    }
+
+    /* ─── MOBILE MENU ───────────────────────────────────────────────── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: rgba(250,250,248,0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 20px var(--pad-x) 28px;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 99;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-link {
+      padding: 12px 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-link:last-of-type { border-bottom: none; }
+    .mobile-link:hover { color: var(--text); }
+    .mobile-menu .btn { margin-top: 16px; width: 100%; justify-content: center; }
+
+    /* ─── ARTICLE HERO ──────────────────────────────────────────────── */
+    #article-hero {
+      padding-top: calc(68px + clamp(48px, 7vw, 80px));
+      padding-bottom: clamp(40px, 6vw, 56px);
+    }
+    .article-breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .article-breadcrumb:hover { color: var(--text); }
+    .article-breadcrumb svg { transition: transform 0.2s; }
+    .article-breadcrumb:hover svg { transform: translateX(-2px); }
+    .article-hero-inner { max-width: 760px; }
+    .article-eyebrow-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .eyebrow-sep {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--border-strong);
+    }
+    #article-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .article-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
+    .author-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ─── COVER IMAGE ───────────────────────────────────────────────── */
+    #cover-image-wrap {
+      padding: 0 0 clamp(40px, 6vw, 64px);
+    }
+    #cover-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: var(--radius-card);
+      display: block;
+    }
+
+    /* ─── ARTICLE BODY ──────────────────────────────────────────────── */
+    #article-body-section {
+      padding-bottom: var(--section-gap);
+    }
+    .article-body {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .article-body p {
+      font-size: 17px;
+      line-height: 1.78;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-top: 48px;
+      margin-bottom: 16px;
+    }
+    .article-body h3 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-top: 32px;
+      margin-bottom: 10px;
+    }
+    .article-body blockquote {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(18px, 2.5vw, 22px);
+      line-height: 1.5;
+      color: var(--text-muted);
+      border-left: 3px solid var(--border-strong);
+      padding-left: 24px;
+      margin: 36px 0;
+    }
+    .article-body strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .article-body a {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .article-body a:hover { color: var(--text-muted); }
+    .article-body img {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      margin: 32px 0;
+    }
+    .article-body ul, .article-body ol {
+      padding-left: 24px;
+      margin-bottom: 24px;
+    }
+    .article-body li {
+      font-size: 17px;
+      line-height: 1.78;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* ─── RELATED / BACK ────────────────────────────────────────────── */
+    .back-row {
+      max-width: 680px;
+      margin: 0 auto;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s, gap 0.2s;
+    }
+    .back-link:hover { color: var(--text); gap: 2px; }
+    .back-link svg { transition: transform 0.2s; }
+    .back-link:hover svg { transform: translateX(-3px); }
+
+    /* ─── FOOTER CTA ────────────────────────────────────────────────── */
+    #footer-cta {
+      background: var(--bg-dark);
+      padding: var(--section-gap) 0;
+      text-align: center;
+    }
+    .footer-cta-inner { max-width: 560px; margin: 0 auto; }
+    .footer-cta-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      display: block;
+      margin-bottom: 16px;
+    }
+    .footer-cta-h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.12;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .footer-cta-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    /* ─── LOADING / ERROR STATES ────────────────────────────────────── */
+    .post-loading {
+      padding: calc(68px + 80px) var(--pad-x) 80px;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      color: var(--text-light);
+      font-size: 15px;
+    }
+    .post-error {
+      padding: calc(68px + 80px) var(--pad-x) 80px;
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .post-error h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 36px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .post-error p { color: var(--text-muted); margin-bottom: 24px; }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-mobile-toggle { display: flex; }
+    }
+    /* ─── PAGE CURTAIN ─────────────────────────────────────────────── */
+    #page-curtain {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      transform: scaleY(1);
+      transform-origin: top center;
+      z-index: 500;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="page-curtain"></div>
+<div id="scroll-progress"></div>
+
+<!-- ─── NAV ──────────────────────────────────────────────────────────── -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="rmr-home.html" class="nav-logo">
+      <img src="rmr-logo.png" alt="Roll My Retirement" class="nav-logo-img">
+    </a>
+    <ul class="nav-links">
+      <li><a href="rmr-home.html" class="nav-advisors">← Home</a></li>
+      <li><a href="rmr-advisors-page.html" class="nav-advisors">For Advisors →</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="rmr-contact.html" class="btn btn-primary btn-arrow">
+        Let's Talk <span class="arrow">→</span>
+      </a>
+    </div>
+    <button class="nav-mobile-toggle" id="mobile-toggle" aria-label="Menu">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+        <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── MOBILE MENU ───────────────────────────────────────────────────── -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="rmr-home.html" class="mobile-link">Home</a>
+  <a href="rmr-advisors-page.html" class="mobile-link">For Advisors</a>
+  <a href="rmr-contact.html" class="btn btn-primary">Let's Talk</a>
+</div>
+
+<!-- ─── ARTICLE CONTENT (rendered by JS) ─────────────────────────────── -->
+<div id="post-mount">
+  <div class="post-loading">Loading article…</div>
+</div>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
+<div id="site-footer"></div>
+<script src="footer.js"></script>
+
+<!-- ─── SCRIPTS ──────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="cursor.js"></script>
+
+<script>
+  /* ─── LENIS ──────────────────────────────────────────────────────── */
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smooth: true,
+    smoothTouch: false
+  });
+  gsap.ticker.add(time => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+  lenis.on('scroll', ScrollTrigger.update);
+
+  /* ─── SCROLL PROGRESS ─────────────────────────────────────────────── */
+  const progressBar = document.getElementById('scroll-progress');
+  lenis.on('scroll', ({ progress }) => {
+    progressBar.style.transform = `scaleX(${progress})`;
+  });
+
+  /* ─── NAV SCROLL + DARK ───────────────────────────────────────────── */
+  const mainNav = document.getElementById('main-nav');
+  lenis.on('scroll', ({ scroll }) => {
+    mainNav.classList.toggle('scrolled', scroll > 10);
+  });
+
+  /* ─── MOBILE MENU ─────────────────────────────────────────────────── */
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileToggle.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  mobileMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+  /* ─── UTILS ───────────────────────────────────────────────────────── */
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function initials(name) {
+    return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  }
+
+  /* ─── RENDER POST ─────────────────────────────────────────────────── */
+  function renderPost(post) {
+    document.title = `${post.title} — Roll My Retirement`;
+    document.querySelector('meta[name="description"]').content = post.excerpt;
+
+    const mount = document.getElementById('post-mount');
+    mount.innerHTML = `
+      <!-- HERO -->
+      <section id="article-hero">
+        <div class="container">
+          <a href="rmr-blog.html" class="article-breadcrumb">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Insights
+          </a>
+          <div class="article-hero-inner">
+            <div class="article-eyebrow-row">
+              <span class="eyebrow">${post.category}</span>
+              <span class="eyebrow-sep"></span>
+              <span class="eyebrow">${post.readTime}</span>
+            </div>
+            <h1 id="article-title">${post.title}</h1>
+            <div class="article-meta-row">
+              <span class="author-avatar">${initials(post.author)}</span>
+              <span>${post.author}</span>
+              <span class="meta-dot"></span>
+              <span>${formatDate(post.date)}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COVER IMAGE -->
+      <div id="cover-image-wrap">
+        <div class="container">
+          <img id="cover-image" src="${post.image}" alt="${post.title}" loading="eager">
+        </div>
+      </div>
+
+      <!-- ARTICLE BODY -->
+      <section id="article-body-section">
+        <div class="container">
+          <div class="article-body" id="article-body">
+            ${post.content}
+          </div>
+          <div class="back-row">
+            <a href="rmr-blog.html" class="back-link">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              All articles
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER CTA -->
+      <section id="footer-cta" data-nav-dark>
+        <div class="container">
+          <div class="footer-cta-inner">
+            <span class="footer-cta-eyebrow">Roll My Retirement</span>
+            <h2 class="footer-cta-h2">Ready to roll over<br>your 401k?</h2>
+            <p class="footer-cta-sub">Connect with a vetted advisor who can walk you through every step — at no cost to you.</p>
+            <a href="rmr-contact.html" class="btn btn-ghost-light btn-arrow">
+              Get started <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    `;
+
+    /* ─── NAV DARK OVER FOOTER CTA ─────────────────────────────────── */
+    ScrollTrigger.create({
+      trigger: '#footer-cta',
+      start: 'top 68px',
+      end: 'bottom 68px',
+      onEnter: () => mainNav.classList.add('nav-dark'),
+      onLeave: () => mainNav.classList.remove('nav-dark'),
+      onEnterBack: () => mainNav.classList.add('nav-dark'),
+      onLeaveBack: () => mainNav.classList.remove('nav-dark'),
+    });
+
+    /* ─── ENTRANCE ANIMATIONS ──────────────────────────────────────── */
+    gsap.set(['.article-breadcrumb', '.article-eyebrow-row', '#article-title', '.article-meta-row'], {
+      opacity: 0, y: 16
+    });
+    const tl = gsap.timeline({ delay: 0.05 });
+    tl.to('.article-breadcrumb',   { opacity: 1, y: 0, duration: 0.6,  ease: 'power3.out' })
+      .to('.article-eyebrow-row',  { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }, '-=0.35')
+      .to('#article-title',        { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }, '-=0.4')
+      .to('.article-meta-row',     { opacity: 1, y: 0, duration: 0.6,  ease: 'power3.out' }, '-=0.35');
+
+    gsap.set('#cover-image', { opacity: 0, y: 20 });
+    gsap.to('#cover-image', {
+      opacity: 1, y: 0,
+      duration: 0.85, ease: 'power3.out',
+      scrollTrigger: { trigger: '#cover-image-wrap', start: 'top 85%', once: true }
+    });
+
+    gsap.set('.article-body', { opacity: 0, y: 16 });
+    gsap.to('.article-body', {
+      opacity: 1, y: 0,
+      duration: 0.75, ease: 'power3.out',
+      scrollTrigger: { trigger: '.article-body', start: 'top 85%', once: true }
+    });
+
+    gsap.set('#footer-cta .footer-cta-inner', { opacity: 0, y: 20 });
+    gsap.to('#footer-cta .footer-cta-inner', {
+      opacity: 1, y: 0,
+      duration: 0.75, ease: 'power3.out',
+      scrollTrigger: { trigger: '#footer-cta', start: 'top 80%', once: true }
+    });
+
+    ScrollTrigger.refresh();
+    initLinkTransitions();
+  }
+
+  /* ─── RENDER ERROR ────────────────────────────────────────────────── */
+  function renderError(message) {
+    document.getElementById('post-mount').innerHTML = `
+      <div class="post-error container">
+        <h2>Article not found</h2>
+        <p>${message}</p>
+        <a href="rmr-blog.html" class="btn btn-primary">← Back to Insights</a>
+      </div>
+    `;
+  }
+
+  /* ─── PAGE CURTAIN ───────────────────────────────────────────────── */
+  gsap.to('#page-curtain', { scaleY: 0, duration: 0.6, ease: 'power3.inOut', delay: 0.05 });
+
+  function initLinkTransitions() {
+    document.querySelectorAll('a[href]').forEach(link => {
+      if (link._curtainBound) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
+      if (!href.endsWith('.html') && !href.includes('.html#')) return;
+      link._curtainBound = true;
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = this.href;
+        gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
+        gsap.to('#page-curtain', {
+          scaleY: 1, duration: 0.42, ease: 'power3.in',
+          onComplete: () => { window.location.href = target; }
+        });
+      });
+    });
+  }
+
+  initLinkTransitions();
+
+  /* ─── LOAD POST ───────────────────────────────────────────────────── */
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+
+  if (!slug) {
+    renderError('No article was specified. Please return to the Insights page.');
+  } else {
+    fetch('blog/posts.json')
+      .then(r => r.json())
+      .then(data => {
+        const post = data.posts.find(p => p.slug === slug);
+        if (!post) {
+          renderError(`We couldn't find an article matching "${slug}".`);
+        } else {
+          renderPost(post);
+        }
+      })
+      .catch(() => {
+        renderError('Could not load article data. Make sure this page is served over HTTP (not opened directly from the filesystem).');
+      });
+  }
+</script>
+</body>
+</html>
