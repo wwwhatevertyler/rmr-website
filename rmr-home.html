@@ -162,11 +162,24 @@
       -webkit-backdrop-filter: blur(20px);
       border-bottom: none;
       box-shadow: none;
-      transition: box-shadow 0.3s;
+      transition: background 0.35s ease, box-shadow 0.3s ease;
     }
     nav.scrolled {
       box-shadow: 0 1px 0 rgba(0,0,0,0.06);
     }
+    /* Dark section overlay */
+    nav.nav-dark {
+      background: rgba(17, 17, 16, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: none;
+    }
+    nav.nav-dark .nav-links a { color: rgba(255,255,255,0.65); }
+    nav.nav-dark .nav-links a:hover { color: #fff; }
+    nav.nav-dark .nav-links a.nav-advisors { color: rgba(255,255,255,0.35); }
+    nav.nav-dark .nav-logo-img { filter: brightness(0) invert(1); }
+    nav.nav-dark .btn-primary { background: #fff; color: var(--bg-dark); }
+    nav.nav-dark .btn-primary:hover { background: rgba(255,255,255,0.88); box-shadow: none; }
     .nav-inner {
       width: 100%;
       max-width: 1280px;
@@ -178,7 +191,7 @@
       gap: 48px;
     }
     .nav-logo { display: flex; align-items: center; gap: 10px; }
-    .nav-logo-img { height: 40px; width: auto; display: block; }
+    .nav-logo-img { height: 40px; width: auto; display: block; transition: filter 0.35s ease; }
     .nav-logo-text { font-family: 'Instrument Serif', Georgia, serif; font-size: 15px; color: #1a1a18; white-space: nowrap; }
     .nav-links {
       display: flex;
@@ -191,7 +204,7 @@
       font-weight: 500;
       color: var(--text-muted);
       letter-spacing: -0.01em;
-      transition: color 0.2s;
+      transition: color 0.35s ease;
     }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.nav-advisors {
@@ -304,7 +317,8 @@
     .about-left h2 { margin-bottom: 20px; }
     .about-left p { margin-bottom: 20px; }
     .about-right-card {
-      background: var(--bg-dark);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: var(--radius-card);
       padding: 40px;
       display: flex;
@@ -315,19 +329,19 @@
       font-family: 'Instrument Serif', Georgia, serif;
       font-size: clamp(52px, 7vw, 80px);
       font-weight: 400;
-      color: rgba(255,255,255,0.15);
+      color: var(--border-strong);
       line-height: 1;
       margin-bottom: 16px;
       letter-spacing: -0.03em;
     }
     .about-stat-label {
       font-size: 14px;
-      color: rgba(255,255,255,0.6);
+      color: var(--text-muted);
       line-height: 1.6;
       max-width: 260px;
     }
     .about-stat-label strong {
-      color: rgba(255,255,255,0.9);
+      color: var(--text);
       font-weight: 500;
     }
     .about-tag {
@@ -336,55 +350,55 @@
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      border-top: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-light);
+      border-top: 1px solid var(--border);
       padding-top: 20px;
       width: 100%;
     }
 
     /* ─── PROCESS (dark) ───────────────────────────────────────────── */
-    #process { background: var(--bg-dark); color: #fff; }
-    #process .section-header h2 { color: #fff; }
-    #process .section-header .eyebrow { color: rgba(255,255,255,0.4); }
-    #process .lead { color: rgba(255,255,255,0.55); }
+    #process { background: var(--bg-card); color: var(--text); }
+    #process .section-header h2 { color: var(--text); }
+    #process .section-header .eyebrow { color: var(--text-light); }
+    #process .lead { color: var(--text-muted); }
     .process-steps {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1px;
-      background: rgba(255,255,255,0.08);
+      background: var(--border);
       border-radius: var(--radius-card);
       overflow: hidden;
       margin-top: 48px;
     }
     .process-step {
-      background: var(--bg-dark);
+      background: var(--bg-card);
       padding: 40px 36px;
       transition: background 0.2s;
     }
-    .process-step:hover { background: #1a1a18; }
+    .process-step:hover { background: var(--bg); }
     .process-step-num {
       font-family: 'Instrument Serif', Georgia, serif;
       font-size: 13px;
-      color: rgba(255,255,255,0.25);
+      color: var(--text-light);
       margin-bottom: 20px;
       letter-spacing: 0.02em;
     }
     .process-step h3 {
       font-size: 15px;
       font-weight: 600;
-      color: #fff;
+      color: var(--text);
       margin-bottom: 10px;
       line-height: 1.35;
     }
     .process-step p {
       font-size: 13px;
-      color: rgba(255,255,255,0.5);
+      color: var(--text-muted);
       line-height: 1.7;
     }
     .process-note {
       margin-top: 24px;
       font-size: 13px;
-      color: rgba(255,255,255,0.3);
+      color: var(--text-light);
       text-align: center;
     }
 
@@ -399,54 +413,37 @@
     .network-left h2 { margin-bottom: 20px; }
     .network-left p { margin-bottom: 20px; max-width: 400px; }
     .network-visual {
-      background: var(--bg-card);
-      border-radius: var(--radius-card);
-      border: 1px solid var(--border);
-      padding: 28px 28px 48px;
       position: relative;
-      overflow: hidden;
+      aspect-ratio: 1;
+      overflow: visible;
     }
-    .network-map-svg {
+    #network-svg {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
     }
-    .us-outline {
-      fill: none;
-      stroke: var(--border-strong);
-      stroke-width: 1.5;
-      stroke-linejoin: round;
-      stroke-linecap: round;
-    }
-    .city-dot {
-      fill: var(--text);
-    }
-    .city-ring {
-      fill: none;
-      stroke: var(--text);
-      stroke-width: 1;
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: city-pulse 3s ease-in-out infinite;
-    }
-    @keyframes city-pulse {
-      0%, 100% { transform: scale(1); opacity: 0.25; }
-      50% { transform: scale(2.8); opacity: 0; }
-    }
-    .network-label {
+    .network-ring { fill: none; stroke: rgba(0,0,0,0.07); stroke-width: 1; }
+    .ndot { fill: var(--text); will-change: transform; }
+    #network-you-pill {
       position: absolute;
-      bottom: 20px;
-      left: 0; right: 0;
-      text-align: center;
+      top: 0; left: 0;
+      pointer-events: none;
+      background: var(--bg-dark);
+      color: #fff;
       font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 5px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      opacity: 0;
+      will-change: transform, opacity;
+      transition: opacity 180ms cubic-bezier(0.23, 1, 0.32, 1);
+      user-select: none;
     }
 
     /* ─── FAQ ──────────────────────────────────────────────────────── */
-    #faq { background: var(--bg-card); }
+    #faq { background: var(--bg); padding-top: var(--section-gap); }
     .faq-list {
       max-width: 760px;
       margin: 0 auto;
@@ -495,73 +492,53 @@
       max-width: 640px;
     }
 
+    /* ─── WAVES ─────────────────────────────────────────────────────── */
+    #waves {
+      background: var(--bg);
+      padding: 0;
+    }
+    #waves-container {
+      position: relative;
+      width: 100%;
+      height: clamp(360px, 52vh, 580px);
+      overflow: hidden;
+    }
+    #waves-svg {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     /* ─── FOOTER CTA ───────────────────────────────────────────────── */
     .footer-cta {
-      background: var(--bg-dark);
+      background: var(--bg);
       padding: clamp(56px, 8vw, 88px) 0;
       text-align: center;
     }
     .footer-cta h2 {
-      color: #fff;
+      color: var(--text);
       max-width: 640px;
       margin: 0 auto 20px;
     }
     .footer-cta p {
-      color: rgba(255,255,255,0.5);
+      color: var(--text-muted);
       max-width: 480px;
       margin: 0 auto 32px;
     }
     .footer-cta .btn-primary {
-      background: rgba(255,255,255,0.12);
+      background: var(--bg-dark);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: none;
     }
     .footer-cta .btn-primary:hover {
-      background: rgba(255,255,255,0.2);
-      border-color: rgba(255,255,255,0.35);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+      background: #222220;
+      box-shadow: 0 8px 24px rgba(17,17,16,0.18);
     }
 
     /* ─── FOOTER ───────────────────────────────────────────────────── */
-    footer {
-      background: var(--bg-dark);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 32px var(--pad-x);
-    }
-    .footer-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .footer-logo {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 15px;
-      color: rgba(255,255,255,0.5);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .footer-logo-img { height: 32px; width: auto; display: block; filter: brightness(0) invert(1); opacity: 0.5; }
-    .footer-nav {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      list-style: none;
-    }
-    .footer-nav a {
-      font-size: 12px;
-      color: rgba(255,255,255,0.3);
-      transition: color 0.2s;
-    }
-    .footer-nav a:hover { color: rgba(255,255,255,0.6); }
-    .footer-copy {
-      font-size: 12px;
-      color: rgba(255,255,255,0.2);
-    }
+    /* footer styles live in footer.js */
 
     /* ─── MOBILE NAV MENU ──────────────────────────────────────────── */
     .mobile-menu {
@@ -601,6 +578,7 @@
       .network-grid { gap: 48px; }
     }
 
+
     @media (max-width: 860px) {
       .value-strip-inner { grid-template-columns: repeat(2, 1fr); }
       .value-item:nth-child(2) { border-right: none; }
@@ -609,6 +587,8 @@
       .about-grid { grid-template-columns: 1fr; gap: 40px; }
       .process-steps { grid-template-columns: 1fr; }
       .network-grid { grid-template-columns: 1fr; gap: 40px; }
+      .network-visual { max-width: 340px; }
+      #network-you-pill { display: none; }
       .nav-links { display: none; }
       .nav-cta { display: none; }
       .nav-mobile-toggle { display: flex; }
@@ -620,8 +600,7 @@
       .value-item:first-child { border-top: none; }
       .hero-cta-row { flex-direction: column; align-items: center; }
       .hero-cta-row .btn { width: 100%; justify-content: center; }
-      .footer-inner { flex-direction: column; text-align: center; }
-      .footer-nav { justify-content: center; flex-wrap: wrap; gap: 16px; }
+      /* footer responsive handled by footer.js */
     }
 
     /* ─── PAGE CURTAIN ─────────────────────────────────────────────── */
@@ -809,37 +788,9 @@
       </div>
 
       <div class="network-visual">
-        <svg class="network-map-svg" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-          <!-- Map outline -->
-          <rect class="us-outline" x="24" y="24" width="912" height="552" rx="16" ry="16"/>
-          <!-- City dots -->
-          <circle class="city-dot" cx="200" cy="155" r="5"/>
-          <circle class="city-dot" cx="195" cy="330" r="5"/>
-          <circle class="city-dot" cx="350" cy="248" r="5"/>
-          <circle class="city-dot" cx="460" cy="408" r="5"/>
-          <circle class="city-dot" cx="540" cy="160" r="5"/>
-          <circle class="city-dot" cx="618" cy="215" r="5"/>
-          <circle class="city-dot" cx="655" cy="188" r="5"/>
-          <circle class="city-dot" cx="638" cy="335" r="5"/>
-          <circle class="city-dot" cx="710" cy="400" r="5"/>
-          <circle class="city-dot" cx="755" cy="450" r="5"/>
-          <circle class="city-dot" cx="810" cy="308" r="5"/>
-          <circle class="city-dot" cx="820" cy="248" r="5"/>
-          <!-- Pulse rings -->
-          <circle class="city-ring" cx="200" cy="155" r="8" style="animation-delay:0s"/>
-          <circle class="city-ring" cx="195" cy="330" r="8" style="animation-delay:0.8s"/>
-          <circle class="city-ring" cx="350" cy="248" r="8" style="animation-delay:1.2s"/>
-          <circle class="city-ring" cx="460" cy="408" r="8" style="animation-delay:2.0s"/>
-          <circle class="city-ring" cx="540" cy="160" r="8" style="animation-delay:0.4s"/>
-          <circle class="city-ring" cx="618" cy="215" r="8" style="animation-delay:1.6s"/>
-          <circle class="city-ring" cx="655" cy="188" r="8" style="animation-delay:0.6s"/>
-          <circle class="city-ring" cx="638" cy="335" r="8" style="animation-delay:1.0s"/>
-          <circle class="city-ring" cx="710" cy="400" r="8" style="animation-delay:1.8s"/>
-          <circle class="city-ring" cx="755" cy="450" r="8" style="animation-delay:2.4s"/>
-          <circle class="city-ring" cx="810" cy="308" r="8" style="animation-delay:0.2s"/>
-          <circle class="city-ring" cx="820" cy="248" r="8" style="animation-delay:1.4s"/>
+        <svg id="network-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         </svg>
-        <div class="network-label">Advisors across the US</div>
+        <div id="network-you-pill">You</div>
       </div>
 
     </div>
@@ -943,36 +894,150 @@
   </div>
 </section>
 
+<!-- ─── WAVES ────────────────────────────────────────────────────────── -->
+<section id="waves">
+  <div id="waves-container">
+    <svg id="waves-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+</section>
+
 <!-- ─── FOOTER CTA ────────────────────────────────────────────────────── -->
 <div class="footer-cta" id="contact">
   <div class="container">
     <h2>Let's get your investments rolled over</h2>
     <p>Connect with a trusted local advisor and take the first step toward a retirement that actually works for you.</p>
-    <a href="mailto:hello@rollmyretirement.com" class="btn btn-primary btn-arrow">
+    <a href="rmr-contact.html" class="btn btn-primary btn-arrow">
       Let's Talk <span class="arrow">→</span>
     </a>
   </div>
 </div>
 
 <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
-<footer>
-  <div class="footer-inner">
-    <span class="footer-logo">
-      <img src="rmr-logo.png" alt="Roll My Retirement" class="footer-logo-img">
-    </span>
-    <ul class="footer-nav">
-      <li><a href="rmr-home.html">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#process">Process</a></li>
-      <li><a href="#network">Network</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="rmr-advisors-page.html">For Advisors</a></li>
-    </ul>
-    <span class="footer-copy">© 2025 Roll My Retirement. All rights reserved.</span>
-  </div>
-</footer>
+<div id="site-footer"></div>
+<script src="footer.js"></script>
 
 <!-- ─── CDN SCRIPTS ───────────────────────────────────────────────────── -->
+<script type="module">
+import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist/esm/simplex-noise.js';
+
+(function initWaves() {
+  const container = document.getElementById('waves-container');
+  const svg = document.getElementById('waves-svg');
+  if (!container || !svg) return;
+
+  const noise2D = createNoise2D();
+  const mouse = { x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false };
+  let paths = [], lines = [], bounding = null;
+
+  function setSize() {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    svg.style.width  = w + 'px';
+    svg.style.height = h + 'px';
+    bounding = { width: w, height: h };
+  }
+
+  function setLines() {
+    paths.forEach(p => p.remove());
+    paths = []; lines = [];
+    const { width, height } = bounding;
+    const xGap = 8, yGap = 8;
+    const oWidth = width + 200, oHeight = height + 30;
+    const totalLines  = Math.ceil(oWidth  / xGap);
+    const totalPoints = Math.ceil(oHeight / yGap);
+    const xStart = (width  - xGap * totalLines)  / 2;
+    const yStart = (height - yGap * totalPoints) / 2;
+
+    for (let i = 0; i < totalLines; i++) {
+      const pts = [];
+      for (let j = 0; j < totalPoints; j++) {
+        pts.push({ x: xStart + xGap * i, y: yStart + yGap * j,
+          wave: { x: 0, y: 0 }, cursor: { x: 0, y: 0, vx: 0, vy: 0 } });
+      }
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', '#c8c7c0');
+      path.setAttribute('stroke-width', '1');
+      svg.appendChild(path);
+      paths.push(path);
+      lines.push(pts);
+    }
+  }
+
+  function updateMouse(clientX, clientY) {
+    const b = container.getBoundingClientRect();
+    mouse.x = clientX - b.left;
+    mouse.y = clientY - b.top;
+    if (!mouse.set) {
+      mouse.sx = mouse.x; mouse.sy = mouse.y;
+      mouse.lx = mouse.x; mouse.ly = mouse.y;
+      mouse.set = true;
+    }
+  }
+
+  function movePoints(time) {
+    lines.forEach(pts => pts.forEach(p => {
+      const move = noise2D((p.x + time * 0.008) * 0.003, (p.y + time * 0.003) * 0.002) * 8;
+      p.wave.x = Math.cos(move) * 12;
+      p.wave.y = Math.sin(move) * 6;
+      const dx = p.x - mouse.sx, dy = p.y - mouse.sy;
+      const d = Math.hypot(dx, dy), l = Math.max(175, mouse.vs);
+      if (d < l) {
+        const s = 1 - d / l, f = Math.cos(d * 0.001) * s;
+        p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00035;
+        p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00035;
+      }
+      p.cursor.vx += (0 - p.cursor.x) * 0.01; p.cursor.vy += (0 - p.cursor.y) * 0.01;
+      p.cursor.vx *= 0.95; p.cursor.vy *= 0.95;
+      p.cursor.x += p.cursor.vx; p.cursor.y += p.cursor.vy;
+      p.cursor.x = Math.min(50, Math.max(-50, p.cursor.x));
+      p.cursor.y = Math.min(50, Math.max(-50, p.cursor.y));
+    }));
+  }
+
+  function moved(p, withCursor = true) {
+    return { x: p.x + p.wave.x + (withCursor ? p.cursor.x : 0),
+             y: p.y + p.wave.y + (withCursor ? p.cursor.y : 0) };
+  }
+
+  function drawLines() {
+    lines.forEach((pts, i) => {
+      if (pts.length < 2 || !paths[i]) return;
+      const first = moved(pts[0], false);
+      let d = `M ${first.x} ${first.y}`;
+      for (let j = 1; j < pts.length; j++) {
+        const c = moved(pts[j]);
+        d += ` L ${c.x} ${c.y}`;
+      }
+      paths[i].setAttribute('d', d);
+    });
+  }
+
+  function tick(time) {
+    mouse.sx += (mouse.x - mouse.sx) * 0.1;
+    mouse.sy += (mouse.y - mouse.sy) * 0.1;
+    const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
+    mouse.v  = Math.hypot(dx, dy);
+    mouse.vs += (mouse.v - mouse.vs) * 0.1;
+    mouse.vs  = Math.min(100, mouse.vs);
+    mouse.lx = mouse.x; mouse.ly = mouse.y;
+    mouse.a  = Math.atan2(dy, dx);
+    movePoints(time);
+    drawLines();
+    requestAnimationFrame(tick);
+  }
+
+  setSize();
+  setLines();
+  window.addEventListener('resize', () => { setSize(); setLines(); });
+  window.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY));
+  container.addEventListener('touchmove', e => {
+    e.preventDefault();
+    updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+  requestAnimationFrame(tick);
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -1007,11 +1072,21 @@
     }
   });
 
-  // ── Nav scroll state
+  // ── Nav scroll state + dark section detection
   const nav = document.getElementById('main-nav');
-  window.addEventListener('scroll', () => {
+  const darkSections = document.querySelectorAll('[data-nav-dark]');
+  const navH = nav.offsetHeight;
+  function updateNav() {
     nav.classList.toggle('scrolled', window.scrollY > 10);
-  }, { passive: true });
+    let isDark = false;
+    darkSections.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top <= navH && r.bottom > 0) isDark = true;
+    });
+    nav.classList.toggle('nav-dark', isDark);
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
 
   // ── Mobile menu toggle
   const toggle = document.getElementById('mobile-toggle');
@@ -1196,6 +1271,144 @@
       });
     });
   });
+</script>
+
+<script>
+(function () {
+  const visual = document.querySelector('.network-visual');
+  const svg    = document.getElementById('network-svg');
+  const pill   = document.getElementById('network-you-pill');
+  if (!visual || !svg || !pill) return;
+
+  const CX = 200, CY = 200, R = 193;
+  const WALL = R - 16; // soft boundary inside the circle
+
+  // Generate dots programmatically — uniform random distribution inside circle
+  const N = 200;
+  const NS = 'http://www.w3.org/2000/svg';
+  const frag = document.createDocumentFragment();
+  const dots = Array.from({ length: N }, (_, i) => {
+    const r   = 170 * Math.sqrt(Math.random()); // uniform-in-circle
+    const a   = Math.random() * Math.PI * 2;
+    const ox  = CX + r * Math.cos(a);
+    const oy  = CY + r * Math.sin(a);
+    const el  = document.createElementNS(NS, 'circle');
+    el.setAttribute('r', '2');
+    el.setAttribute('cx', ox.toFixed(1));
+    el.setAttribute('cy', oy.toFixed(1));
+    el.classList.add('ndot');
+    frag.appendChild(el);
+    return { el, ox, oy, x: ox, y: oy,
+             vx: (Math.random() - 0.5) * 0.04,
+             vy: (Math.random() - 0.5) * 0.04,
+             angle: (i / N) * Math.PI * 2 };
+  });
+  svg.appendChild(frag);
+
+  const hasMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let msvgX = CX, msvgY = CY;
+  let mpxX = 0, mpxY = 0;
+  let inCircle = false;
+  let pillX = 0, pillY = 0;
+  let started = false;
+
+  if (hasMouse) {
+    window.addEventListener('mousemove', e => {
+      const b = svg.getBoundingClientRect();
+      msvgX = (e.clientX - b.left) / b.width  * 400;
+      msvgY = (e.clientY - b.top)  / b.height * 400;
+      mpxX  = e.clientX - b.left;
+      mpxY  = e.clientY - b.top;
+      inCircle = Math.hypot(msvgX - CX, msvgY - CY) < R;
+      if (!started) { pillX = mpxX; pillY = mpxY; started = true; }
+    }, { passive: true });
+    visual.addEventListener('mouseleave', () => { inCircle = false; });
+  }
+
+  // Click: scatter all dots in random directions
+  visual.addEventListener('click', () => {
+    dots.forEach(d => {
+      const a = Math.random() * Math.PI * 2;
+      const spd = 2.5 + Math.random() * 3;
+      d.vx = Math.cos(a) * spd;
+      d.vy = Math.sin(a) * spd;
+      d.angle = a;
+    });
+  });
+
+  function tick() {
+    dots.forEach(d => {
+      // ── Wander: very gentle drift in a slowly turning direction
+      d.angle += (Math.random() - 0.5) * 0.03;
+      d.vx += Math.cos(d.angle) * 0.007;
+      d.vy += Math.sin(d.angle) * 0.007;
+
+      // ── Boundary: soft repulsion from the circle wall
+      const fromCX = d.x - CX, fromCY = d.y - CY;
+      const wallDist = Math.hypot(fromCX, fromCY);
+      if (wallDist > WALL) {
+        const excess = wallDist - WALL;
+        d.vx -= (fromCX / wallDist) * excess * 0.10;
+        d.vy -= (fromCY / wallDist) * excess * 0.10;
+        // Also steer heading back inward
+        const toCenter = Math.atan2(-fromCY, -fromCX);
+        let diff = toCenter - d.angle;
+        while (diff >  Math.PI) diff -= 2 * Math.PI;
+        while (diff < -Math.PI) diff += 2 * Math.PI;
+        d.angle += diff * 0.12;
+      }
+
+      // ── Attract: spring force toward cursor (proportional to distance so
+      //    far dots are pulled strongly, near dots settle gently — no ring)
+      //    + angle nudge so they approach organically not all from same line
+      if (inCircle) {
+        const dx = msvgX - d.x, dy = msvgY - d.y;
+        d.vx += dx * 0.00028;
+        d.vy += dy * 0.00028;
+        const toward = Math.atan2(dy, dx);
+        let diff = toward - d.angle;
+        while (diff >  Math.PI) diff -= 2 * Math.PI;
+        while (diff < -Math.PI) diff += 2 * Math.PI;
+        d.angle += diff * 0.04;
+      }
+
+      // ── Damping — high retention so momentum carries on release
+      d.vx *= 0.986;
+      d.vy *= 0.986;
+
+      d.x += d.vx;
+      d.y += d.vy;
+
+      // ── Hard clamp: safety net at the circle edge
+      const fc = Math.hypot(d.x - CX, d.y - CY);
+      if (fc > R - 6) {
+        const ca = Math.atan2(d.y - CY, d.x - CX);
+        d.x = CX + (R - 6) * Math.cos(ca);
+        d.y = CY + (R - 6) * Math.sin(ca);
+        const nx = Math.cos(ca), ny = Math.sin(ca);
+        const proj = d.vx * nx + d.vy * ny;
+        if (proj > 0) { d.vx -= proj * nx; d.vy -= proj * ny; }
+      }
+
+      d.el.setAttribute('transform', `translate(${(d.x - d.ox).toFixed(2)},${(d.y - d.oy).toFixed(2)})`);
+    });
+
+    if (hasMouse) {
+      if (inCircle) {
+        pillX += (mpxX + 12 - pillX) * 0.10;
+        pillY += (mpxY - 12 - pillY) * 0.10;
+        pill.style.transform = `translate(${pillX.toFixed(1)}px, ${pillY.toFixed(1)}px) translate(0, -100%)`;
+        pill.style.opacity = '1';
+      } else {
+        pill.style.opacity = '0';
+      }
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+})();
 </script>
 
 </body>

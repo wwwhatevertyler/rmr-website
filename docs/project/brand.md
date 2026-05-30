@@ -71,10 +71,11 @@ Section padding: `padding: var(--section-gap) 0;`
 - Padding: `13px 26px` (standard) · `9px 20px` (nav)
 
 ### Nav
-- Fixed, 64px height, `rgba(250,250,248,0.88)` + `backdrop-filter: blur(16px)`
-- `.scrolled` class adds `border-bottom: 1px solid var(--border)` + `box-shadow`
-- Logo: Instrument Serif 17px
-- CTA pill right
+- Fixed full-width, **68px height**, max-width 1280px inner, `rgba(250,250,248,0.88)` + `backdrop-filter: blur(20px)`
+- `.scrolled` adds `box-shadow: 0 1px 0 rgba(0,0,0,0.06)`
+- `.nav-dark` triggered when scrolling over `[data-nav-dark]` sections (footer-cta, footer): bg `rgba(17,17,16,0.82)`, white links, logo inverted
+- Contact page nav: starts transparent, gains glass on scroll (`.scrolled`)
+- Logo: `rmr-logo.png`, height 40px, `filter: brightness(0) invert(1)` in dark mode
 
 ### Cards (`.card`)
 - Background `var(--bg-card)`, border `var(--border)`, radius `var(--radius-card)`
@@ -95,11 +96,33 @@ Section padding: `padding: var(--section-gap) 0;`
 - Icon: 22px circle, `border: 1px solid var(--border-strong)`, rotates 45° on open
 - Spring ease: `back.out(1.7)` on icon; `power2.inOut` on height
 
-### Dark Sections (process / how-it-works)
-- `background: var(--bg-dark)` on `<section>`
-- Step grid: `gap: 1px; background: rgba(255,255,255,0.08); border-radius: var(--radius-card); overflow: hidden`
-- Step bg: `var(--bg-dark)`, hover `#1a1a18`
-- Step numbers: Instrument Serif 13px, `rgba(255,255,255,0.25)`
+### Process Section (`#process`)
+- Light grey: `background: var(--bg-card)`, dark text
+- Step grid: `gap: 1px; background: var(--border); border-radius: var(--radius-card); overflow: hidden; margin-top: 48px`
+- Step bg: `var(--bg-card)`, hover `var(--bg)`, `transition: background 0.2s`
+- Step padding: `40px 36px`
+- Step numbers: Instrument Serif 13px, `color: var(--text-light)`
+- Step h3: 15px, weight 600, `color: var(--text)`
+- Step p: 13px, `color: var(--text-muted)`, line-height 1.7
+- `.process-note`: 13px, `color: var(--text-light)`, centered
+- **No** `data-nav-dark` — nav stays in light/glass mode when scrolling over
+
+### About Card (`.about-right-card`)
+- Light: `background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 40px`
+- Stat number (`.about-stat`): Instrument Serif large, `color: var(--border-strong)` (muted warm grey)
+- Stat label (`.about-stat-label`): `color: var(--text-muted)`; strong child: `color: var(--text); font-weight: 500`
+- Tag row (`.about-tag`): `color: var(--text-light); border-top: 1px solid var(--border)`
+
+### FAQ Section (`#faq`)
+- Background: `var(--bg)` (primary off-white, not card grey)
+- All other FAQ styles (accordion, icon, spring animation) remain the same as in brand baseline
+
+### Network Section (`#network`)
+- Right column: SVG particle sphere, 200 dots, no outline circle
+- CSS: `.network-visual { position: relative; aspect-ratio: 1; overflow: visible }`
+- Dot class: `.ndot { fill: var(--text); will-change: transform }`
+- "You" pill: `#network-you-pill` — dark pill (`background: var(--bg-dark); color: #fff`), 11px/600, tracks cursor top-right, fades in/out on `mouseleave`
+- See animation-system.md for particle physics spec
 
 ### Footer CTA (dark)
 - `background: var(--bg-dark)`, centered text
@@ -147,3 +170,4 @@ lenis.on('scroll', ScrollTrigger.update);
 |------|---------|
 | `rmr-home.html` | Consumer homepage |
 | `rmr-advisors-page.html` | Advisor network recruitment page |
+| `rmr-contact.html` | Contact / get started page |

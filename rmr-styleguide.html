@@ -717,7 +717,7 @@
 <div class="guide-header">
   <p class="guide-eyebrow">Roll My Retirement</p>
   <h1 class="guide-title">Design System</h1>
-  <p class="guide-meta">Version 1.0 &nbsp;·&nbsp; May 2025 &nbsp;·&nbsp; Cream palette · Instrument Serif + Inter</p>
+  <p class="guide-meta">Version 1.1 &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Cream palette · Instrument Serif + Inter</p>
 </div>
 
 <!-- ── STICKY NAV ──────────────────────────────────────────────────── -->
@@ -733,6 +733,7 @@
     <a href="#dark-section">Dark Mode</a>
     <a href="#motion">Motion</a>
     <a href="#micro">Micro-elements</a>
+    <a href="#footer">Footer</a>
   </div>
 </nav>
 
@@ -757,7 +758,7 @@
         <div class="color-swatch-info">
           <div class="color-swatch-name">--bg-card</div>
           <div class="color-swatch-hex">#f4f3ef</div>
-          <div class="color-swatch-use">Card & FAQ section bg</div>
+          <div class="color-swatch-use">Card bg, process section bg</div>
         </div>
       </div>
       <div class="color-swatch">
@@ -955,8 +956,8 @@
       </div>
       <div class="spacing-item">
         <div class="spacing-bar-label">Nav height</div>
-        <div class="spacing-bar" style="width: 64px;"></div>
-        <span class="spacing-bar-spec">64px fixed</span>
+        <div class="spacing-bar" style="width: 68px;"></div>
+        <span class="spacing-bar-spec">68px fixed</span>
       </div>
       <div class="spacing-item">
         <div class="spacing-bar-label">Card padding</div>
@@ -1078,6 +1079,18 @@
       </div>
     </div>
 
+    <p class="guide-label" style="margin-bottom: 16px;">About card — light (homepage)</p>
+    <div style="max-width: 400px; margin-bottom: 40px;">
+      <div class="after-card" style="padding: 40px;">
+        <div class="after-card-num">$0</div>
+        <h3 style="margin-bottom: 8px;">Zero cost to you</h3>
+        <p>We're compensated by the advisors in our network — but only after careful vetting. You pay nothing at any point.</p>
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-light);">
+          Free service · No obligation · No hidden fees
+        </div>
+      </div>
+    </div>
+
     <p class="guide-label" style="margin-bottom: 16px;">Value strip</p>
     <div class="value-strip-demo">
       <div class="value-item-demo">
@@ -1157,7 +1170,7 @@
 </section>
 
 <!-- ══ 7. FAQ ACCORDION ════════════════════════════════════════════════ -->
-<section class="guide-section" id="faq-demo" style="background: var(--bg-card);">
+<section class="guide-section" id="faq-demo" style="background: var(--bg);">
   <div class="guide-section-inner">
     <h2 class="guide-section-title">FAQ Accordion</h2>
     <p class="guide-section-desc">GSAP spring accordion — height animates to measured natural height, icon rotates 45° with <code>back.out(1.7)</code>.</p>
@@ -1206,35 +1219,42 @@
   </div>
 </section>
 
-<!-- ══ 8. DARK SECTION ════════════════════════════════════════════════ -->
+<!-- ══ 8. PROCESS SECTION & DARK PATTERN ══════════════════════════════ -->
 <section class="guide-section" id="dark-section">
   <div class="guide-section-inner">
-    <h2 class="guide-section-title">Dark Section</h2>
-    <p class="guide-section-desc">Used for process / how-it-works sections. Eyebrow, heading, lead, steps grid, and CTA button all adapt.</p>
+    <h2 class="guide-section-title">Process Section & Dark Pattern</h2>
+    <p class="guide-section-desc">The process section uses a dark treatment. All other sections — including footer CTA and footer — use the light background system.</p>
 
-    <div class="dark-preview">
-      <p class="dark-eyebrow">Our Process</p>
-      <h2 class="dark-h2">Three steps to financial clarity</h2>
-      <p class="dark-lead">We do the heavy lifting so you can focus on what matters — understanding your options and making the right call for your future.</p>
-
-      <div class="dark-steps">
-        <div class="dark-step">
-          <div class="dark-step-num">01</div>
-          <h4>Get Matched</h4>
-          <p>We introduce you to a trusted, well-vetted professional in your area.</p>
+    <p class="guide-label" style="margin-bottom: 16px;">Process section — light (bg-card)</p>
+    <div style="background: var(--bg-card); border-radius: var(--radius-card); padding: 48px; margin-bottom: 40px;">
+      <p style="font-size:11px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-light); margin-bottom:16px;">Our Process</p>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif; font-size:clamp(24px,3.5vw,40px); font-weight:400; letter-spacing:-0.02em; margin-bottom:16px;">Three steps to financial clarity</h2>
+      <p style="font-size:16px; color:var(--text-muted); line-height:1.65; margin-bottom:32px; max-width:480px;">We do the heavy lifting so you can focus on what matters — understanding your options and making the right call for your future.</p>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border-radius:14px; overflow:hidden;">
+        <div style="background:var(--bg-card); padding:32px 28px; transition:background 0.2s;" onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='var(--bg-card)'">
+          <div style="font-family:'Instrument Serif',Georgia,serif; font-size:13px; color:var(--text-light); margin-bottom:14px;">01</div>
+          <div style="font-size:15px; font-weight:600; color:var(--text); margin-bottom:8px;">Get Matched</div>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.7;">We introduce you to a trusted, well-vetted professional in your area.</p>
         </div>
-        <div class="dark-step">
-          <div class="dark-step-num">02</div>
-          <h4>Understand Your Options</h4>
-          <p>Your pro walks you through your choices in plain English.</p>
+        <div style="background:var(--bg-card); padding:32px 28px; transition:background 0.2s;" onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='var(--bg-card)'">
+          <div style="font-family:'Instrument Serif',Georgia,serif; font-size:13px; color:var(--text-light); margin-bottom:14px;">02</div>
+          <div style="font-size:15px; font-weight:600; color:var(--text); margin-bottom:8px;">Understand Your Options</div>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.7;">Your advisor walks you through your choices in plain English.</p>
         </div>
-        <div class="dark-step">
-          <div class="dark-step-num">03</div>
-          <h4>Meet Your Advisors</h4>
-          <p>Connect with 1–3 local advisors via short live calls.</p>
+        <div style="background:var(--bg-card); padding:32px 28px; transition:background 0.2s;" onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='var(--bg-card)'">
+          <div style="font-family:'Instrument Serif',Georgia,serif; font-size:13px; color:var(--text-light); margin-bottom:14px;">03</div>
+          <div style="font-size:15px; font-weight:600; color:var(--text); margin-bottom:8px;">Meet Your Advisors</div>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.7;">Connect with 1–3 local advisors via short live calls.</p>
         </div>
       </div>
+      <p style="margin-top:20px; font-size:13px; color:var(--text-light); text-align:center;">No obligation. Free to you.</p>
+    </div>
 
+    <p class="guide-label" style="margin-bottom: 16px;">Dark sections — footer CTA & footer</p>
+    <div class="dark-preview">
+      <p class="dark-eyebrow">Footer CTA</p>
+      <h2 class="dark-h2">Ready to take control of your retirement?</h2>
+      <p class="dark-lead">Used only for footer CTA and site footer. Background: <code style="font-size:12px; opacity:0.6;">var(--bg-dark)</code></p>
       <div style="display: flex; gap: 12px; flex-wrap: wrap;">
         <button class="btn btn-ghost btn-arrow">Let's Talk <span class="arrow">→</span></button>
         <button class="btn btn-white">Get Started</button>
@@ -1423,15 +1443,42 @@
         <div class="micro-item-label">Nav backdrop</div>
         <div class="micro-item-demo" style="flex-direction: column; align-items: flex-start; gap: 4px;">
           <div style="width:100%; height:32px; background: rgba(250,250,248,0.88); border:1px solid var(--border); border-radius:6px; display:flex; align-items:center; justify-content:center;">
-            <span style="font-size:11px; color:var(--text-muted);">rgba + blur(16px)</span>
+            <span style="font-size:11px; color:var(--text-muted);">rgba(250,250,248,0.88)</span>
           </div>
         </div>
-        <span class="guide-spec">backdrop-filter: blur(16px)</span>
+        <span class="guide-spec">backdrop-filter: blur(20px)</span>
+      </div>
+
+      <div class="micro-item">
+        <div class="micro-item-label">Network dots</div>
+        <div class="micro-item-demo" style="position:relative; width:80px; height:80px; flex-shrink:0;">
+          <svg id="sg-dots-svg" viewBox="0 0 80 80" style="width:80px;height:80px;" aria-hidden="true"></svg>
+        </div>
+        <span class="guide-spec">200 dots · rAF physics · Hooke attract</span>
       </div>
 
     </div>
   </div>
 </section>
+
+<section class="guide-section" id="footer">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Footer</h2>
+    <p class="guide-section-desc">Shared component loaded from <code>footer.js</code>. One file controls all pages — update nav links, copy, or styling once and it propagates everywhere. Copyright year updates automatically.</p>
+    <p class="guide-label" style="margin-bottom: 16px;">Live component preview</p>
+    <div style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+      <div id="site-footer"></div>
+    </div>
+    <div style="margin-top: 20px; background: var(--bg-card); border-radius: 8px; padding: 20px 24px;">
+      <p class="guide-label" style="margin-bottom: 8px;">Usage</p>
+      <code style="font-size: 12px; color: var(--text-muted); line-height: 1.8; display: block;">
+        &lt;div id="site-footer"&gt;&lt;/div&gt;<br>
+        &lt;script src="footer.js"&gt;&lt;/script&gt;
+      </code>
+    </div>
+  </div>
+</section>
+<script src="footer.js"></script>
 
 <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
 <div class="guide-footer">
@@ -1440,6 +1487,7 @@
     <ul class="guide-footer-links">
       <li><a href="rmr-home.html">Home</a></li>
       <li><a href="rmr-advisors-page.html">Advisors</a></li>
+      <li><a href="rmr-contact.html">Contact</a></li>
       <li><a href="docs/project/brand.md">brand.md</a></li>
     </ul>
   </div>
@@ -1515,6 +1563,38 @@
   window.addEventListener('load', () => {
     setTimeout(replayCheck, 600);
   });
+
+  // Mini network dots demo
+  (function() {
+    const svg = document.getElementById('sg-dots-svg');
+    if (!svg) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const CX = 40, CY = 40, R = 36, N = 30;
+    const dots = Array.from({ length: N }, () => {
+      const r = 30 * Math.sqrt(Math.random());
+      const a = Math.random() * Math.PI * 2;
+      const ox = CX + r * Math.cos(a), oy = CY + r * Math.sin(a);
+      const el = document.createElementNS(NS, 'circle');
+      el.setAttribute('r', '1.5'); el.setAttribute('cx', ox); el.setAttribute('cy', oy);
+      el.setAttribute('fill', 'var(--text)');
+      svg.appendChild(el);
+      return { el, ox, oy, x: ox, y: oy, vx: (Math.random()-.5)*.03, vy: (Math.random()-.5)*.03, angle: Math.random()*Math.PI*2 };
+    });
+    function tick() {
+      dots.forEach(d => {
+        d.angle += (Math.random()-.5)*.04;
+        d.vx += Math.cos(d.angle)*.006; d.vy += Math.sin(d.angle)*.006;
+        const dist = Math.hypot(d.x-CX, d.y-CY);
+        if (dist > R-4) { const ex = dist-(R-4); d.vx -= (d.x-CX)/dist*ex*.1; d.vy -= (d.y-CY)/dist*ex*.1; }
+        d.vx *= .986; d.vy *= .986; d.x += d.vx; d.y += d.vy;
+        const fc = Math.hypot(d.x-CX, d.y-CY);
+        if (fc > R-2) { const ca = Math.atan2(d.y-CY, d.x-CX); d.x = CX+(R-2)*Math.cos(ca); d.y = CY+(R-2)*Math.sin(ca); }
+        d.el.setAttribute('transform', `translate(${(d.x-d.ox).toFixed(2)},${(d.y-d.oy).toFixed(2)})`);
+      });
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
 
   // Animate progress demo bar as a visual example
   gsap.to('#progress-fill', {

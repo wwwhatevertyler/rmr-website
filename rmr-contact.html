@@ -241,8 +241,10 @@
     .contact-watermark {
       position: absolute;
       top: -90px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      right: 0;
+      width: 100%;
+      text-align: center;
       font-family: 'Instrument Serif', Georgia, serif;
       font-style: italic;
       font-size: clamp(240px, 34vw, 480px);
@@ -457,94 +459,79 @@
     }
 
     /* ─── TRUST STRIP ──────────────────────────────────────────────── */
-    .trust-strip {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      padding: clamp(32px, 4vw, 48px) 0;
-      flex-wrap: wrap;
+    #trust-strip {
+      padding: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 24px;
+    #trust-strip .container { padding: 0; }
+    #trust-strip .value-strip-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    #trust-strip .value-item {
+      padding: 36px 32px;
       border-right: 1px solid var(--border);
+      transition: background 0.2s;
     }
-    .trust-item:last-child { border-right: none; }
-    .trust-item-title {
-      font-size: 13px;
+    #trust-strip .value-item:last-child { border-right: none; }
+    #trust-strip .value-item:hover { background: var(--bg-card); }
+    #trust-strip .value-item-title {
+      font-size: 14px;
       font-weight: 600;
       color: var(--text);
+      margin-bottom: 4px;
       letter-spacing: -0.01em;
     }
-    .trust-item-sub {
-      font-size: 12px;
+    #trust-strip .value-item-sub {
+      font-size: 13px;
       color: var(--text-light);
-    }
-    .trust-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--border-strong);
-      flex-shrink: 0;
     }
 
     /* ─── FOOTER CTA ───────────────────────────────────────────────── */
     .footer-cta {
-      background: var(--bg-dark);
+      background: var(--bg);
       padding: clamp(56px, 8vw, 88px) 0;
       text-align: center;
     }
     .footer-cta h2 {
-      color: #fff;
+      color: var(--text);
       max-width: 560px;
       margin: 0 auto 16px;
     }
     .footer-cta p {
-      color: rgba(255,255,255,0.5);
+      color: var(--text-muted);
       max-width: 420px;
       margin: 0 auto 28px;
     }
-    .footer-cta .btn-ghost::after { display: none; }
-
-    /* ─── FOOTER ───────────────────────────────────────────────────── */
-    footer {
+    .footer-cta .btn-primary {
       background: var(--bg-dark);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 32px var(--pad-x);
+      color: #fff;
+      border: none;
     }
-    .footer-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
+    .footer-cta .btn-primary:hover {
+      background: #222220;
+      box-shadow: 0 8px 24px rgba(17,17,16,0.18);
+    }
+    .footer-cta-details {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 24px;
+      justify-content: center;
+      gap: 10px;
       flex-wrap: wrap;
     }
-    .footer-logo {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 15px;
-      color: rgba(255,255,255,0.5);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .footer-logo-img { height: 32px; width: auto; display: block; filter: brightness(0) invert(1); opacity: 0.5; }
-    .footer-nav {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      list-style: none;
-    }
-    .footer-nav a {
-      font-size: 12px;
-      color: rgba(255,255,255,0.3);
+    .footer-cta-details a {
+      color: var(--text-muted);
       transition: color 0.2s;
     }
-    .footer-nav a:hover { color: rgba(255,255,255,0.6); }
-    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.2); }
+    .footer-cta-details a:hover { color: var(--text); }
+    .footer-cta-divider { opacity: 0.4; }
+
+    /* ─── FOOTER ───────────────────────────────────────────────────── */
+    /* footer styles live in footer.js */
 
     /* ─── RESPONSIVE ───────────────────────────────────────────────── */
     @media (max-width: 1024px) {
@@ -564,15 +551,16 @@
     @media (max-width: 860px) {
       .nav-links { display: none; }
       .nav-mobile-toggle { display: flex; }
-      .trust-strip { flex-direction: column; gap: 16px; }
-      .trust-item { border-right: none; }
+      #trust-strip .value-strip-inner { grid-template-columns: repeat(2, 1fr); }
+      #trust-strip .value-item { border-right: 1px solid var(--border); }
+      #trust-strip .value-item:nth-child(2n) { border-right: none; }
+      #trust-strip .value-item:nth-child(n+3) { border-top: 1px solid var(--border); }
     }
     @media (max-width: 560px) {
       .form-cols { grid-template-columns: 1fr; }
       .situation-pills { gap: 6px; }
       .contact-watermark { font-size: clamp(88px, 22vw, 140px); }
-      .footer-inner { flex-direction: column; text-align: center; }
-      .footer-nav { justify-content: center; flex-wrap: wrap; gap: 16px; }
+      /* footer responsive handled by footer.js */
     }
 
     /* ─── PAGE CURTAIN ─────────────────────────────────────────────── */
@@ -696,14 +684,14 @@
             </div>
           </div>
 
-          <div class="form-field full" style="margin-top: 14px;">
+          <div class="form-field full" style="margin-top: 32px;">
             <label for="c-message">Anything else you'd like us to know? <span style="color:var(--text-light); font-weight:400;">(optional)</span></label>
             <textarea id="c-message" name="message" placeholder="Tell us about your accounts, timeline, or any questions you have…"></textarea>
           </div>
 
           <div class="form-submit-area">
-            <button type="submit" class="btn btn-primary btn-arrow">
-              Let's Talk <span class="arrow">→</span>
+            <button type="submit" id="form-submit" class="btn btn-primary btn-arrow">
+              Send Message <span class="arrow">→</span>
             </button>
             <p class="form-microcopy">
               Free to you<span>·</span>No obligation<span>·</span>We'll be in touch within 1 business day
@@ -731,36 +719,24 @@
 </section>
 
 <!-- ─── TRUST STRIP ───────────────────────────────────────────────────── -->
-<div id="trust-strip" style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg);">
+<div id="trust-strip">
   <div class="container">
-    <div class="trust-strip">
-      <div class="trust-item">
-        <div class="trust-dot"></div>
-        <div>
-          <div class="trust-item-title">Free to you</div>
-          <div class="trust-item-sub">No hidden fees ever</div>
-        </div>
+    <div class="value-strip-inner">
+      <div class="value-item">
+        <div class="value-item-title">Free to You</div>
+        <div class="value-item-sub">No hidden fees ever</div>
       </div>
-      <div class="trust-item">
-        <div class="trust-dot"></div>
-        <div>
-          <div class="trust-item-title">No obligation</div>
-          <div class="trust-item-sub">Move at your own pace</div>
-        </div>
+      <div class="value-item">
+        <div class="value-item-title">No Obligation</div>
+        <div class="value-item-sub">Move at your own pace</div>
       </div>
-      <div class="trust-item">
-        <div class="trust-dot"></div>
-        <div>
-          <div class="trust-item-title">24/7 support</div>
-          <div class="trust-item-sub">Real humans, always available</div>
-        </div>
+      <div class="value-item">
+        <div class="value-item-title">24/7 Support</div>
+        <div class="value-item-sub">Real humans, always available</div>
       </div>
-      <div class="trust-item">
-        <div class="trust-dot"></div>
-        <div>
-          <div class="trust-item-title">1 business day</div>
-          <div class="trust-item-sub">We follow up fast</div>
-        </div>
+      <div class="value-item">
+        <div class="value-item-title">1 Business Day</div>
+        <div class="value-item-sub">We follow up fast</div>
       </div>
     </div>
   </div>
@@ -771,29 +747,20 @@
   <div class="container">
     <h2>Based in Dallas, Texas, here to help.</h2>
     <p>Call us, email us, or just fill out the form above — we'll take it from there.</p>
-    <a href="mailto:hello@rollmyretirement.com" class="btn btn-ghost btn-arrow">
+    <a href="mailto:hello@rollmyretirement.com" class="btn btn-primary btn-arrow">
       hello@rollmyretirement.com <span class="arrow">→</span>
     </a>
+    <div class="footer-cta-details">
+      <a href="tel:+14699841128">+1 469-984-1128</a>
+      <span class="footer-cta-divider">·</span>
+      <span>3100 Monticello Suite 310, Dallas, TX 75205</span>
+    </div>
   </div>
 </div>
 
 <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
-<footer>
-  <div class="footer-inner">
-    <span class="footer-logo">
-      <img src="rmr-logo.png" alt="Roll My Retirement" class="footer-logo-img">
-    </span>
-    <ul class="footer-nav">
-      <li><a href="rmr-home.html">Home</a></li>
-      <li><a href="rmr-home.html#about">About</a></li>
-      <li><a href="rmr-home.html#process">Process</a></li>
-      <li><a href="rmr-home.html#network">Network</a></li>
-      <li><a href="rmr-home.html#faq">FAQ</a></li>
-      <li><a href="rmr-advisors-page.html">For Advisors</a></li>
-    </ul>
-    <span class="footer-copy">© 2025 Roll My Retirement. All rights reserved.</span>
-  </div>
-</footer>
+<div id="site-footer"></div>
+<script src="footer.js"></script>
 
 <!-- ─── CDN SCRIPTS ───────────────────────────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
