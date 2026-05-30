@@ -1456,7 +1456,7 @@
   standardsTl
     .from('.standards-left .eyebrow', { y: 16, opacity: 0, duration: 0.5, ease: 'power3.out' })
     .from('.standards-left h2', { y: 32, opacity: 0, x: -20, duration: 0.75, ease: 'power3.out' }, '-=0.3')
-    .from('.standards-left > p', { y: 18, opacity: 0, x: -12, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.45')
+    .from('.standards-left > p:not(.eyebrow)', { y: 18, opacity: 0, x: -12, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.45')
     .from('.checklist li', { y: 22, opacity: 0, stagger: 0.07, duration: 0.55, ease: 'power3.out' }, '-=0.35');
 
   // SVG checkmark stroke draw-in

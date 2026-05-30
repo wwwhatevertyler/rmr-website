@@ -1148,7 +1148,7 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
   aboutTl
     .from('.about-left .eyebrow', { y: 16, opacity: 0, duration: 0.55, ease: 'power3.out' })
     .from('.about-left h2', { y: 32, opacity: 0, x: -20, duration: 0.75, ease: 'power3.out' }, '-=0.3')
-    .from('.about-left > p', { y: 18, opacity: 0, x: -12, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.45')
+    .from('.about-left > p:not(.eyebrow)', { y: 18, opacity: 0, x: -12, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.45')
     .from('.about-left .btn', { y: 16, opacity: 0, duration: 0.5, ease: 'power3.out' }, '-=0.3')
     .from('.about-right-card', { x: 40, opacity: 0, scale: 0.97, duration: 0.9, ease: 'power3.out' }, 0.2);
 
@@ -1194,7 +1194,7 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
   networkTl
     .from('.network-left .eyebrow', { y: 16, opacity: 0, duration: 0.55, ease: 'power3.out' })
     .from('.network-left h2', { y: 32, opacity: 0, x: -20, duration: 0.75, ease: 'power3.out' }, '-=0.3')
-    .from('.network-left > p', { y: 18, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.45')
+    .from('.network-left > p:not(.eyebrow)', { y: 18, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.45')
     .from('.network-left .btn', { y: 16, opacity: 0, duration: 0.5, ease: 'power3.out' }, '-=0.3')
     .from('.network-visual', { x: 40, opacity: 0, scale: 0.97, duration: 0.9, ease: 'power3.out' }, 0.2);
 
