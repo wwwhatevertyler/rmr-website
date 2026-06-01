@@ -1,13 +1,13 @@
 (function () {
-  // Skip on touch-only devices (no hover capability)
-  if (window.matchMedia('(hover: none)').matches) return;
+  // Only run on devices with a precise pointer (mouse/trackpad) — skips all touch screens
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
   const style = document.createElement('style');
   style.textContent = `
     #rmr-cursor {
       position: fixed;
       top: 0; left: 0;
-      width: 8px; height: 8px;
+      width: 6px; height: 6px;
       background: #111110;
       border-radius: 50%;
       pointer-events: none;

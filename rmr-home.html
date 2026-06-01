@@ -11,7 +11,7 @@
   <style>
     /* ─── RESET & BASE ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; }
+    html { font-size: 16px; overflow-x: hidden; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #fafaf8;
@@ -52,6 +52,10 @@
       --max-w: 1120px;
       --pad-x: clamp(24px, 5vw, 64px);
       --section-gap: clamp(72px, 10vw, 104px);
+      --text-swap-dur: 300ms;
+      --text-swap-translate-y: 8px;
+      --text-swap-blur: 3px;
+      --text-swap-ease: ease-in-out;
     }
 
     /* ─── TYPOGRAPHY ───────────────────────────────────────────────── */
@@ -424,6 +428,16 @@
       aspect-ratio: 1;
       overflow: visible;
     }
+    .network-hint {
+      position: absolute;
+      bottom: -26px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      color: var(--text-light);
+      pointer-events: none;
+    }
     #network-svg {
       width: 100%;
       height: 100%;
@@ -620,6 +634,32 @@
       z-index: 500;
       pointer-events: none;
     }
+    /* ─── TEXT SWAP (transitions-dev) ────────────────────────────────── */
+    .t-text-swap {
+      display: inline-block;
+      transform: translateY(0);
+      filter: blur(0);
+      opacity: 1;
+      transition:
+        transform var(--text-swap-dur) var(--text-swap-ease),
+        filter    var(--text-swap-dur) var(--text-swap-ease),
+        opacity   var(--text-swap-dur) var(--text-swap-ease);
+      will-change: transform, filter, opacity;
+    }
+    .t-text-swap.is-exit {
+      transform: translateY(calc(var(--text-swap-translate-y) * -1));
+      filter: blur(var(--text-swap-blur));
+      opacity: 0;
+    }
+    .t-text-swap.is-enter-start {
+      transform: translateY(var(--text-swap-translate-y));
+      filter: blur(var(--text-swap-blur));
+      opacity: 0;
+      transition: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .t-text-swap { transition: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -678,7 +718,7 @@
         <span class="eyebrow">Retirement Account Rollovers — 24/7 Dedicated Support</span>
       </div>
       <h1 class="hero-headline">
-        Your wealth.<br><em>Your way.</em>
+        <span class="t-text-swap" id="hero-swap">Your wealth.</span>
       </h1>
       <p class="lead hero-sub">
         Changing jobs or have old 401(k)s with previous employers? We help you take control of your retirement funds by connecting you with a trusted network of financial professionals.
@@ -801,6 +841,7 @@
         <svg id="network-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         </svg>
         <div id="network-you-pill">You</div>
+        <p class="network-hint">Click to interact</p>
       </div>
 
     </div>
@@ -1142,6 +1183,29 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
     .to('.hero-microcopy', { opacity: 1, duration: 0.45 }, '-=0.25')
     .to('.hero-card', { opacity: 1, x: 0, scale: 1, duration: 1.05, ease: 'power3.out' }, 0.3);
 
+  // ─── HERO TEXT SWAP ────────────────────────────────────────────────
+  (function () {
+    const swapEl = document.getElementById('hero-swap');
+    const phrases = ['Your wealth.', '<em>Your way.</em>'];
+    let idx = 0;
+    const dur = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--text-swap-dur')
+    ) || 300;
+    function cycleHeroText() {
+      idx = (idx + 1) % phrases.length;
+      swapEl.classList.add('is-exit');
+      setTimeout(() => {
+        swapEl.innerHTML = phrases[idx];
+        swapEl.classList.remove('is-exit');
+        swapEl.classList.add('is-enter-start');
+        void swapEl.offsetHeight;
+        swapEl.classList.remove('is-enter-start');
+      }, dur);
+    }
+    setTimeout(() => setInterval(cycleHeroText, 2800), 500);
+  })();
+
+
   // ──────────────────────────────────────────────────────────────────
   // VALUE STRIP — staggered scroll entrance
   // ──────────────────────────────────────────────────────────────────
@@ -1337,6 +1401,7 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
   }
 
   // Click: scatter all dots in random directions
+  const hint = visual.querySelector('.network-hint');
   visual.addEventListener('click', () => {
     dots.forEach(d => {
       const a = Math.random() * Math.PI * 2;
@@ -1345,6 +1410,7 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
       d.vy = Math.sin(a) * spd;
       d.angle = a;
     });
+    if (hint) { hint.style.transition = 'opacity 0.4s ease'; hint.style.opacity = '0'; }
   });
 
   function tick() {
