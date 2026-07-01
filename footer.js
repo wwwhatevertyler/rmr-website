@@ -9,7 +9,25 @@
   const X = 'external'; // cross-page link    → 12px var(--text-light)
   const S = 'sep';      // · dot separator
 
-  const page = window.location.pathname.split('/').pop() || 'rmr-home.html';
+  const cleanPath = window.location.pathname.replace(/\/$/, '') || '/';
+  const localHosts = ['localhost', '127.0.0.1', '::1'];
+  const isLocalHost = localHosts.includes(window.location.hostname);
+  const routes = {
+    home: isLocalHost ? 'rmr-home.html' : '/',
+    advisors: isLocalHost ? 'rmr-advisors-page.html' : '/advisors',
+    contact: isLocalHost ? 'rmr-contact.html' : '/contact',
+    insights: isLocalHost ? 'rmr-blog.html' : '/insights',
+  };
+
+  const cleanPageMap = {
+    '/': 'rmr-home.html',
+    '/advisors': 'rmr-advisors-page.html',
+    '/contact': 'rmr-contact.html',
+    '/insights': 'rmr-blog.html',
+  };
+  const page = cleanPath.startsWith('/insights/')
+    ? 'rmr-blog-post.html'
+    : cleanPageMap[cleanPath] || window.location.pathname.split('/').pop() || 'rmr-home.html';
 
   const linkSets = {
     'rmr-home.html': [
@@ -18,8 +36,8 @@
       { label: 'Network',        href: '#network',               type: A },
       { label: 'FAQs',           href: '#faq',                   type: A },
       { type: S },
-      { label: 'Insights →',     href: 'rmr-blog.html',          type: X },
-      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+      { label: 'Insights →',     href: routes.insights,          type: X },
+      { label: 'For Advisors →', href: routes.advisors,          type: X },
     ],
     'rmr-advisors-page.html': [
       { label: 'Why RMR',        href: '#why-rmr',               type: A },
@@ -27,19 +45,19 @@
       { label: 'Standards',      href: '#standards',             type: A },
       { label: 'FAQ',            href: '#faq',                   type: A },
       { type: S },
-      { label: 'Insights →',     href: 'rmr-blog.html',          type: X },
+      { label: 'Insights →',     href: routes.insights,          type: X },
     ],
     'rmr-contact.html': [
-      { label: 'Insights →',     href: 'rmr-blog.html',          type: X },
-      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+      { label: 'Insights →',     href: routes.insights,          type: X },
+      { label: 'For Advisors →', href: routes.advisors,          type: X },
     ],
     'rmr-blog.html': [
-      { label: '← Insights',     href: 'rmr-blog.html',          type: X },
-      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+      { label: '← Insights',     href: routes.insights,          type: X },
+      { label: 'For Advisors →', href: routes.advisors,          type: X },
     ],
     'rmr-blog-post.html': [
-      { label: '← Insights',     href: 'rmr-blog.html',          type: X },
-      { label: 'For Advisors →', href: 'rmr-advisors-page.html', type: X },
+      { label: '← Insights',     href: routes.insights,          type: X },
+      { label: 'For Advisors →', href: routes.advisors,          type: X },
     ],
   };
 
@@ -123,7 +141,7 @@
 
   const html = `
     <div class="sf-inner">
-      <a href="rmr-home.html" class="sf-logo">
+      <a href="${routes.home}" class="sf-logo">
         <img src="rmr-logo.png" alt="Roll My Retirement">
       </a>
       <ul class="sf-nav">

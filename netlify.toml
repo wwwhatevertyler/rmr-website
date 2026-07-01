@@ -1,0 +1,52 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/advisors"
+  to = "/rmr-advisors-page.html"
+  status = 200
+
+[[redirects]]
+  from = "/contact"
+  to = "/rmr-contact.html"
+  status = 200
+
+[[redirects]]
+  from = "/insights"
+  to = "/rmr-blog.html"
+  status = 200
+
+[[redirects]]
+  from = "/insights/"
+  to = "/rmr-blog.html"
+  status = 200
+
+[[redirects]]
+  from = "/insights/:slug"
+  to = "/rmr-blog-post.html"
+  status = 200
+
+[[redirects]]
+  from = "/rmr-home.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/rmr-advisors-page.html"
+  to = "/advisors"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/rmr-contact.html"
+  to = "/contact"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/rmr-blog.html"
+  to = "/insights"
+  status = 301
+  force = true

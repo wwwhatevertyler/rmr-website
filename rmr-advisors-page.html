@@ -682,6 +682,14 @@
       font-size: 12px;
       color: var(--text-light);
     }
+    .netlify-honeypot { display: none; }
+    .form-error {
+      display: none;
+      margin: 12px 0 0;
+      font-size: 12px;
+      color: #8a2f24;
+    }
+    .form-error.visible { display: block; }
 
     /* ─── FOOTER CTA ───────────────────────────────────────────────── */
     .footer-cta {
@@ -1194,7 +1202,12 @@
     </div>
 
     <div class="apply-form-wrap">
-      <form id="advisor-form" novalidate>
+      <form id="advisor-form" name="advisor-application" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="advisor-application" />
+        <input type="hidden" name="subject" value="New Roll My Retirement advisor application" />
+        <p class="netlify-honeypot">
+          <label>Leave this field empty <input name="bot-field" /></label>
+        </p>
 
         <div class="form-group-label">Contact Information</div>
 
@@ -1319,6 +1332,7 @@
             Submit Application <span class="arrow">→</span>
           </button>
           <p class="form-microcopy">Private partnership pricing is discussed on a follow-up call for qualified advisors.</p>
+          <p class="form-error" id="advisor-form-error" aria-live="polite"></p>
         </div>
 
       </form>
@@ -1346,7 +1360,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="cursor.js"></script>
-
 <script>
   gsap.registerPlugin(ScrollTrigger);
 
@@ -1628,21 +1641,47 @@
   // ──────────────────────────────────────────────────────────────────
   // FORM SUBMIT — spring feedback
   // ──────────────────────────────────────────────────────────────────
-  document.getElementById('advisor-form').addEventListener('submit', function(e) {
+  function encodeForm(form) {
+    return new URLSearchParams(new FormData(form)).toString();
+  }
+
+  document.getElementById('advisor-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn = this.querySelector('[type="submit"]');
-    gsap.to(btn, {
-      scale: 0.96,
-      duration: 0.12,
-      yoyo: true,
-      repeat: 1,
-      ease: 'power2.inOut',
-      onComplete() {
-        btn.textContent = 'Application Submitted';
-        gsap.to(btn, { backgroundColor: '#2a5c45', duration: 0.4, ease: 'power2.out' });
-        btn.disabled = true;
-      }
-    });
+    const error = document.getElementById('advisor-form-error');
+    const originalLabel = btn.innerHTML;
+
+    error.textContent = '';
+    error.classList.remove('visible');
+    btn.disabled = true;
+    btn.innerHTML = 'Submitting...';
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeForm(this),
+      });
+
+      if (!response.ok) throw new Error('Form submission failed');
+
+      gsap.to(btn, {
+        scale: 0.96,
+        duration: 0.12,
+        yoyo: true,
+        repeat: 1,
+        ease: 'power2.inOut',
+        onComplete() {
+          btn.textContent = 'Application Submitted';
+          gsap.to(btn, { backgroundColor: '#2a5c45', duration: 0.4, ease: 'power2.out' });
+        }
+      });
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = originalLabel;
+      error.textContent = 'Something went wrong. Please try again or email hello@rollmyretirement.com.';
+      error.classList.add('visible');
+    }
   });
 
   // ── Page curtain — intercept internal navigation

@@ -56,5 +56,7 @@ Do not confuse these with draft files in the root:
 ## Deployment
 
 - GitHub repo: `https://github.com/wwwhatevertyler/rmr-website`
-- Public URL: `https://wwwhatevertyler.github.io/rmr-website/`
-- Pushing to `main` deploys automatically via GitHub Pages — no separate step needed.
+- Production host: Netlify, publishing the generated `dist/` folder.
+- Build command: `npm run build`
+- Public domain target: `rollmyretirement.com` / `www.rollmyretirement.com`
+- Do not publish the repo root directly. The root contains project docs, tasks, stale Framer exports, and local experiments.

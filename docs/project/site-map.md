@@ -6,7 +6,10 @@ _Pages, routes, and navigation structure._
 
 - `/` — Homepage
 - `/advisors` — Advisor landing page
+- `/contact` — Consumer/contact lead form
+- `/insights` — Blog index
+- `/insights/:slug` — Blog post detail
 
 ## Navigation
 
-_TBD_
+Production uses clean Netlify routes. Legacy `.html` files remain as source files and compatibility fallbacks.

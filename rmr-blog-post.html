@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/" />
   <title>Loading… — Roll My Retirement</title>
   <meta name="description" content="" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -489,7 +490,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="cursor.js"></script>
-
 <script>
   /* ─── LENIS ──────────────────────────────────────────────────────── */
   const lenis = new Lenis({
@@ -684,8 +684,16 @@
   initLinkTransitions();
 
   /* ─── LOAD POST ───────────────────────────────────────────────────── */
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('slug');
+  function getPostSlug() {
+    const params = new URLSearchParams(window.location.search);
+    const querySlug = params.get('slug');
+    if (querySlug) return querySlug;
+
+    const match = window.location.pathname.match(/^\/insights\/([^/]+)\/?$/);
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  const slug = getPostSlug();
 
   if (!slug) {
     renderError('No article was specified. Please return to the Insights page.');

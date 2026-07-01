@@ -433,6 +433,15 @@
       margin: 0 6px;
       opacity: 0.5;
     }
+    .netlify-honeypot { display: none; }
+    .form-error {
+      display: none;
+      margin: 0;
+      font-size: 12px;
+      color: #8a2f24;
+      text-align: center;
+    }
+    .form-error.visible { display: block; }
 
     /* Success state */
     .form-success {
@@ -640,7 +649,12 @@
       <!-- Form card -->
       <div class="contact-form-wrap" id="contact-form-wrap">
 
-        <form id="contact-form" novalidate>
+        <form id="contact-form" name="consumer-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="consumer-contact" />
+          <input type="hidden" name="subject" value="New Roll My Retirement contact request" />
+          <p class="netlify-honeypot">
+            <label>Leave this field empty <input name="bot-field" /></label>
+          </p>
 
           <div class="form-section-label">Your details</div>
 
@@ -699,6 +713,7 @@
             <p class="form-microcopy">
               Free to you<span>·</span>No obligation<span>·</span>We'll be in touch within 1 business day
             </p>
+            <p class="form-error" id="contact-form-error" aria-live="polite"></p>
           </div>
 
         </form>
@@ -770,7 +785,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="cursor.js"></script>
-
 <script>
   gsap.registerPlugin(ScrollTrigger);
 
@@ -856,19 +870,46 @@
   // ──────────────────────────────────────────────────────────────────
   // FORM SUBMIT — show success state
   // ──────────────────────────────────────────────────────────────────
-  document.getElementById('contact-form').addEventListener('submit', function(e) {
+  function encodeForm(form) {
+    return new URLSearchParams(new FormData(form)).toString();
+  }
+
+  document.getElementById('contact-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const form = this;
     const success = document.getElementById('form-success');
+    const btn = document.getElementById('form-submit');
+    const error = document.getElementById('contact-form-error');
+    const originalLabel = btn.innerHTML;
 
-    gsap.to(form, {
-      opacity: 0, y: -20, duration: 0.35, ease: 'power2.in',
-      onComplete() {
-        form.style.display = 'none';
-        success.classList.add('visible');
-        gsap.from(success, { opacity: 0, y: 24, duration: 0.6, ease: 'power3.out' });
-      }
-    });
+    error.textContent = '';
+    error.classList.remove('visible');
+    btn.disabled = true;
+    btn.innerHTML = 'Sending...';
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeForm(form),
+      });
+
+      if (!response.ok) throw new Error('Form submission failed');
+
+      gsap.to(form, {
+        opacity: 0, y: -20, duration: 0.35, ease: 'power2.in',
+        onComplete() {
+          form.style.display = 'none';
+          success.classList.add('visible');
+          gsap.from(success, { opacity: 0, y: 24, duration: 0.6, ease: 'power3.out' });
+        }
+      });
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = originalLabel;
+      error.textContent = 'Something went wrong. Please try again or email hello@rollmyretirement.com.';
+      error.classList.add('visible');
+    }
   });
 </script>
 

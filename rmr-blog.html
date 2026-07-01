@@ -516,6 +516,14 @@
       color: var(--text-light);
       margin-top: 12px;
     }
+    .netlify-honeypot { display: none; }
+    .newsletter-error {
+      display: none;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #8a2f24;
+    }
+    .newsletter-error.visible { display: block; }
 
     /* ─── RESPONSIVE ────────────────────────────────────────────────── */
     @media (max-width: 768px) {
@@ -617,9 +625,15 @@
       <span class="eyebrow newsletter-eyebrow">Stay informed</span>
       <h2 class="serif newsletter-h2">Get the next article<br>in your inbox.</h2>
       <p class="newsletter-sub">No noise. One article when it's worth reading.</p>
-      <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+      <form class="newsletter-form" name="newsletter-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit="handleNewsletterSubmit(event)">
+        <input type="hidden" name="form-name" value="newsletter-signup" />
+        <input type="hidden" name="subject" value="New Roll My Retirement newsletter signup" />
+        <p class="netlify-honeypot">
+          <label>Leave this field empty <input name="bot-field" /></label>
+        </p>
         <input
           type="email"
+          name="email"
           class="newsletter-input"
           placeholder="your@email.com"
           required
@@ -629,6 +643,7 @@
           Subscribe <span class="arrow">→</span>
         </button>
       </form>
+      <p class="newsletter-error" id="newsletter-error" aria-live="polite"></p>
       <p class="newsletter-note">No spam. Unsubscribe any time.</p>
     </div>
   </div>
@@ -643,7 +658,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="cursor.js"></script>
-
 <script>
   /* ─── LENIS SMOOTH SCROLL ─────────────────────────────────────────── */
   const lenis = new Lenis({
@@ -685,7 +699,10 @@
   }
 
   function navigateToPost(slug) {
-    const target = `rmr-blog-post.html?slug=${slug}`;
+    const localHosts = ['localhost', '127.0.0.1', '::1'];
+    const target = localHosts.includes(window.location.hostname)
+      ? `rmr-blog-post.html?slug=${slug}`
+      : `/insights/${slug}`;
     gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
     gsap.to('#page-curtain', {
       scaleY: 1, duration: 0.42, ease: 'power3.in',
@@ -852,12 +869,39 @@
   });
 
   /* ─── NEWSLETTER SUBMIT ───────────────────────────────────────────── */
-  function handleNewsletterSubmit(e) {
+  function encodeForm(form) {
+    return new URLSearchParams(new FormData(form)).toString();
+  }
+
+  async function handleNewsletterSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button');
-    btn.textContent = 'Subscribed ✓';
+    const error = document.getElementById('newsletter-error');
+    const originalLabel = btn.innerHTML;
+
+    error.textContent = '';
+    error.classList.remove('visible');
+    btn.textContent = 'Subscribing...';
     btn.disabled = true;
-    btn.style.opacity = '0.6';
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeForm(e.target),
+      });
+
+      if (!response.ok) throw new Error('Form submission failed');
+
+      btn.textContent = 'Subscribed';
+      btn.style.opacity = '0.6';
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = originalLabel;
+      btn.style.opacity = '1';
+      error.textContent = 'Something went wrong. Please try again in a moment.';
+      error.classList.add('visible');
+    }
   }
 
   /* ─── KEYBOARD NAV ON CARDS ──────────────────────────────────────── */
