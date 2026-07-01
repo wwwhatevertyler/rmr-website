@@ -14,6 +14,8 @@ const entries = [
   ['rmr-blog-post.html'],
   ['footer.js'],
   ['cursor.js'],
+  ['audio.js'],
+  ['audio/background-audio-trimmed.mp3'],
   ['rmr-logo.png'],
   ['blog'],
   ['Website Images'],

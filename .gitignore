@@ -1,7 +1,7 @@
 .DS_Store
 dist/
-audio/
-audio.js
+audio/*
+!audio/background-audio-trimmed.mp3
 Roll My Retirement - Fast 401k Rollovers.html
 original-website-prompt.txt
 rmr-contact-page.html
