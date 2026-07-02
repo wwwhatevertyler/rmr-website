@@ -15,7 +15,7 @@
   const FADE_IN_MS   = 3000;    // atmospheric auto-start fade
   const TOGGLE_IN_MS = 500;     // re-enable via toggle
   const TOGGLE_OUT_MS = 600;    // disable via toggle
-  const CLICK_VOL    = 0.28;
+  const CLICK_VOL    = 0.56;
   const CLICK_POOL_SIZE = 6;
 
   let bgMaxVol  = 0.22;         // mutable — slider can update this
