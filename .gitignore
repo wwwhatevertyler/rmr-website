@@ -2,6 +2,7 @@
 dist/
 audio/*
 !audio/background-audio-trimmed.mp3
+!audio/audio-for-clicks-1.wav
 Roll My Retirement - Fast 401k Rollovers.html
 original-website-prompt.txt
 rmr-contact-page.html

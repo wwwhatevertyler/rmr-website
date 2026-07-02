@@ -427,6 +427,12 @@
       position: relative;
       aspect-ratio: 1;
       overflow: visible;
+      cursor: pointer;
+    }
+    .network-visual:focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: 8px;
+      border-radius: 50%;
     }
     .network-hint {
       position: absolute;
@@ -1355,6 +1361,10 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
   const pill   = document.getElementById('network-you-pill');
   if (!visual || !svg || !pill) return;
 
+  visual.setAttribute('role', 'button');
+  visual.setAttribute('tabindex', '0');
+  visual.setAttribute('aria-label', 'Scatter the local advisor network dots');
+
   const CX = 200, CY = 200, R = 193;
   const WALL = R - 16; // soft boundary inside the circle
 
@@ -1400,9 +1410,8 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
     visual.addEventListener('mouseleave', () => { inCircle = false; });
   }
 
-  // Click: scatter all dots in random directions
   const hint = visual.querySelector('.network-hint');
-  visual.addEventListener('click', () => {
+  function scatterDots() {
     dots.forEach(d => {
       const a = Math.random() * Math.PI * 2;
       const spd = 2.5 + Math.random() * 3;
@@ -1411,6 +1420,14 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
       d.angle = a;
     });
     if (hint) { hint.style.transition = 'opacity 0.4s ease'; hint.style.opacity = '0'; }
+  }
+
+  // Click/keyboard: scatter all dots in random directions.
+  visual.addEventListener('click', scatterDots);
+  visual.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    visual.click();
   });
 
   function tick() {

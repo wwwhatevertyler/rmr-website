@@ -1,68 +1,52 @@
 /**
- * RMR audio system — background music + synthesized UI click sounds.
+ * RMR audio system — background music + sampled UI click sounds.
  * Include before </body> on every page:
  *   <script src="audio.js"></script>
  *
  * Background music: drop your audio file at  audio/background-audio-trimmed.mp3
- * Click sounds are synthesized via Web Audio API (no files needed).
+ * Click sounds use audio/audio-for-clicks-1.wav.
  */
 (function () {
   'use strict';
 
   const BG_SRC       = 'audio/background-audio-trimmed.mp3';
+  const CLICK_SRC    = 'audio/audio-for-clicks-1.wav';
   const BG_START_AT  = 0;       // skip to this timestamp in the song (seconds)
   const FADE_IN_MS   = 3000;    // atmospheric auto-start fade
   const TOGGLE_IN_MS = 500;     // re-enable via toggle
   const TOGGLE_OUT_MS = 600;    // disable via toggle
+  const CLICK_VOL    = 0.28;
+  const CLICK_POOL_SIZE = 6;
 
   let bgMaxVol  = 0.22;         // mutable — slider can update this
   let active    = false;
   let bgAudio   = null;
-  let audioCtx  = null;
   let toggleEl  = null;
   let volInput  = null;
   let fadeRaf   = null;
   let bgPlayPending = false;
+  let clickPool = [];
+  let clickPoolIndex = 0;
 
-  // ── Audio Context ──────────────────────────────────────────────────────────
-  function getCtx() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    return audioCtx;
+  // ── Sampled Click Sound ───────────────────────────────────────────────────
+  function buildClickPool() {
+    clickPool = Array.from({ length: CLICK_POOL_SIZE }, () => {
+      const audio = new Audio(CLICK_SRC);
+      audio.preload = 'auto';
+      audio.volume = CLICK_VOL;
+      return audio;
+    });
   }
 
-  // ── Synthesized Click Sound (Nier / Ex Machina style) ─────────────────────
   function playClickSound() {
-    if (!active) return;
+    if (!active || !clickPool.length) return;
+    const click = clickPool[clickPoolIndex];
+    clickPoolIndex = (clickPoolIndex + 1) % clickPool.length;
     try {
-      const ctx = getCtx();
-      const now = ctx.currentTime;
-
-      const osc1 = ctx.createOscillator();
-      const g1   = ctx.createGain();
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(1600, now);
-      osc1.frequency.exponentialRampToValueAtTime(800, now + 0.09);
-      g1.gain.setValueAtTime(0.09, now);
-      g1.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
-      osc1.connect(g1);
-      g1.connect(ctx.destination);
-      osc1.start(now);
-      osc1.stop(now + 0.13);
-
-      const osc2 = ctx.createOscillator();
-      const g2   = ctx.createGain();
-      osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(800, now);
-      osc2.frequency.exponentialRampToValueAtTime(400, now + 0.06);
-      g2.gain.setValueAtTime(0.04, now);
-      g2.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
-      osc2.connect(g2);
-      g2.connect(ctx.destination);
-      osc2.start(now);
-      osc2.stop(now + 0.09);
+      click.pause();
+      click.currentTime = 0;
+      click.volume = CLICK_VOL;
+      click.play().catch(() => {});
     } catch (_) { /* silent fail */ }
   }
 
@@ -397,18 +381,35 @@
   }
 
   // ── Click Sound Listeners ──────────────────────────────────────────────────
+  function isSoundableClickTarget(target) {
+    if (!target || target.closest('#audio-wrap')) return false;
+    if (target.closest('input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), textarea')) return false;
+    return Boolean(target.closest([
+      'a[href]',
+      'button',
+      '[role="button"]',
+      'input[type="submit"]',
+      'input[type="button"]',
+      'input[type="checkbox"]',
+      'input[type="radio"]',
+      'label',
+      'select',
+      'summary',
+      '[tabindex]:not([tabindex="-1"])',
+      '.network-visual'
+    ].join(',')));
+  }
+
   function attachInteractionListeners() {
     document.addEventListener('click', (e) => {
-      if (e.target.closest('#audio-wrap')) return;
-      if (e.target.closest('a[href], button, [role="button"], input[type="submit"], input[type="button"], label')) {
-        playClickSound();
-      }
+      if (isSoundableClickTarget(e.target)) playClickSound();
     }, true);
   }
 
   // ── Init ───────────────────────────────────────────────────────────────────
   function init() {
     toggleEl = buildUI();
+    buildClickPool();
     attachInteractionListeners();
 
     // Attempt auto-start; only flip active AFTER play() confirms success.
