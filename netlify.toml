@@ -13,6 +13,18 @@
   status = 200
 
 [[redirects]]
+  from = "/rmr-contact"
+  to = "/contact"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/rmr-contact/"
+  to = "/contact"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/insights"
   to = "/rmr-blog.html"
   status = 200
