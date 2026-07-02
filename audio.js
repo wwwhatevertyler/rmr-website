@@ -22,6 +22,7 @@
   let toggleEl  = null;
   let volInput  = null;
   let fadeRaf   = null;
+  let bgPlayPending = false;
 
   // ── Audio Context ──────────────────────────────────────────────────────────
   function getCtx() {
@@ -94,12 +95,26 @@
       bgAudio.src = BG_SRC;
     }
 
+    if (bgPlayPending) return;
+    bgPlayPending = true;
+
     bgAudio.play()
-      .then(() => fadeBg(bgMaxVol, fadeDuration))
+      .then(() => {
+        bgPlayPending = false;
+        fadeBg(bgMaxVol, fadeDuration);
+      })
       .catch(() => {
+        bgPlayPending = false;
         // Autoplay blocked — start on first user interaction
         const onInteract = () => {
-          bgAudio.play().then(() => fadeBg(bgMaxVol, fadeDuration)).catch(() => {});
+          if (bgPlayPending) return;
+          bgPlayPending = true;
+          bgAudio.play()
+            .then(() => {
+              bgPlayPending = false;
+              fadeBg(bgMaxVol, fadeDuration);
+            })
+            .catch(() => { bgPlayPending = false; });
           document.removeEventListener('click', onInteract);
         };
         document.addEventListener('click', onInteract);
@@ -122,6 +137,16 @@
       stopBg();
     }
     updateToggleUI();
+  }
+
+  function activateFromVolumeControl() {
+    if (!active) {
+      setActive(true);
+      return;
+    }
+    if (bgAudio && bgAudio.paused) {
+      startBg(TOGGLE_IN_MS);
+    }
   }
 
   // ── Styles ────────────────────────────────────────────────────────────────
@@ -338,9 +363,23 @@
     wrap.addEventListener('mouseenter', () => panel.setAttribute('data-open', 'true'));
     wrap.addEventListener('mouseleave', () => panel.setAttribute('data-open', 'false'));
 
+    // Volume interaction should start audio just like the main toggle.
+    const sliderStartEvents = window.PointerEvent ? ['pointerdown'] : ['mousedown', 'touchstart'];
+    sliderStartEvents.forEach(eventName => {
+      slider.addEventListener(eventName, () => {
+        activateFromVolumeControl();
+      }, { passive: true });
+    });
+
+    slider.addEventListener('keydown', (e) => {
+      const volumeKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'];
+      if (volumeKeys.includes(e.key)) activateFromVolumeControl();
+    });
+
     // Volume scrubbing
     slider.addEventListener('input', () => {
       bgMaxVol = slider.value / 100;
+      activateFromVolumeControl();
       if (bgAudio && active) {
         if (fadeRaf) { cancelAnimationFrame(fadeRaf); fadeRaf = null; }
         bgAudio.volume = bgMaxVol;
@@ -374,7 +413,7 @@
 
     // Attempt auto-start; only flip active AFTER play() confirms success.
     // Browsers block autoplay until a user gesture — if blocked the UI stays
-    // inactive (correct) and the user clicks the toggle to start.
+    // inactive (correct) and the user can use the toggle or volume slider to start.
     bgAudio           = new Audio();
     bgAudio.loop      = true;
     bgAudio.volume    = 0;
@@ -390,7 +429,7 @@
         fadeBg(bgMaxVol, FADE_IN_MS);
       })
       .catch(() => {
-        // Autoplay blocked — UI stays off; user clicks toggle to start
+        // Autoplay blocked — UI stays off; user uses the toggle or volume slider to start.
       });
   }
 
