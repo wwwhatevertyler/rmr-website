@@ -1361,6 +1361,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="cursor.js"></script>
 <script src="audio.js"></script>
+<script src="router.js"></script>
 <script>
   gsap.registerPlugin(ScrollTrigger);
 
@@ -1685,21 +1686,6 @@
     }
   });
 
-  // ── Page curtain — intercept internal navigation
-  document.querySelectorAll('a[href]').forEach(link => {
-    const href = link.getAttribute('href');
-    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
-    if (!href.endsWith('.html') && !href.includes('.html#')) return;
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = this.href;
-      gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
-      gsap.to('#page-curtain', {
-        scaleY: 1, duration: 0.42, ease: 'power3.in',
-        onComplete: () => { window.location.href = target; }
-      });
-    });
-  });
 </script>
 
 </body>

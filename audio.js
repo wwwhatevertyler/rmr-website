@@ -9,6 +9,11 @@
 (function () {
   'use strict';
 
+  if (window.RMRAudio && window.RMRAudio.ensureMounted) {
+    window.RMRAudio.ensureMounted();
+    return;
+  }
+
   const BG_SRC       = 'audio/background-audio-trimmed.mp3';
   const CLICK_SRC    = 'audio/audio-for-clicks-1.wav';
   const BG_START_AT  = 0;       // skip to this timestamp in the song (seconds)
@@ -27,6 +32,8 @@
   let bgPlayPending = false;
   let clickPool = [];
   let clickPoolIndex = 0;
+  let clickListenerAttached = false;
+  let initialized = false;
 
   // ── Sampled Click Sound ───────────────────────────────────────────────────
   function buildClickPool() {
@@ -293,10 +300,25 @@
   `;
 
   // ── Build UI ───────────────────────────────────────────────────────────────
-  function buildUI() {
+  function ensureStyle() {
+    if (document.getElementById('rmr-audio-style')) return;
     const styleEl = document.createElement('style');
+    styleEl.id = 'rmr-audio-style';
     styleEl.textContent = CSS;
     document.head.appendChild(styleEl);
+  }
+
+  function buildUI() {
+    ensureStyle();
+
+    const existing = document.getElementById('audio-wrap');
+    if (existing) {
+      toggleEl = document.getElementById('audio-toggle');
+      volInput = document.getElementById('audio-vol');
+      if (volInput) volInput.value = String(Math.round(bgMaxVol * 100));
+      updateToggleUI();
+      return toggleEl;
+    }
 
     // Wrapper
     const wrap = document.createElement('div');
@@ -401,16 +423,36 @@
   }
 
   function attachInteractionListeners() {
+    if (clickListenerAttached) return;
+    clickListenerAttached = true;
     document.addEventListener('click', (e) => {
       if (isSoundableClickTarget(e.target)) playClickSound();
     }, true);
   }
 
+  function ensureMounted() {
+    if (!document.body) return;
+    if (!document.getElementById('audio-wrap')) {
+      toggleEl = buildUI();
+    } else {
+      ensureStyle();
+      toggleEl = document.getElementById('audio-toggle');
+      volInput = document.getElementById('audio-vol');
+    }
+    if (!clickPool.length) buildClickPool();
+    attachInteractionListeners();
+    if (volInput) volInput.value = String(Math.round(bgMaxVol * 100));
+    updateToggleUI();
+  }
+
   // ── Init ───────────────────────────────────────────────────────────────────
   function init() {
-    toggleEl = buildUI();
-    buildClickPool();
-    attachInteractionListeners();
+    if (initialized) {
+      ensureMounted();
+      return;
+    }
+    initialized = true;
+    ensureMounted();
 
     // Attempt auto-start; only flip active AFTER play() confirms success.
     // Browsers block autoplay until a user gesture — if blocked the UI stays
@@ -433,6 +475,12 @@
         // Autoplay blocked — UI stays off; user uses the toggle or volume slider to start.
       });
   }
+
+  window.RMRAudio = {
+    ensureMounted,
+    playClickSound,
+    isActive: () => active
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

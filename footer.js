@@ -129,9 +129,10 @@
     }
   `;
 
-  const styleEl = document.createElement('style');
+  const styleEl = document.getElementById('rmr-footer-style') || document.createElement('style');
+  styleEl.id = 'rmr-footer-style';
   styleEl.textContent = css;
-  document.head.appendChild(styleEl);
+  if (!styleEl.parentNode) document.head.appendChild(styleEl);
 
   const navItems = nav.map(item => {
     if (item.type === 'sep') return `<li class="sf-nav-sep" aria-hidden="true">·</li>`;

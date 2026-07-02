@@ -15,6 +15,7 @@ const entries = [
   ['footer.js'],
   ['cursor.js'],
   ['audio.js'],
+  ['router.js'],
   ['audio/background-audio-trimmed.mp3'],
   ['audio/audio-for-clicks-1.wav'],
   ['rmr-logo.png'],

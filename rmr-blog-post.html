@@ -491,6 +491,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="cursor.js"></script>
 <script src="audio.js"></script>
+<script src="router.js"></script>
 <script>
   /* ─── LENIS ──────────────────────────────────────────────────────── */
   const lenis = new Lenis({
@@ -646,7 +647,6 @@
     });
 
     ScrollTrigger.refresh();
-    initLinkTransitions();
   }
 
   /* ─── RENDER ERROR ────────────────────────────────────────────────── */
@@ -662,27 +662,6 @@
 
   /* ─── PAGE CURTAIN ───────────────────────────────────────────────── */
   gsap.to('#page-curtain', { scaleY: 0, duration: 0.6, ease: 'power3.inOut', delay: 0.05 });
-
-  function initLinkTransitions() {
-    document.querySelectorAll('a[href]').forEach(link => {
-      if (link._curtainBound) return;
-      const href = link.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
-      if (!href.endsWith('.html') && !href.includes('.html#')) return;
-      link._curtainBound = true;
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = this.href;
-        gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
-        gsap.to('#page-curtain', {
-          scaleY: 1, duration: 0.42, ease: 'power3.in',
-          onComplete: () => { window.location.href = target; }
-        });
-      });
-    });
-  }
-
-  initLinkTransitions();
 
   /* ─── LOAD POST ───────────────────────────────────────────────────── */
   function getPostSlug() {

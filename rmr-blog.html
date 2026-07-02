@@ -625,7 +625,7 @@
       <span class="eyebrow newsletter-eyebrow">Stay informed</span>
       <h2 class="serif newsletter-h2">Get the next article<br>in your inbox.</h2>
       <p class="newsletter-sub">No noise. One article when it's worth reading.</p>
-      <form class="newsletter-form" name="newsletter-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit="handleNewsletterSubmit(event)">
+      <form class="newsletter-form" name="newsletter-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="newsletter-signup" />
         <input type="hidden" name="subject" value="New Roll My Retirement newsletter signup" />
         <p class="netlify-honeypot">
@@ -659,6 +659,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="cursor.js"></script>
 <script src="audio.js"></script>
+<script src="router.js"></script>
 <script>
   /* ─── LENIS SMOOTH SCROLL ─────────────────────────────────────────── */
   const lenis = new Lenis({
@@ -704,18 +705,18 @@
     const target = localHosts.includes(window.location.hostname)
       ? `rmr-blog-post.html?slug=${slug}`
       : `/insights/${slug}`;
-    gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
-    gsap.to('#page-curtain', {
-      scaleY: 1, duration: 0.42, ease: 'power3.in',
-      onComplete: () => { window.location.href = target; }
-    });
+    if (window.RMRRouter && window.RMRRouter.navigate) {
+      window.RMRRouter.navigate(target);
+    } else {
+      window.location.href = target;
+    }
   }
 
   /* ─── RENDER FEATURED POST ────────────────────────────────────────── */
   function renderFeatured(post) {
     const el = document.getElementById('featured-post');
     el.innerHTML = `
-      <article class="featured-card" onclick="navigateToPost('${post.slug}')" role="button" tabindex="0" aria-label="Read ${post.title}">
+      <article class="featured-card" data-slug="${post.slug}" role="button" tabindex="0" aria-label="Read ${post.title}">
         <div class="featured-img-wrap">
           <img src="${post.image}" alt="${post.title}" class="featured-img" loading="lazy">
         </div>
@@ -744,7 +745,7 @@
   /* ─── RENDER ARTICLE CARD (grid) ──────────────────────────────────── */
   function renderCard(post) {
     return `
-      <article class="article-card" data-category="${post.category}" onclick="navigateToPost('${post.slug}')" role="button" tabindex="0" aria-label="Read ${post.title}">
+      <article class="article-card" data-category="${post.category}" data-slug="${post.slug}" role="button" tabindex="0" aria-label="Read ${post.title}">
         <div class="card-img-wrap">
           <img src="${post.image}" alt="${post.title}" class="card-img" loading="lazy">
         </div>
@@ -767,7 +768,7 @@
   /* ─── RENDER LIST ROW (compact) ───────────────────────────────────── */
   function renderRow(post) {
     return `
-      <article class="list-row" data-category="${post.category}" onclick="navigateToPost('${post.slug}')" role="button" tabindex="0" aria-label="Read ${post.title}">
+      <article class="list-row" data-category="${post.category}" data-slug="${post.slug}" role="button" tabindex="0" aria-label="Read ${post.title}">
         <img src="${post.image}" alt="${post.title}" class="list-thumb" loading="lazy">
         <div class="list-body">
           <div class="list-tag-row">
@@ -869,6 +870,12 @@
     applyFilter(pill.dataset.filter);
   });
 
+  document.addEventListener('click', e => {
+    const card = e.target.closest('.article-card, .list-row, .featured-card');
+    if (!card || !card.dataset.slug) return;
+    navigateToPost(card.dataset.slug);
+  });
+
   /* ─── NEWSLETTER SUBMIT ───────────────────────────────────────────── */
   function encodeForm(form) {
     return new URLSearchParams(new FormData(form)).toString();
@@ -905,6 +912,8 @@
     }
   }
 
+  document.querySelector('.newsletter-form').addEventListener('submit', handleNewsletterSubmit);
+
   /* ─── KEYBOARD NAV ON CARDS ──────────────────────────────────────── */
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter' && document.activeElement.matches('.article-card, .list-row, .featured-card')) {
@@ -914,21 +923,6 @@
 
   /* ─── PAGE CURTAIN ───────────────────────────────────────────────── */
   gsap.to('#page-curtain', { scaleY: 0, duration: 0.6, ease: 'power3.inOut', delay: 0.05 });
-
-  document.querySelectorAll('a[href]').forEach(link => {
-    const href = link.getAttribute('href');
-    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
-    if (!href.endsWith('.html') && !href.includes('.html#')) return;
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = this.href;
-      gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
-      gsap.to('#page-curtain', {
-        scaleY: 1, duration: 0.42, ease: 'power3.in',
-        onComplete: () => { window.location.href = target; }
-      });
-    });
-  });
 
   /* ─── LOAD & RENDER ───────────────────────────────────────────────── */
   initHeroAnim();

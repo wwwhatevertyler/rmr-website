@@ -974,13 +974,33 @@
 <script src="footer.js"></script>
 
 <!-- ─── CDN SCRIPTS ───────────────────────────────────────────────────── -->
-<script type="module">
-import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist/esm/simplex-noise.js';
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="cursor.js"></script>
+<script src="audio.js"></script>
+<script src="router.js"></script>
+<script>
 
 (function initWaves() {
   const container = document.getElementById('waves-container');
   const svg = document.getElementById('waves-svg');
   if (!container || !svg) return;
+
+  let disposed = false;
+  let rafId = 0;
+  const cleanupFns = [];
+  if (window.RMRPage && window.RMRPage.registerCleanup) {
+    window.RMRPage.registerCleanup(() => {
+      disposed = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      cleanupFns.forEach(fn => fn());
+    });
+  }
+
+  import('https://cdn.jsdelivr.net/npm/simplex-noise@4/dist/esm/simplex-noise.js')
+    .then(({ createNoise2D }) => {
+      if (disposed || !document.body.contains(container)) return;
 
   const noise2D = createNoise2D();
   const mouse = { x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false };
@@ -1071,6 +1091,7 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
   }
 
   function tick(time) {
+    if (disposed || !document.body.contains(container)) return;
     mouse.sx += (mouse.x - mouse.sx) * 0.1;
     mouse.sy += (mouse.y - mouse.sy) * 0.1;
     const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
@@ -1081,25 +1102,30 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
     mouse.a  = Math.atan2(dy, dx);
     movePoints(time);
     drawLines();
-    requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
   }
 
   setSize();
   setLines();
-  window.addEventListener('resize', () => { setSize(); setLines(); });
-  window.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY));
-  container.addEventListener('touchmove', e => {
+  const onResize = () => { setSize(); setLines(); };
+  const onMouseMove = e => updateMouse(e.clientX, e.clientY);
+  const onTouchMove = e => {
     e.preventDefault();
     updateMouse(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: false });
-  requestAnimationFrame(tick);
+  };
+  window.addEventListener('resize', onResize);
+  window.addEventListener('mousemove', onMouseMove);
+  container.addEventListener('touchmove', onTouchMove, { passive: false });
+  cleanupFns.push(
+    () => window.removeEventListener('resize', onResize),
+    () => window.removeEventListener('mousemove', onMouseMove),
+    () => container.removeEventListener('touchmove', onTouchMove)
+  );
+  rafId = requestAnimationFrame(tick);
+    })
+    .catch(() => {});
 })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script src="cursor.js"></script>
-<script src="audio.js"></script>
 <script>
   gsap.registerPlugin(ScrollTrigger);
 
@@ -1337,21 +1363,6 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
     .from('.footer-cta p', { opacity: 0, y: 14, duration: 0.6, ease: 'power3.out' }, '-=0.4')
     .from('.footer-cta .btn', { opacity: 0, y: 14, scale: 0.95, duration: 0.5, ease: 'power3.out' }, '-=0.3');
 
-  // ── Page curtain — intercept internal navigation
-  document.querySelectorAll('a[href]').forEach(link => {
-    const href = link.getAttribute('href');
-    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
-    if (!href.endsWith('.html') && !href.includes('.html#')) return;
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = this.href;
-      gsap.set('#page-curtain', { scaleY: 0, transformOrigin: 'bottom center' });
-      gsap.to('#page-curtain', {
-        scaleY: 1, duration: 0.42, ease: 'power3.in',
-        onComplete: () => { window.location.href = target; }
-      });
-    });
-  });
 </script>
 
 <script>
@@ -1396,9 +1407,20 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
   let inCircle = false;
   let pillX = 0, pillY = 0;
   let started = false;
+  let disposed = false;
+  let rafId = 0;
+  const cleanupFns = [];
+
+  if (window.RMRPage && window.RMRPage.registerCleanup) {
+    window.RMRPage.registerCleanup(() => {
+      disposed = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      cleanupFns.forEach(fn => fn());
+    });
+  }
 
   if (hasMouse) {
-    window.addEventListener('mousemove', e => {
+    const onMouseMove = e => {
       const b = svg.getBoundingClientRect();
       msvgX = (e.clientX - b.left) / b.width  * 400;
       msvgY = (e.clientY - b.top)  / b.height * 400;
@@ -1406,8 +1428,14 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
       mpxY  = e.clientY - b.top;
       inCircle = Math.hypot(msvgX - CX, msvgY - CY) < R;
       if (!started) { pillX = mpxX; pillY = mpxY; started = true; }
-    }, { passive: true });
-    visual.addEventListener('mouseleave', () => { inCircle = false; });
+    };
+    const onMouseLeave = () => { inCircle = false; };
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    visual.addEventListener('mouseleave', onMouseLeave);
+    cleanupFns.push(
+      () => window.removeEventListener('mousemove', onMouseMove),
+      () => visual.removeEventListener('mouseleave', onMouseLeave)
+    );
   }
 
   const hint = visual.querySelector('.network-hint');
@@ -1424,13 +1452,19 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
 
   // Click/keyboard: scatter all dots in random directions.
   visual.addEventListener('click', scatterDots);
-  visual.addEventListener('keydown', e => {
+  const onKeydown = e => {
     if (e.key !== 'Enter' && e.key !== ' ') return;
     e.preventDefault();
     visual.click();
-  });
+  };
+  visual.addEventListener('keydown', onKeydown);
+  cleanupFns.push(
+    () => visual.removeEventListener('click', scatterDots),
+    () => visual.removeEventListener('keydown', onKeydown)
+  );
 
   function tick() {
+    if (disposed || !document.body.contains(visual)) return;
     dots.forEach(d => {
       // ── Wander: very gentle drift in a slowly turning direction
       d.angle += (Math.random() - 0.5) * 0.03;
@@ -1498,10 +1532,10 @@ import { createNoise2D } from 'https://cdn.jsdelivr.net/npm/simplex-noise@4/dist
       }
     }
 
-    requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
   }
 
-  requestAnimationFrame(tick);
+  rafId = requestAnimationFrame(tick);
 })();
 </script>
 
