@@ -12,6 +12,7 @@ See `docs/reference/README.md` for the full screenshot index.
 
 - `docs/project/brand.md` — colors, typography, tokens
 - `docs/project/site-map.md` — pages and routing
+- `docs/project/deployment.md` — Netlify domain and deploy workflow
 - `docs/project/animation-system.md` — motion principles and patterns
 - `docs/project/content.md` — copy and content decisions
 - `tasks/todo.md` — current task list
@@ -56,6 +57,7 @@ Do not confuse these with draft files in the root:
 ## Deployment
 
 - GitHub repo: `https://github.com/wwwhatevertyler/rmr-website`
+- Netlify app domain: `https://rollmyretirement.netlify.app`
 - Production host: Netlify, publishing the generated `dist/` folder.
 - Build command: `npm run build`
 - Public domain target: `rollmyretirement.com` / `www.rollmyretirement.com`
