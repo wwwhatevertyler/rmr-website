@@ -180,6 +180,14 @@
     );
   }
 
+  function normalizeInternalRoute(url) {
+    const normalized = new URL(url.href);
+    if (/\/rmr-home(?:\.html)?$/.test(normalized.pathname)) {
+      normalized.pathname = '/';
+    }
+    return normalized;
+  }
+
   function isSoftNavLink(event, link) {
     if (!link || event.defaultPrevented) return false;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
@@ -190,7 +198,7 @@
     const raw = link.getAttribute('href');
     if (!raw || raw.startsWith('#') || raw.startsWith('mailto:') || raw.startsWith('tel:')) return false;
 
-    const url = new URL(raw, window.location.href);
+    const url = normalizeInternalRoute(new URL(raw, window.location.href));
     if (url.origin !== window.location.origin) return false;
     if (samePageHashOnly(url)) return false;
     if (!/\/$|\.html$|^\/(advisors|contact|insights)(\/|$)?/.test(url.pathname)) return false;
@@ -231,7 +239,7 @@
   }
 
   async function navigate(to, options = {}) {
-    const url = new URL(to, window.location.href);
+    const url = normalizeInternalRoute(new URL(to, window.location.href));
     if (url.origin !== window.location.origin) {
       window.location.href = url.href;
       return;

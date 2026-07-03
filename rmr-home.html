@@ -315,6 +315,13 @@
       transform-origin: center center;
       will-change: transform, opacity;
     }
+    .hero-float-magnet {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
     .hero-float-drift {
       width: 100%;
       height: 100%;
@@ -753,6 +760,9 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .t-text-swap { transition: none !important; }
+      .hero-float-magnet {
+        transform: none !important;
+      }
       .hero-float-drift { animation: none !important; }
     }
   </style>
@@ -768,7 +778,7 @@
 <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
 <nav id="main-nav">
   <div class="nav-inner">
-    <a href="rmr-home.html" class="nav-logo">
+    <a href="/" class="nav-logo">
       <img src="rmr-logo.png" alt="Roll My Retirement" class="nav-logo-img">
     </a>
     <ul class="nav-links">
@@ -807,16 +817,20 @@
 <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
 <section id="hero">
   <figure class="hero-float-card hero-float-card--left" data-final-rotate="-5" data-start-rotate="-9" data-parallax-y="-44" aria-hidden="true">
-    <div class="hero-float-enter">
-      <div class="hero-float-drift">
-        <img src="Website%20Images/Li%20Hui%20-%20Photographer%20License%20image%20-%20Original.png" alt="" loading="lazy" decoding="async">
+    <div class="hero-float-magnet">
+      <div class="hero-float-enter">
+        <div class="hero-float-drift">
+          <img src="Website%20Images/Li%20Hui%20-%20Photographer%20License%20image%20-%20Original.png" alt="" loading="lazy" decoding="async">
+        </div>
       </div>
     </div>
   </figure>
   <figure class="hero-float-card hero-float-card--right" data-final-rotate="7" data-start-rotate="11" data-parallax-y="-68" aria-hidden="true">
-    <div class="hero-float-enter">
-      <div class="hero-float-drift">
-        <img src="Website%20Images/2cb66532-e99e-4cbd-bc3f-6628960bd80c.webp" alt="" loading="lazy" decoding="async">
+    <div class="hero-float-magnet">
+      <div class="hero-float-enter">
+        <div class="hero-float-drift">
+          <img src="Website%20Images/2cb66532-e99e-4cbd-bc3f-6628960bd80c.webp" alt="" loading="lazy" decoding="async">
+        </div>
       </div>
     </div>
   </figure>
@@ -1352,6 +1366,55 @@
         }
       });
     });
+
+    const heroEl = document.getElementById('hero');
+    const canUseHeroMagnet = heroEl && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (canUseHeroMagnet) {
+      const heroFloatMagnets = heroFloatCards
+        .map((card, index) => {
+          const target = card.querySelector('.hero-float-magnet');
+          if (!target || getComputedStyle(card).display === 'none') return null;
+          return {
+            xTo: gsap.quickTo(target, 'x', { duration: 0.42, ease: 'power3.out' }),
+            yTo: gsap.quickTo(target, 'y', { duration: 0.42, ease: 'power3.out' }),
+            rotateTo: gsap.quickTo(target, 'rotate', { duration: 0.42, ease: 'power3.out' }),
+            polarity: index === 0 ? -1 : 1
+          };
+        })
+        .filter(Boolean);
+
+      if (heroFloatMagnets.length) {
+        const resetHeroMagnets = () => {
+          heroFloatMagnets.forEach(({ xTo, yTo, rotateTo }) => {
+            xTo(0);
+            yTo(0);
+            rotateTo(0);
+          });
+        };
+
+        const moveHeroMagnets = (event) => {
+          const rect = heroEl.getBoundingClientRect();
+          const nx = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+          const ny = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+
+          heroFloatMagnets.forEach(({ xTo, yTo, rotateTo, polarity }) => {
+            xTo(nx * 5 * polarity);
+            yTo(ny * 4);
+            rotateTo(nx * 0.45 * polarity);
+          });
+        };
+
+        heroEl.addEventListener('mousemove', moveHeroMagnets, { passive: true });
+        heroEl.addEventListener('mouseleave', resetHeroMagnets, { passive: true });
+
+        if (window.RMRPage && window.RMRPage.registerCleanup) {
+          window.RMRPage.registerCleanup(() => {
+            heroEl.removeEventListener('mousemove', moveHeroMagnets);
+            heroEl.removeEventListener('mouseleave', resetHeroMagnets);
+          });
+        }
+      }
+    }
   }
 
   // ─── HERO TEXT SWAP ────────────────────────────────────────────────

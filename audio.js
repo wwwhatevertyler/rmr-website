@@ -20,7 +20,7 @@
   const FADE_IN_MS   = 3000;    // atmospheric auto-start fade
   const TOGGLE_IN_MS = 500;     // re-enable via toggle
   const TOGGLE_OUT_MS = 600;    // disable via toggle
-  const CLICK_VOL    = 0.56;
+  const CLICK_VOL    = 0.82;
   const CLICK_POOL_SIZE = 6;
 
   let bgMaxVol  = 0.22;         // mutable — slider can update this
@@ -33,6 +33,8 @@
   let clickPool = [];
   let clickPoolIndex = 0;
   let clickListenerAttached = false;
+  let lastLabelControlId = '';
+  let lastLabelClickAt = 0;
   let initialized = false;
 
   // ── Sampled Click Sound ───────────────────────────────────────────────────
@@ -422,11 +424,27 @@
     ].join(',')));
   }
 
+  function isDuplicateLabelControlClick(target) {
+    const control = target && target.closest('input[type="checkbox"], input[type="radio"]');
+    if (!control || !control.id) return false;
+    return lastLabelControlId === control.id && performance.now() - lastLabelClickAt < 80;
+  }
+
+  function rememberLabelControlClick(target) {
+    const label = target && target.closest('label[for]');
+    if (!label) return;
+    lastLabelControlId = label.getAttribute('for') || '';
+    lastLabelClickAt = performance.now();
+  }
+
   function attachInteractionListeners() {
     if (clickListenerAttached) return;
     clickListenerAttached = true;
     document.addEventListener('click', (e) => {
-      if (isSoundableClickTarget(e.target)) playClickSound();
+      if (!isSoundableClickTarget(e.target)) return;
+      if (isDuplicateLabelControlClick(e.target)) return;
+      rememberLabelControlClick(e.target);
+      playClickSound();
     }, true);
   }
 

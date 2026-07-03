@@ -2,6 +2,7 @@
 
 ## Current
 
+- [x] Polish hero floating image interaction and unify click audio behavior
 - [x] Add Netlify build output and clean route configuration
 - [x] Wire advisor, contact, and newsletter forms to Netlify Forms
 - [x] Keep blog static with clean `/insights/:slug` production routes
