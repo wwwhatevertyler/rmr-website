@@ -28,6 +28,17 @@
     cleanups: [],
     bound: false
   };
+  const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1']);
+  const PRODUCTION_ROUTE_MAP = {
+    '/rmr-home': '/',
+    '/rmr-home.html': '/',
+    '/rmr-contact': '/contact',
+    '/rmr-contact.html': '/contact',
+    '/rmr-advisors-page': '/advisors',
+    '/rmr-advisors-page.html': '/advisors',
+    '/rmr-blog': '/insights',
+    '/rmr-blog.html': '/insights'
+  };
 
   function safeCleanup(fn) {
     try { fn(); } catch (_) { /* cleanup should never block navigation */ }
@@ -182,7 +193,10 @@
 
   function normalizeInternalRoute(url) {
     const normalized = new URL(url.href);
-    if (/\/rmr-home(?:\.html)?$/.test(normalized.pathname)) {
+    const mappedPath = PRODUCTION_ROUTE_MAP[normalized.pathname];
+    if (mappedPath && !LOCAL_HOSTS.has(window.location.hostname)) {
+      normalized.pathname = mappedPath;
+    } else if (/\/rmr-home(?:\.html)?$/.test(normalized.pathname)) {
       normalized.pathname = '/';
     }
     return normalized;
