@@ -56,8 +56,6 @@
       --text-swap-translate-y: 8px;
       --text-swap-blur: 3px;
       --text-swap-ease: ease-in-out;
-      --parallax-enter-dur: 720ms;
-      --parallax-enter-y: 28px;
     }
 
     /* ─── TYPOGRAPHY ───────────────────────────────────────────────── */
@@ -290,94 +288,67 @@
       color: var(--text-light);
     }
 
-    /* ─── FLOATING PARALLAX IMAGES ─────────────────────────────────── */
-    #about,
-    #process,
-    #network,
-    #faq,
-    #waves {
-      position: relative;
-      isolation: isolate;
-    }
-    #about .container,
-    #process .container,
-    #network .container,
-    #faq .container {
-      position: relative;
-      z-index: 2;
-    }
-    .home-parallax {
+    /* ─── HERO FLOATING IMAGES ─────────────────────────────────────── */
+    .hero-float-card {
       position: absolute;
       z-index: 1;
-      width: var(--parallax-w);
-      height: var(--parallax-h);
-      border: 1px solid rgba(228, 227, 222, 0.9);
-      border-radius: var(--parallax-radius, 18px);
-      box-shadow: var(--parallax-shadow, 0 18px 42px rgba(17, 17, 16, 0.1));
+      top: clamp(176px, 20vw, 222px);
+      width: 144px;
+      height: 180px;
       pointer-events: none;
       user-select: none;
-      contain: paint;
+      contain: layout paint;
       will-change: transform;
     }
-    .home-parallax-frame {
+    .hero-float-card--left {
+      left: max(28px, calc(50% - 500px));
+    }
+    .hero-float-card--right {
+      right: max(28px, calc(50% - 500px));
+      top: clamp(198px, 22vw, 252px);
+    }
+    .hero-float-enter {
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform-origin: center center;
+      will-change: transform, opacity;
+    }
+    .hero-float-drift {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      border-radius: inherit;
-      opacity: 0;
-      transform: translateY(var(--parallax-enter-y)) scale(0.96);
-      will-change: transform, opacity;
+      border: 1px solid rgba(228, 227, 222, 0.92);
+      border-radius: 16px;
+      box-shadow: 0 18px 42px rgba(17, 17, 16, 0.11);
+      animation: heroFloatLeft 6.6s cubic-bezier(0.45, 0, 0.25, 1) infinite alternate;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
     }
-    .home-parallax img {
+    .hero-float-card--right .hero-float-drift {
+      animation-name: heroFloatRight;
+      animation-duration: 7.4s;
+    }
+    .hero-float-drift img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: var(--parallax-pos, center);
-      filter: var(--parallax-filter, none);
-      transform: scale(var(--parallax-img-scale, 1.035));
+      object-position: var(--hero-float-pos, center);
+      transform: scale(1.035);
     }
-    .home-parallax--hero {
-      --parallax-w: clamp(112px, 9.5vw, 148px);
-      --parallax-h: clamp(148px, 12.5vw, 196px);
-      --parallax-radius: 15px;
-      --parallax-pos: center 58%;
-      top: clamp(112px, 14vw, 164px);
-      left: max(28px, calc(50% - 520px));
+    .hero-float-card--left img {
+      --hero-float-pos: center 42%;
     }
-    .home-parallax--about {
-      --parallax-w: clamp(132px, 13vw, 176px);
-      --parallax-h: clamp(178px, 18vw, 244px);
-      --parallax-radius: 16px;
-      --parallax-pos: center 45%;
-      right: max(28px, calc(50% - 548px));
-      top: clamp(-116px, -7vw, -72px);
+    .hero-float-card--right img {
+      --hero-float-pos: center 48%;
     }
-    .home-parallax--texture {
-      --parallax-w: clamp(176px, 18vw, 256px);
-      --parallax-h: clamp(128px, 13vw, 188px);
-      --parallax-radius: 18px;
-      --parallax-shadow: none;
-      --parallax-img-scale: 1;
-      top: clamp(38px, 7vw, 84px);
-      right: max(28px, calc(50% - 560px));
-      border-color: rgba(228, 227, 222, 0.45);
-      mix-blend-mode: multiply;
+    @keyframes heroFloatLeft {
+      from { transform: translate3d(0, 0, 0) rotate(0deg); }
+      to { transform: translate3d(4px, -8px, 0) rotate(1.2deg); }
     }
-    .home-parallax--faq {
-      --parallax-w: clamp(126px, 13vw, 168px);
-      --parallax-h: clamp(126px, 13vw, 168px);
-      --parallax-radius: 17px;
-      --parallax-pos: center 38%;
-      top: clamp(168px, 22vw, 280px);
-      left: max(24px, calc(50% - 548px));
-    }
-    .home-parallax--waves {
-      --parallax-w: clamp(178px, 18vw, 248px);
-      --parallax-h: clamp(82px, 8.5vw, 116px);
-      --parallax-radius: 15px;
-      --parallax-pos: center 43%;
-      top: clamp(32px, 6vw, 78px);
-      right: max(32px, calc(50% - 468px));
+    @keyframes heroFloatRight {
+      from { transform: translate3d(0, 0, 0) rotate(0deg); }
+      to { transform: translate3d(-5px, -7px, 0) rotate(-1deg); }
     }
 
     /* ─── VALUE STRIP ──────────────────────────────────────────────── */
@@ -701,11 +672,12 @@
     @media (max-width: 1024px) {
       .about-grid { gap: 48px; }
       .network-grid { gap: 48px; }
-      .home-parallax--hero { left: 32px; }
-      .home-parallax--about { right: 32px; }
-      .home-parallax--texture { right: 36px; }
-      .home-parallax--faq { left: 32px; }
-      .home-parallax--waves { right: 40px; }
+      .hero-float-card {
+        width: 126px;
+        height: 158px;
+      }
+      .hero-float-card--left { left: 28px; }
+      .hero-float-card--right { right: 28px; }
     }
 
 
@@ -722,22 +694,17 @@
       .nav-links { display: none; }
       .nav-cta { display: none; }
       .nav-mobile-toggle { display: flex; }
-      .home-parallax--texture,
-      .home-parallax--faq {
-        display: none;
+      .hero-float-card {
+        width: 112px;
+        height: 140px;
+        top: 152px;
       }
-      .home-parallax--hero {
-        top: 104px;
-        left: 24px;
-        opacity: 0.82;
-      }
-      .home-parallax--about {
-        right: 24px;
-        top: -64px;
-      }
-      .home-parallax--waves {
-        right: 24px;
-      }
+      .hero-float-card--left { left: 18px; }
+      .hero-float-card--right { right: 18px; top: 182px; }
+    }
+
+    @media (max-width: 700px) {
+      .hero-float-card { display: none; }
     }
 
     @media (max-width: 560px) {
@@ -746,7 +713,6 @@
       .value-item:first-child { border-top: none; }
       .hero-cta-row { flex-direction: column; align-items: center; }
       .hero-cta-row .btn { width: 100%; justify-content: center; }
-      .home-parallax { display: none; }
       /* footer responsive handled by footer.js */
     }
 
@@ -785,6 +751,7 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .t-text-swap { transition: none !important; }
+      .hero-float-drift { animation: none !important; }
     }
   </style>
 </head>
@@ -837,9 +804,18 @@
 
 <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <figure class="home-parallax home-parallax--hero" data-parallax-trigger="#hero" data-parallax-y="64" data-parallax-opacity="1" data-parallax-rotate="-1" aria-hidden="true">
-    <div class="home-parallax-frame">
-      <img src="Website%20Images/image.png" alt="" loading="lazy" decoding="async">
+  <figure class="hero-float-card hero-float-card--left" data-final-rotate="-5" data-start-rotate="-9" data-parallax-y="-44" aria-hidden="true">
+    <div class="hero-float-enter">
+      <div class="hero-float-drift">
+        <img src="Website%20Images/Li%20Hui%20-%20Photographer%20License%20image%20-%20Original.png" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </figure>
+  <figure class="hero-float-card hero-float-card--right" data-final-rotate="7" data-start-rotate="11" data-parallax-y="-68" aria-hidden="true">
+    <div class="hero-float-enter">
+      <div class="hero-float-drift">
+        <img src="Website%20Images/2cb66532-e99e-4cbd-bc3f-6628960bd80c.webp" alt="" loading="lazy" decoding="async">
+      </div>
     </div>
   </figure>
   <div class="container">
@@ -922,16 +898,6 @@
 
 <!-- ─── PROCESS ───────────────────────────────────────────────────────── -->
 <section id="process">
-  <figure class="home-parallax home-parallax--about" data-parallax-trigger="#about" data-parallax-y="-118" data-parallax-opacity="1" data-parallax-rotate="1.2" aria-hidden="true">
-    <div class="home-parallax-frame">
-      <img src="Website%20Images/Li%20Hui%20-%20Photographer%20License%20image%20-%20Original.png" alt="" loading="lazy" decoding="async">
-    </div>
-  </figure>
-  <figure class="home-parallax home-parallax--texture" data-parallax-trigger="#process" data-parallax-y="74" data-parallax-opacity="0.48" data-parallax-rotate="-0.8" aria-hidden="true">
-    <div class="home-parallax-frame">
-      <img src="Website%20Images/Background.png" alt="" loading="lazy" decoding="async">
-    </div>
-  </figure>
   <div class="container">
     <div class="section-header">
       <p class="eyebrow">Our Process</p>
@@ -991,11 +957,6 @@
 
 <!-- ─── FAQ ──────────────────────────────────────────────────────────── -->
 <section id="faq">
-  <figure class="home-parallax home-parallax--faq" data-parallax-trigger="#faq" data-parallax-y="-96" data-parallax-opacity="0.9" data-parallax-rotate="-1.1" aria-hidden="true">
-    <div class="home-parallax-frame">
-      <img src="Website%20Images/DSC05194.png" alt="" loading="lazy" decoding="async">
-    </div>
-  </figure>
   <div class="container">
     <div class="section-header" style="text-align: center; max-width: 560px; margin: 0 auto clamp(40px,5vw,64px);">
       <p class="eyebrow">FAQ</p>
@@ -1093,11 +1054,6 @@
 
 <!-- ─── WAVES ────────────────────────────────────────────────────────── -->
 <section id="waves">
-  <figure class="home-parallax home-parallax--waves" data-parallax-trigger="#waves" data-parallax-y="-88" data-parallax-opacity="1" data-parallax-rotate="0.8" aria-hidden="true">
-    <div class="home-parallax-frame">
-      <img src="Website%20Images/image%2028.png" alt="" loading="lazy" decoding="async">
-    </div>
-  </figure>
   <div id="waves-container">
     <svg id="waves-svg" xmlns="http://www.w3.org/2000/svg"></svg>
   </div>
@@ -1336,66 +1292,16 @@
     });
   });
 
-  // ── Floating image parallax layer
-  (function () {
-    const parallaxItems = gsap.utils.toArray('.home-parallax');
-    if (!parallaxItems.length) return;
-
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const enterMs = parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue('--parallax-enter-dur')
-    ) || 720;
-
-    parallaxItems.forEach(item => {
-      if (getComputedStyle(item).display === 'none') return;
-
-      const frame = item.querySelector('.home-parallax-frame');
-      if (!frame) return;
-
-      const trigger = document.querySelector(item.dataset.parallaxTrigger) || item.closest('section') || item;
-      const targetOpacity = parseFloat(item.dataset.parallaxOpacity || '1');
-      const targetRotate = parseFloat(item.dataset.parallaxRotate || '0');
-      const parallaxY = parseFloat(item.dataset.parallaxY || '-80');
-
-      gsap.set(frame, {
-        opacity: 0,
-        y: parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--parallax-enter-y')) || 28,
-        scale: 0.96,
-        rotate: targetRotate * -0.5,
-        transformOrigin: 'center center'
-      });
-
-      if (reducedMotion) {
-        gsap.set(frame, { opacity: targetOpacity, y: 0, scale: 1, rotate: 0 });
-        return;
-      }
-
-      gsap.to(frame, {
-        opacity: targetOpacity,
-        y: 0,
-        scale: 1,
-        rotate: targetRotate,
-        duration: enterMs / 1000,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger,
-          start: 'top 82%',
-          once: true
-        }
-      });
-
-      gsap.to(item, {
-        y: parallaxY,
-        ease: 'none',
-        scrollTrigger: {
-          trigger,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 0.8
-        }
-      });
-    });
-  })();
+  const heroFloatCards = gsap.utils.toArray('.hero-float-card');
+  const heroFloatFrames = gsap.utils.toArray('.hero-float-enter');
+  const reduceHeroFloatMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  gsap.set(heroFloatFrames, {
+    opacity: 0,
+    y: reduceHeroFloatMotion ? 0 : 18,
+    scale: reduceHeroFloatMotion ? 1 : 0.96,
+    rotate: (i, el) => Number(el.closest('.hero-float-card')?.dataset[reduceHeroFloatMotion ? 'finalRotate' : 'startRotate'] || 0),
+    transformOrigin: 'center center'
+  });
 
   // ──────────────────────────────────────────────────────────────────
   // HERO ENTRANCE — page load stagger
@@ -1419,7 +1325,32 @@
     .to('.hero-bullets li', { opacity: 1, y: 0, x: 0, stagger: 0.07, duration: 0.55 }, '-=0.45')
     .to('.hero-cta-row', { opacity: 1, y: 0, duration: 0.5 }, '-=0.35')
     .to('.hero-microcopy', { opacity: 1, duration: 0.45 }, '-=0.25')
-    .to('.hero-card', { opacity: 1, x: 0, scale: 1, duration: 1.05, ease: 'power3.out' }, 0.3);
+    .to('.hero-card', { opacity: 1, x: 0, scale: 1, duration: 1.05, ease: 'power3.out' }, 0.3)
+    .to(heroFloatFrames, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      rotate: (i, el) => Number(el.closest('.hero-float-card')?.dataset.finalRotate || 0),
+      duration: reduceHeroFloatMotion ? 0.25 : 0.82,
+      stagger: reduceHeroFloatMotion ? 0 : 0.12,
+      ease: 'power3.out'
+    }, 0.42);
+
+  if (!reduceHeroFloatMotion) {
+    heroFloatCards.forEach(card => {
+      if (getComputedStyle(card).display === 'none') return;
+      gsap.to(card, {
+        y: Number(card.dataset.parallaxY || -48),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.8
+        }
+      });
+    });
+  }
 
   // ─── HERO TEXT SWAP ────────────────────────────────────────────────
   (function () {
