@@ -278,11 +278,12 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       object-fit: cover;
+      object-position: var(--post-image-position, center);
       border-radius: var(--radius-card);
       display: block;
     }
     #cover-image.cover-image-focus-lower {
-      object-position: center 88%;
+      object-position: var(--post-image-position, center 88%);
     }
 
     /* ─── ARTICLE BODY ──────────────────────────────────────────────── */
@@ -571,7 +572,7 @@
       <!-- COVER IMAGE -->
       <div id="cover-image-wrap">
         <div class="container">
-          <img id="cover-image" class="${post.slug === 'when-to-roll-over-your-401k' ? 'cover-image-focus-lower' : ''}" src="${post.image}" alt="${post.title}" loading="eager">
+          <img id="cover-image" class="${post.slug === 'when-to-roll-over-your-401k' ? 'cover-image-focus-lower' : ''}" src="${post.image}" alt="${post.title}" loading="eager"${post.imagePosition ? ` style="--post-image-position: ${post.imagePosition};"` : ''}>
         </div>
       </div>
 
