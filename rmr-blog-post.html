@@ -281,9 +281,6 @@
       border-radius: var(--radius-card);
       display: block;
     }
-    #cover-image.cover-image-focus-lower {
-      object-position: center 88%;
-    }
 
     /* ─── ARTICLE BODY ──────────────────────────────────────────────── */
     #article-body-section {
@@ -571,7 +568,7 @@
       <!-- COVER IMAGE -->
       <div id="cover-image-wrap">
         <div class="container">
-          <img id="cover-image" class="${post.slug === 'when-to-roll-over-your-401k' ? 'cover-image-focus-lower' : ''}" src="${post.image}" alt="${post.title}" loading="eager">
+          <img id="cover-image" src="${post.image}" alt="${post.title}" loading="eager">
         </div>
       </div>
 
