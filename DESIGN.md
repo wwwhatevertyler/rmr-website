@@ -172,8 +172,10 @@ Source image folder: `website/assets/images/`. The build emits these files to `d
 - `DSC_0366.png` - in-article image for "The Quiet Power of Moving Your 401k".
 - `rmr-social-share-2.png` - current Open Graph/Twitter social share image.
 
-Source favicon/logo assets live in `website/assets/icons/`. The build emits public favicon files to the `dist/` root:
+Source favicon/logo assets live in `website/assets/icons/`. The build emits public logo and favicon files to the `dist/` root:
 
+- `rmr-logo-new.png` - primary nav/footer brand mark.
+- `rmr-logo.png` - original logo variant retained for design-system reference and fallback use.
 - `favicon.ico`
 - `favicon-32x32.png`
 - `favicon-192x192.png`

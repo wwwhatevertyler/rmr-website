@@ -19,6 +19,7 @@ const entries = [
   ['website/assets/audio/background-audio-trimmed.mp3', 'audio/background-audio-trimmed.mp3'],
   ['website/assets/audio/audio-for-clicks-1.wav', 'audio/audio-for-clicks-1.wav'],
   ['website/assets/icons/rmr-logo.png', 'rmr-logo.png'],
+  ['website/assets/icons/rmr-logo-new.png', 'rmr-logo-new.png'],
   ['website/assets/icons/favicon.ico', 'favicon.ico'],
   ['website/assets/icons/favicon-32x32.png', 'favicon-32x32.png'],
   ['website/assets/icons/favicon-192x192.png', 'favicon-192x192.png'],

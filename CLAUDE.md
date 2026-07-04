@@ -51,7 +51,7 @@ Source pages live under `website/`. Root `rmr-*.html` filenames are generated co
 - No dot indicators. No flexbox centering. The home page pattern is the canonical one.
 
 ### Logos & Nav
-- Footer logo and nav logo are both `40px` height. Production links normalize to `/`; local generated output may use `rmr-home.html`.
+- Primary footer/nav logo is `rmr-logo-new.png`; keep `rmr-logo.png` as the original design-system variant. Footer logo and nav logo are both `40px` height. Production links normalize to `/`; local generated output may use `rmr-home.html`.
 - Nav link style: `13px`, `font-weight: 500`, `color: var(--text-muted)`, `letter-spacing: -0.01em`, `transition: color 0.35s ease`.
 - Footer links must match nav link styles exactly.
 

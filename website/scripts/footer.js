@@ -143,7 +143,7 @@
   const html = `
     <div class="sf-inner">
       <a href="${routes.home}" class="sf-logo">
-        <img src="rmr-logo.png" alt="Roll My Retirement">
+        <img src="rmr-logo-new.png" alt="Roll My Retirement">
       </a>
       <ul class="sf-nav">
         ${navItems}

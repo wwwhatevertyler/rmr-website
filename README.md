@@ -50,6 +50,8 @@ Netlify is connected to GitHub, so pushing `main` should trigger deployment.
 
 - Source images live in `website/assets/images/`; the build emits them to `dist/Website Images/` to preserve public image URLs.
 - Source favicon/logo files live in `website/assets/icons/`; the build emits public metadata assets to the `dist/` root:
+  - `rmr-logo-new.png` - primary nav/footer logo
+  - `rmr-logo.png` - original design-system logo variant
   - `favicon.ico`
   - `favicon-32x32.png`
   - `favicon-192x192.png`
