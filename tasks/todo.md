@@ -9,6 +9,10 @@
 - [x] Exclude docs, tasks, stale exports, sandbox files, and audio experiments from production output
 - [x] Connect Netlify project to GitHub and verify preview deployment
 - [x] Add seamless same-tab navigation so background audio continues across internal pages
+- [x] Add root README/DESIGN.md and archive unused source assets outside production paths
+- [x] Refresh styleguide to match current homepage, blog, forms, metadata, footer, and motion rules
+- [x] Move active website source into organized `website/` folders while preserving Netlify output paths
+- [x] Update homepage social metadata and verify generated output before production push
 - [ ] Point GoDaddy DNS from Framer to Netlify after preview approval
 
 ## Backlog

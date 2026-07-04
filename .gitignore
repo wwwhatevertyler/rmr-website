@@ -1,8 +1,23 @@
 .DS_Store
+.claude/
+_archive/
+docs/source-assets/_archive/
 dist/
-audio/*
-!audio/background-audio-trimmed.mp3
-!audio/audio-for-clicks-1.wav
+/Icons/
+/Website Images/
+/audio/
+/blog/
+/rmr-*.html
+/index.html
+/audio.js
+/cursor.js
+/footer.js
+/router.js
+/favicon.ico
+/favicon-*.png
+/apple-touch-icon.png
+/site.webmanifest
+/rmr-logo.png
 Roll My Retirement - Fast 401k Rollovers.html
 original-website-prompt.txt
 rmr-contact-page.html

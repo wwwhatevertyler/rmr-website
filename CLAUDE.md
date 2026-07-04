@@ -10,6 +10,8 @@ See `docs/reference/README.md` for the full screenshot index.
 
 ## Key Docs
 
+- `README.md` — project map, source pages, build flow
+- `DESIGN.md` — canonical company, design, content, assets, and motion system
 - `docs/project/brand.md` — colors, typography, tokens
 - `docs/project/site-map.md` — pages and routing
 - `docs/project/deployment.md` — Netlify domain and deploy workflow
@@ -20,22 +22,24 @@ See `docs/reference/README.md` for the full screenshot index.
 
 ## Active Pages
 
-Do not confuse these with draft files in the root:
+Source pages live under `website/`. Root `rmr-*.html` filenames are generated compatibility outputs only.
 
 | File | Page |
 |------|------|
-| `rmr-home.html` | Home |
-| `rmr-contact.html` | Contact (**not** `rmr-contact-page.html` — that is a stale draft) |
-| `rmr-advisors-page.html` | Advisor network |
-| `rmr-styleguide.html` | Design system reference |
-| `footer.js` | Shared footer component |
+| `website/pages/home.html` | Home |
+| `website/pages/contact.html` | Contact |
+| `website/pages/advisors.html` | Advisor network |
+| `website/pages/insights.html` | Blog index / insights |
+| `website/pages/article.html` | Blog post detail renderer |
+| `website/pages/styleguide.html` | Design system reference |
+| `website/scripts/footer.js` | Shared footer component |
 
 ## Design System Decisions
 
 ### Footer
-- `footer.js` is the **single source of truth** for the site footer. Edit it once; it updates every page.
+- `website/scripts/footer.js` is the **single source of truth** for the site footer. Edit it once; it updates every page.
 - All pages use `<div id="site-footer"></div>` + `<script src="footer.js"></script>` — never write per-page `<footer>` HTML.
-- Footer is documented in the styleguide at `rmr-styleguide.html#footer`.
+- Footer is documented in the styleguide at `website/pages/styleguide.html#footer`.
 - Copyright year is dynamic (`new Date().getFullYear()`) — never hard-code it.
 
 ### Color / Theme
@@ -47,7 +51,7 @@ Do not confuse these with draft files in the root:
 - No dot indicators. No flexbox centering. The home page pattern is the canonical one.
 
 ### Logos & Nav
-- Footer logo and nav logo are both `40px` height, both link to `rmr-home.html`.
+- Footer logo and nav logo are both `40px` height. Production links normalize to `/`; local generated output may use `rmr-home.html`.
 - Nav link style: `13px`, `font-weight: 500`, `color: var(--text-muted)`, `letter-spacing: -0.01em`, `transition: color 0.35s ease`.
 - Footer links must match nav link styles exactly.
 

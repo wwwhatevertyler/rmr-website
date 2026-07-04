@@ -424,7 +424,170 @@
     .value-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
     .value-sub { font-size: 13px; color: var(--text-light); }
 
-    /* ── 6. FORMS ─────────────────────────────────────────────────── */
+    /* ── 6. HERO IMAGERY ──────────────────────────────────────────── */
+    .hero-float-demo {
+      position: relative;
+      min-height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: #fff;
+      padding: 48px;
+    }
+    .hero-float-copy {
+      max-width: 520px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-float-copy h3 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+    .hero-float-copy p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+    .hero-float-card {
+      position: absolute;
+      width: 144px;
+      height: 180px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(17,17,16,0.08);
+      box-shadow: 0 18px 42px rgba(17,17,16,0.12);
+      pointer-events: none;
+      background: var(--bg-card);
+    }
+    .hero-float-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-float-card.left {
+      left: clamp(36px, 10vw, 140px);
+      top: 54px;
+      transform: rotate(-5deg);
+    }
+    .hero-float-card.right {
+      right: clamp(36px, 10vw, 140px);
+      top: 82px;
+      transform: rotate(7deg);
+    }
+
+    /* ── 7. BLOG & ASSETS ─────────────────────────────────────────── */
+    .blog-pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .blog-card-demo {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .blog-card-demo img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: var(--demo-image-position, center center);
+      display: block;
+    }
+    .blog-card-demo-body {
+      padding: 26px 28px 30px;
+      background: var(--bg-card);
+    }
+    .blog-pill-demo {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      background: #fff;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .blog-card-demo h3 {
+      font-size: 16px;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .blog-card-demo p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .blog-meta-demo {
+      color: var(--text-light);
+      font-size: 12px;
+    }
+    .asset-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .asset-tile {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .asset-preview {
+      min-height: 132px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      padding: 20px;
+    }
+    .asset-preview img {
+      max-width: 100%;
+      max-height: 150px;
+      border-radius: 8px;
+      display: block;
+    }
+    .asset-preview.icon img {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+    }
+    .asset-tile-body {
+      padding: 16px 18px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .asset-tile-body h3 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .asset-tile-body p {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    /* ── 8. FORMS ─────────────────────────────────────────────────── */
     .form-demo {
       background: #fff;
       border: 1px solid var(--border);
@@ -700,6 +863,15 @@
     @media (max-width: 860px) {
       .cards-showcase { grid-template-columns: 1fr; }
       .value-strip-demo { grid-template-columns: 1fr 1fr; }
+      .hero-float-demo { min-height: 420px; padding: 48px 24px; }
+      .hero-float-card {
+        width: clamp(112px, 18vw, 132px);
+        height: clamp(140px, 23vw, 165px);
+      }
+      .hero-float-card.left { left: 22px; top: 42px; }
+      .hero-float-card.right { right: 22px; top: 72px; }
+      .blog-pattern-grid,
+      .asset-grid { grid-template-columns: 1fr; }
       .motion-grid { grid-template-columns: 1fr; }
       .dark-steps { grid-template-columns: 1fr; }
       .guide-footer-inner { flex-direction: column; text-align: center; }
@@ -708,6 +880,8 @@
       .value-strip-demo { grid-template-columns: 1fr; }
       .type-row { grid-template-columns: 1fr; }
       .type-specs { text-align: left; align-items: flex-start; }
+      .hero-float-card { display: none; }
+      .hero-float-demo { min-height: auto; }
     }
   </style>
 </head>
@@ -717,7 +891,7 @@
 <div class="guide-header">
   <p class="guide-eyebrow">Roll My Retirement</p>
   <h1 class="guide-title">Design System</h1>
-  <p class="guide-meta">Version 1.1 &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Cream palette · Instrument Serif + Inter</p>
+  <p class="guide-meta">Version 1.2 &nbsp;·&nbsp; July 2026 &nbsp;·&nbsp; Canonical reference: DESIGN.md</p>
 </div>
 
 <!-- ── STICKY NAV ──────────────────────────────────────────────────── -->
@@ -728,9 +902,11 @@
     <a href="#spacing">Spacing</a>
     <a href="#buttons">Buttons</a>
     <a href="#cards">Cards</a>
+    <a href="#hero-imagery">Hero Imagery</a>
+    <a href="#blog-assets">Blog & Assets</a>
     <a href="#forms">Forms</a>
     <a href="#faq-demo">FAQ</a>
-    <a href="#dark-section">Dark Mode</a>
+    <a href="#dark-section">Section Treatments</a>
     <a href="#motion">Motion</a>
     <a href="#micro">Micro-elements</a>
     <a href="#footer">Footer</a>
@@ -766,7 +942,7 @@
         <div class="color-swatch-info">
           <div class="color-swatch-name">--bg-dark</div>
           <div class="color-swatch-hex">#111110</div>
-          <div class="color-swatch-use">Dark sections, footer</div>
+          <div class="color-swatch-use">Sparse dark CTAs and contrast sections</div>
         </div>
       </div>
     </div>
@@ -1113,21 +1289,123 @@
   </div>
 </section>
 
-<!-- ══ 6. FORMS ════════════════════════════════════════════════════════ -->
+<!-- ══ 6. HERO IMAGERY ═════════════════════════════════════════════════ -->
+<section class="guide-section" id="hero-imagery">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Hero Imagery</h2>
+    <p class="guide-section-desc">The homepage uses two decorative image cards in the hero only. They load in with the hero, drift gently, share one subtle desktop cursor magnet, and parallax away on scroll.</p>
+
+    <div class="hero-float-demo">
+      <figure class="hero-float-card left" aria-hidden="true">
+        <img src="Website%20Images/Li%20Hui%20-%20Photographer%20License%20image%20-%20Original.png" alt="" loading="lazy" />
+      </figure>
+      <div class="hero-float-copy">
+        <p class="guide-label" style="margin-bottom: 16px;">Retirement account rollovers</p>
+        <h3>Your wealth.</h3>
+        <p>Changing jobs or have old 401(k)s with previous employers? We help you take control of your retirement funds.</p>
+      </div>
+      <figure class="hero-float-card right" aria-hidden="true">
+        <img src="Website%20Images/ariannalago_ari1645-047_Human_S_hero.jpg" alt="" loading="lazy" />
+      </figure>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="guide-spec">desktop cards: 144px x 180px</span>
+      <span class="guide-spec">border-radius: 18px</span>
+      <span class="guide-spec">GSAP entrance + ScrollTrigger parallax</span>
+      <span class="guide-spec">CSS drift on inner wrapper</span>
+      <span class="guide-spec">hidden under 700px</span>
+      <span class="guide-spec">alt="" aria-hidden="true"</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. BLOG & ASSETS ═══════════════════════════════════════════════ -->
+<section class="guide-section" id="blog-assets">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Blog & Assets</h2>
+    <p class="guide-section-desc">Blog imagery is configured from <code>blog/posts.json</code>. Cards and article covers share the same source image and optional object-position crop.</p>
+
+    <p class="guide-label" style="margin-bottom: 16px;">Blog card imagery</p>
+    <div class="blog-pattern-grid">
+      <article class="blog-card-demo">
+        <img src="Website%20Images/13d81bb8-b09e-4533-b356-24dcd240d722.webp" alt="" loading="lazy" />
+        <div class="blog-card-demo-body">
+          <span class="blog-pill-demo">Rollover Strategy</span>
+          <h3>What Happens to Your 401k When You Change Jobs</h3>
+          <p>Your old employer cannot take it back. But depending on your balance, they can do more than you think.</p>
+          <div class="blog-meta-demo">May 8, 2026 &nbsp;·&nbsp; 4 min read</div>
+        </div>
+      </article>
+      <article class="blog-card-demo" style="--demo-image-position: center bottom;">
+        <img src="Website%20Images/ae13e405-3520-40cb-a87e-9efe612003c8.webp" alt="" loading="lazy" />
+        <div class="blog-card-demo-body">
+          <span class="blog-pill-demo">Market Updates</span>
+          <h3>Rate Cuts and Your Retirement: What the Headlines Actually Mean</h3>
+          <p>When the Fed moves, retirement accounts feel it, but not always in the direction the headlines suggest.</p>
+          <div class="blog-meta-demo">April 11, 2026 &nbsp;·&nbsp; 4 min read</div>
+        </div>
+      </article>
+    </div>
+
+    <div style="margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="guide-spec">default object-position: center center</span>
+      <span class="guide-spec">car/traffic image: center bottom</span>
+      <span class="guide-spec">article cover inherits imagePosition</span>
+    </div>
+
+    <p class="guide-label" style="margin-top: 40px; margin-bottom: 16px;">Production metadata assets</p>
+    <div class="asset-grid">
+      <div class="asset-tile">
+        <div class="asset-preview">
+          <img src="Website%20Images/rmr-social-share-2.png" alt="RMR social share preview" />
+        </div>
+        <div class="asset-tile-body">
+          <h3>Social share image</h3>
+          <p>1200 x 630 Open Graph image. Used by homepage, blog index, article pages, and advisor/contact pages unless a page-specific share image is introduced.</p>
+        </div>
+      </div>
+      <div class="asset-tile">
+        <div class="asset-preview icon">
+          <img src="favicon-192x192.png" alt="RMR favicon preview" />
+        </div>
+        <div class="asset-tile-body">
+          <h3>Favicon</h3>
+          <p>Root favicon files are production assets. Source exports live in <code>docs/source-assets/icons/</code>.</p>
+        </div>
+      </div>
+      <div class="asset-tile">
+        <div class="asset-preview icon">
+          <img src="apple-touch-icon.png" alt="RMR Apple touch icon preview" />
+        </div>
+        <div class="asset-tile-body">
+          <h3>Apple touch icon</h3>
+          <p>180 x 180 home-screen icon. Keep it at the root so iOS and social crawlers can find it reliably.</p>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-top: 18px;">
+      Back-pocket and source-only artwork belongs in <code>docs/source-assets/</code>; old local drafts belong in ignored <code>docs/source-assets/_archive/</code>, not in published <code>Website Images/</code>.
+    </p>
+  </div>
+</section>
+
+<!-- ══ 8. FORMS ════════════════════════════════════════════════════════ -->
 <section class="guide-section" id="forms">
   <div class="guide-section-inner">
     <h2 class="guide-section-title">Forms</h2>
-    <p class="guide-section-desc">Form fields live inside a white card container. Click a field to see focus state.</p>
+    <p class="guide-section-desc">Forms use quiet white cards, pill selectors for intent choices, and one shared click-audio volume across buttons, pills, and submit actions.</p>
 
     <div class="form-demo">
       <div class="form-group-label">Contact Information</div>
       <div class="form-field">
         <label for="demo-name">Full Name</label>
-        <input type="text" id="demo-name" placeholder="Jane Smith" />
+        <input type="text" id="demo-name" placeholder="Mara Ellison" />
       </div>
       <div class="form-field">
         <label for="demo-email">Email Address</label>
-        <input type="email" id="demo-email" placeholder="jane@example.com" />
+        <input type="email" id="demo-email" placeholder="mara@example.com" />
       </div>
 
       <div class="form-group-label">Preferences</div>
@@ -1169,7 +1447,7 @@
   </div>
 </section>
 
-<!-- ══ 7. FAQ ACCORDION ════════════════════════════════════════════════ -->
+<!-- ══ 9. FAQ ACCORDION ════════════════════════════════════════════════ -->
 <section class="guide-section" id="faq-demo" style="background: var(--bg);">
   <div class="guide-section-inner">
     <h2 class="guide-section-title">FAQ Accordion</h2>
@@ -1219,13 +1497,13 @@
   </div>
 </section>
 
-<!-- ══ 8. PROCESS SECTION & DARK PATTERN ══════════════════════════════ -->
+<!-- ══ 10. SECTION TREATMENTS ═════════════════════════════════════════ -->
 <section class="guide-section" id="dark-section">
   <div class="guide-section-inner">
-    <h2 class="guide-section-title">Process Section & Dark Pattern</h2>
-    <p class="guide-section-desc">The process section uses a dark treatment. All other sections — including footer CTA and footer — use the light background system.</p>
+    <h2 class="guide-section-title">Section Treatments</h2>
+    <p class="guide-section-desc">Light surfaces are the default, including the shared footer and footer CTA. Dark treatments are reserved for sparse article CTAs or advisor-page contrast moments.</p>
 
-    <p class="guide-label" style="margin-bottom: 16px;">Process section — light (bg-card)</p>
+    <p class="guide-label" style="margin-bottom: 16px;">Homepage process — light (bg-card)</p>
     <div style="background: var(--bg-card); border-radius: var(--radius-card); padding: 48px; margin-bottom: 40px;">
       <p style="font-size:11px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-light); margin-bottom:16px;">Our Process</p>
       <h2 style="font-family:'Instrument Serif',Georgia,serif; font-size:clamp(24px,3.5vw,40px); font-weight:400; letter-spacing:-0.02em; margin-bottom:16px;">Three steps to financial clarity</h2>
@@ -1250,11 +1528,11 @@
       <p style="margin-top:20px; font-size:13px; color:var(--text-light); text-align:center;">No obligation. Free to you.</p>
     </div>
 
-    <p class="guide-label" style="margin-bottom: 16px;">Dark sections — footer CTA & footer</p>
+    <p class="guide-label" style="margin-bottom: 16px;">Dark CTA — sparse use only</p>
     <div class="dark-preview">
-      <p class="dark-eyebrow">Footer CTA</p>
-      <h2 class="dark-h2">Ready to take control of your retirement?</h2>
-      <p class="dark-lead">Used only for footer CTA and site footer. Background: <code style="font-size:12px; opacity:0.6;">var(--bg-dark)</code></p>
+      <p class="dark-eyebrow">Article CTA</p>
+      <h2 class="dark-h2">Ready to roll over your 401k?</h2>
+      <p class="dark-lead">Used sparingly for article detail CTAs or advisor-page contrast. Do not use this as the default footer treatment.</p>
       <div style="display: flex; gap: 12px; flex-wrap: wrap;">
         <button class="btn btn-ghost btn-arrow">Let's Talk <span class="arrow">→</span></button>
         <button class="btn btn-white">Get Started</button>
@@ -1263,11 +1541,11 @@
   </div>
 </section>
 
-<!-- ══ 9. MOTION ═══════════════════════════════════════════════════════ -->
+<!-- ══ 11. MOTION ══════════════════════════════════════════════════════ -->
 <section class="guide-section" id="motion">
   <div class="guide-section-inner">
     <h2 class="guide-section-title">Motion</h2>
-    <p class="guide-section-desc">GSAP 3 + ScrollTrigger + Lenis. All eases, durations, and stagger values are consistent across pages.</p>
+    <p class="guide-section-desc">GSAP 3 + ScrollTrigger + Lenis. Motion should clarify structure and feel tactile; no scroll-jacking, subtle hero magnet only on fine-pointer desktop, and reduced-motion paths stay readable.</p>
 
     <div class="motion-grid">
       <div class="motion-card">
@@ -1340,6 +1618,29 @@
       </div>
     </div>
 
+    <div class="motion-card" style="margin-top: 16px;">
+      <h4>Homepage hero floats</h4>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <span class="guide-spec">load: opacity 0, y 18, scale 0.96</span>
+        <span class="guide-spec">ease: power3.out</span>
+        <span class="guide-spec">stagger: about 0.12s</span>
+        <span class="guide-spec">CSS drift: slow alternate transform</span>
+        <span class="guide-spec">scroll: subtle y parallax only</span>
+        <span class="guide-spec">cursor: shared magnet, desktop only</span>
+        <span class="guide-spec">reduced motion: static reveal</span>
+      </div>
+    </div>
+
+    <div class="motion-card" style="margin-top: 16px;">
+      <h4>Audio and soft navigation</h4>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <span class="guide-spec">click audio: shared AudioManager only</span>
+        <span class="guide-spec">interactive volume: one calibrated level</span>
+        <span class="guide-spec">logo home links: / not /rmr-home</span>
+        <span class="guide-spec">soft-nav should preserve background audio</span>
+      </div>
+    </div>
+
     <div class="motion-demo-card">
       <p class="guide-label">Live demo — click to replay entrance</p>
       <div class="motion-demo-target" id="motion-target">
@@ -1355,11 +1656,11 @@
   </div>
 </section>
 
-<!-- ══ 10. MICRO-ELEMENTS ══════════════════════════════════════════════ -->
+<!-- ══ 12. MICRO-ELEMENTS ══════════════════════════════════════════════ -->
 <section class="guide-section" id="micro">
   <div class="guide-section-inner">
     <h2 class="guide-section-title">Icons & Micro-elements</h2>
-    <p class="guide-section-desc">Small details that make the design feel alive and considered.</p>
+    <p class="guide-section-desc">Small details that make the design feel alive and considered. Root favicon and touch-icon files are production assets; source exports live in <code>docs/source-assets/icons/</code>.</p>
 
     <div class="micro-grid">
 
@@ -1483,12 +1784,12 @@
 <!-- ── FOOTER ──────────────────────────────────────────────────────── -->
 <div class="guide-footer">
   <div class="guide-footer-inner">
-    <span>Roll My Retirement — Design System v1.0</span>
+    <span>Roll My Retirement — Design System v1.2</span>
     <ul class="guide-footer-links">
       <li><a href="rmr-home.html">Home</a></li>
       <li><a href="rmr-advisors-page.html">Advisors</a></li>
       <li><a href="rmr-contact.html">Contact</a></li>
-      <li><a href="docs/project/brand.md">brand.md</a></li>
+      <li><a href="DESIGN.md">DESIGN.md</a></li>
     </ul>
   </div>
 </div>

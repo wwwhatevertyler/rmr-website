@@ -1,0 +1,13 @@
+{
+  "explorer.excludeGitIgnore": true,
+  "explorer.sortOrder": "filesFirst",
+  "files.exclude": {
+    "**/.DS_Store": true,
+    ".claude": true,
+    ".vscode": true,
+    "dist": true,
+    "_archive": true,
+    "Icons": true,
+    "docs/source-assets/_archive": true
+  }
+}
