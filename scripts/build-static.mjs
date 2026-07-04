@@ -19,6 +19,12 @@ const entries = [
   ['audio/background-audio-trimmed.mp3'],
   ['audio/audio-for-clicks-1.wav'],
   ['rmr-logo.png'],
+  ['favicon.ico'],
+  ['favicon-32x32.png'],
+  ['favicon-192x192.png'],
+  ['favicon-512x512.png'],
+  ['apple-touch-icon.png'],
+  ['site.webmanifest'],
   ['blog'],
   ['Website Images'],
 ];

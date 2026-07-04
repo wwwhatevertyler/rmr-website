@@ -1,0 +1,19 @@
+{
+  "name": "Roll My Retirement",
+  "short_name": "RMR",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#fafaf8",
+  "background_color": "#fafaf8",
+  "display": "standalone"
+}
