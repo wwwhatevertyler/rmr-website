@@ -91,6 +91,13 @@
       width: auto;
       display: block;
     }
+    .sf-logo[data-rmr-logo-transition="spin"] img {
+      height: 44px;
+      transform-origin: center center;
+    }
+    .sf-logo[data-rmr-logo-transition="spin"].is-logo-transitioning img {
+      will-change: transform;
+    }
     .sf-nav {
       display: flex;
       align-items: center;
@@ -142,8 +149,8 @@
 
   const html = `
     <div class="sf-inner">
-      <a href="${routes.home}" class="sf-logo">
-        <img src="rmr-logo-new.png" alt="Roll My Retirement">
+      <a href="${routes.home}" class="sf-logo" data-rmr-logo-transition="spin">
+        <img src="rmr-logo.png" alt="Roll My Retirement">
       </a>
       <ul class="sf-nav">
         ${navItems}

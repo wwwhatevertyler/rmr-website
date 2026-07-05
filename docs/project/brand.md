@@ -55,7 +55,7 @@ Default footer and footer CTA sections are light (`--bg`). The article detail pa
 
 - Current public social share image: `Website Images/rmr-social-share-2.png`.
 - Source images live in `website/assets/images/`; the build preserves the public `Website Images/` output path.
-- Source favicon/logo files live in `website/assets/icons/`; the build emits public logo and favicon files to the `dist/` root. `rmr-logo-new.png` is the primary nav/footer mark; `rmr-logo.png` remains the original design-system variant.
+- Source favicon/logo files live in `website/assets/icons/`; the build emits public logo and favicon files to the `dist/` root. `rmr-logo.png` is the primary nav/footer mark; `rmr-logo-new.png` remains the alternate design-system variant.
 - Non-published source/back-pocket assets live under `docs/source-assets/`.
 
 See `DESIGN.md` for detailed page, imagery, motion, and anti-pattern rules.

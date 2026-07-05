@@ -235,6 +235,91 @@
     });
   }
 
+  function shouldReduceMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  const LOGO_SPIN_DURATION = 540;
+  const LOGO_SPIN_PRESS_OFFSET = 110 / LOGO_SPIN_DURATION;
+  const LOGO_PRESS_EASE = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  const LOGO_SPIN_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+  function playLogoTransition(link) {
+    if (!link || shouldReduceMotion()) return Promise.resolve();
+
+    const logo = link.querySelector('.nav-logo-img, img');
+    if (!logo || typeof logo.animate !== 'function') return Promise.resolve();
+
+    return new Promise(resolve => {
+      let settled = false;
+      let fallbackId = 0;
+      let animation = null;
+
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(fallbackId);
+        if (animation) {
+          animation.onfinish = null;
+          animation.oncancel = null;
+          animation.cancel();
+        }
+        link.classList.remove('is-logo-transitioning');
+        logo.__rmrLogoAnimation = null;
+        resolve();
+      };
+
+      if (logo.__rmrLogoAnimation) {
+        logo.__rmrLogoAnimation.cancel();
+      }
+
+      link.classList.remove('is-logo-transitioning');
+      void logo.offsetWidth;
+      link.classList.add('is-logo-transitioning');
+
+      animation = logo.animate([
+        {
+          transform: 'scale(1) rotate(0deg)',
+          offset: 0,
+          easing: LOGO_PRESS_EASE
+        },
+        {
+          transform: 'scale(0.965) rotate(0deg)',
+          offset: LOGO_SPIN_PRESS_OFFSET,
+          easing: LOGO_SPIN_EASE
+        },
+        {
+          transform: 'scale(1) rotate(360deg)',
+          offset: 1
+        }
+      ], {
+        duration: LOGO_SPIN_DURATION,
+        fill: 'both'
+      });
+
+      logo.__rmrLogoAnimation = animation;
+      animation.onfinish = finish;
+      animation.oncancel = finish;
+      fallbackId = window.setTimeout(finish, LOGO_SPIN_DURATION + 80);
+    });
+  }
+
+  function getPreTransition(link) {
+    if (link && link.matches('[data-rmr-logo-transition="spin"]')) {
+      return () => playLogoTransition(link);
+    }
+    return null;
+  }
+
+  async function runPreTransition(preTransition) {
+    if (typeof preTransition !== 'function') return;
+    try {
+      await preTransition();
+    } catch (_) {
+      /* Decorative transition should never block navigation. */
+    }
+  }
+
   function finalUrlFromResponse(response, fallbackUrl) {
     const responseUrl = response && response.url ? new URL(response.url) : fallbackUrl;
     return responseUrl.pathname + responseUrl.search + responseUrl.hash;
@@ -264,6 +349,7 @@
 
     try {
       const fetchPromise = fetchPage(url);
+      await runPreTransition(options.preTransition);
       await animateCurtainIn();
       const { response, html } = await fetchPromise;
       const nextDoc = new DOMParser().parseFromString(html, 'text/html');
@@ -295,7 +381,7 @@
     const link = event.target.closest && event.target.closest('a[href]');
     if (!isSoftNavLink(event, link)) return;
     event.preventDefault();
-    navigate(link.href);
+    navigate(link.href, { preTransition: getPreTransition(link) });
   }
 
   function bind() {

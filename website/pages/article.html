@@ -162,6 +162,13 @@
     }
     .nav-logo { display: flex; align-items: center; gap: 10px; }
     .nav-logo-img { height: 40px; width: auto; display: block; transition: filter 0.35s ease; }
+    .nav-logo[data-rmr-logo-transition="spin"] .nav-logo-img {
+      height: 44px;
+      transform-origin: center center;
+    }
+    .nav-logo[data-rmr-logo-transition="spin"].is-logo-transitioning .nav-logo-img {
+      will-change: transform;
+    }
     .nav-links {
       display: flex;
       align-items: center;
@@ -471,8 +478,8 @@
 <!-- ─── NAV ──────────────────────────────────────────────────────────── -->
 <nav id="main-nav">
   <div class="nav-inner">
-    <a href="rmr-home.html" class="nav-logo">
-      <img src="rmr-logo-new.png" alt="Roll My Retirement" class="nav-logo-img">
+    <a href="rmr-home.html" class="nav-logo" data-rmr-logo-transition="spin">
+      <img src="rmr-logo.png" alt="Roll My Retirement" class="nav-logo-img">
     </a>
     <ul class="nav-links">
       <li><a href="rmr-home.html" class="nav-advisors">← Home</a></li>

@@ -179,6 +179,13 @@
     }
     .nav-logo { display: flex; align-items: center; gap: 10px; }
     .nav-logo-img { height: 40px; width: auto; display: block; }
+    .nav-logo[data-rmr-logo-transition="spin"] .nav-logo-img {
+      height: 44px;
+      transform-origin: center center;
+    }
+    .nav-logo[data-rmr-logo-transition="spin"].is-logo-transitioning .nav-logo-img {
+      will-change: transform;
+    }
     .nav-logo-text { font-family: 'Instrument Serif', Georgia, serif; font-size: 15px; color: #1a1a18; white-space: nowrap; }
     .nav-links {
       display: flex;
@@ -620,8 +627,8 @@
 <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
 <nav id="main-nav">
   <div class="nav-inner">
-    <a href="rmr-home.html" class="nav-logo">
-      <img src="rmr-logo-new.png" alt="Roll My Retirement" class="nav-logo-img">
+    <a href="rmr-home.html" class="nav-logo" data-rmr-logo-transition="spin">
+      <img src="rmr-logo.png" alt="Roll My Retirement" class="nav-logo-img">
     </a>
     <ul class="nav-links">
       <li><a href="rmr-blog.html" class="nav-advisors">Insights →</a></li>

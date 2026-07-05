@@ -174,8 +174,8 @@ Source image folder: `website/assets/images/`. The build emits these files to `d
 
 Source favicon/logo assets live in `website/assets/icons/`. The build emits public logo and favicon files to the `dist/` root:
 
-- `rmr-logo-new.png` - primary nav/footer brand mark.
-- `rmr-logo.png` - original logo variant retained for design-system reference and fallback use.
+- `rmr-logo.png` - primary nav/footer brand mark.
+- `rmr-logo-new.png` - alternate logo variant retained for design-system reference and fallback use.
 - `favicon.ico`
 - `favicon-32x32.png`
 - `favicon-192x192.png`
