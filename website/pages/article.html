@@ -708,6 +708,17 @@
     `;
   }
 
+  function getEmbeddedPost() {
+    const postData = document.getElementById('post-data');
+    if (!postData) return null;
+
+    try {
+      return JSON.parse(postData.textContent);
+    } catch {
+      return null;
+    }
+  }
+
   /* ─── PAGE CURTAIN ───────────────────────────────────────────────── */
   gsap.to('#page-curtain', { scaleY: 0, duration: 0.6, ease: 'power3.inOut', delay: 0.05 });
 
@@ -722,8 +733,11 @@
   }
 
   const slug = getPostSlug();
+  const embeddedPost = getEmbeddedPost();
 
-  if (!slug) {
+  if (embeddedPost) {
+    renderPost(embeddedPost);
+  } else if (!slug) {
     renderError('No article was specified. Please return to the Insights page.');
   } else {
     fetch('blog/posts.json')

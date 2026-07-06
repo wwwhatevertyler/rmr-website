@@ -18,6 +18,7 @@
 - [x] Fix sampled click audio after logo-triggered soft navigation
 - [x] Point GoDaddy DNS from Framer to Netlify after preview approval
 - [x] Add production sitemap and robots file for Search Console
+- [x] Generate static article pages with first-response SEO metadata
 
 ## Recent Verification
 
@@ -30,6 +31,7 @@
 - 2026-07-06: Updated public SEO/social URLs to `https://www.rollmyretirement.com`; ran `node --check website/scripts/audio.js website/scripts/router.js`, `npm run build`, static headless Brave checks for home/advisors/contact/insights, and an in-process Netlify-style route check for `/insights/the-quiet-power-of-moving-your-401k`.
 - 2026-07-06: Cut over GoDaddy DNS from Framer to Netlify. Public DNS checks via Cloudflare and Google resolve `www.rollmyretirement.com` to `rollmyretirement.netlify.app` and `rollmyretirement.com` to `75.2.60.5`; forced Netlify edge checks return `200` for home/advisors/contact/insights/article routes and `301` from the apex to `https://www.rollmyretirement.com/`.
 - 2026-07-06: Added generated `sitemap.xml` and `robots.txt`; ran `node --check scripts/build-static.mjs` and `npm run build`, then verified the sitemap contains the homepage, advisors, contact, insights, and all eight article URLs on `https://www.rollmyretirement.com`.
+- 2026-07-06: Added generated static article pages at `/insights/<slug>/` with server-rendered title, description, canonical, Open Graph, Twitter, Article JSON-LD, embedded post data, and visible article body HTML. Verified `node --check scripts/build-static.mjs`, `npm run build`, `xmllint --noout dist/sitemap.xml`, and representative generated article metadata for `/insights/when-to-roll-over-your-401k/`.
 
 ## Backlog
 
