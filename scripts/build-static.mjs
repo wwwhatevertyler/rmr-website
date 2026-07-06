@@ -302,7 +302,7 @@ async function writeArticlePages() {
   const postsData = JSON.parse(await readFile(path.join(root, 'website/data/blog/posts.json'), 'utf8'));
 
   for (const post of postsData.posts) {
-    const outputPath = path.join(dist, 'insights', post.slug, 'index.html');
+    const outputPath = path.join(dist, 'insights', `${post.slug}.html`);
     await mkdir(path.dirname(outputPath), { recursive: true });
     await writeFile(outputPath, articlePage(template, post), 'utf8');
   }

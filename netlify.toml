@@ -35,8 +35,14 @@
   status = 200
 
 [[redirects]]
+  from = "/insights/:slug/"
+  to = "/insights/:slug"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/insights/:slug"
-  to = "/rmr-blog-post.html"
+  to = "/insights/:slug.html"
   status = 200
 
 [[redirects]]
