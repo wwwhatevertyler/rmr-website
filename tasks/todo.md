@@ -16,7 +16,7 @@
 - [x] Integrate `rmr-logo-new.png` as the primary site logo while preserving the original logo variant
 - [x] Add homepage-only logo press/spin before the soft-navigation curtain sweep
 - [x] Fix sampled click audio after logo-triggered soft navigation
-- [ ] Point GoDaddy DNS from Framer to Netlify after preview approval
+- [x] Point GoDaddy DNS from Framer to Netlify after preview approval
 
 ## Recent Verification
 
@@ -27,6 +27,7 @@
 - 2026-07-05: Rebuilt after rolling the 44px `rmr-logo.png` WAAPI click transition to all nav/footer logos; Brave headless CDP verified every active page nav/footer logo has the hook, representative nav/footer clicks finish animation before the curtain, and reduced motion skips the spin.
 - 2026-07-06: Ran `node --check website/scripts/audio.js website/scripts/router.js` and `npm run build`; Brave headless CDP verified sampled click audio fires once before/after home and contact logo soft-navigation, repeated `RMRAudio.ensureMounted()` calls do not duplicate click sounds, the logo spring still precedes the curtain, and reduced motion skips the logo animation.
 - 2026-07-06: Updated public SEO/social URLs to `https://www.rollmyretirement.com`; ran `node --check website/scripts/audio.js website/scripts/router.js`, `npm run build`, static headless Brave checks for home/advisors/contact/insights, and an in-process Netlify-style route check for `/insights/the-quiet-power-of-moving-your-401k`.
+- 2026-07-06: Cut over GoDaddy DNS from Framer to Netlify. Public DNS checks via Cloudflare and Google resolve `www.rollmyretirement.com` to `rollmyretirement.netlify.app` and `rollmyretirement.com` to `75.2.60.5`; forced Netlify edge checks return `200` for home/advisors/contact/insights/article routes and `301` from the apex to `https://www.rollmyretirement.com/`.
 
 ## Backlog
 
