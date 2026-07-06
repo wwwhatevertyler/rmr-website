@@ -240,7 +240,7 @@ Blog:
 
 SEO/social:
 
-- Current canonical social image is `https://rollmyretirement.netlify.app/Website%20Images/rmr-social-share-2.png`.
+- Current canonical social image is `https://www.rollmyretirement.com/Website%20Images/rmr-social-share-2.png`.
 - Use `summary_large_image` for Twitter cards.
 - Keep alt text descriptive on content images and empty on decorative images.
 

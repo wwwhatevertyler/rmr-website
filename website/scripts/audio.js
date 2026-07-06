@@ -32,7 +32,6 @@
   let bgPlayPending = false;
   let clickPool = [];
   let clickPoolIndex = 0;
-  let clickListenerAttached = false;
   let lastLabelControlId = '';
   let lastLabelClickAt = 0;
   let initialized = false;
@@ -437,15 +436,16 @@
     lastLabelClickAt = performance.now();
   }
 
+  function handleDocumentClick(e) {
+    if (!isSoundableClickTarget(e.target)) return;
+    if (isDuplicateLabelControlClick(e.target)) return;
+    rememberLabelControlClick(e.target);
+    playClickSound();
+  }
+
   function attachInteractionListeners() {
-    if (clickListenerAttached) return;
-    clickListenerAttached = true;
-    document.addEventListener('click', (e) => {
-      if (!isSoundableClickTarget(e.target)) return;
-      if (isDuplicateLabelControlClick(e.target)) return;
-      rememberLabelControlClick(e.target);
-      playClickSound();
-    }, true);
+    document.removeEventListener('click', handleDocumentClick, true);
+    document.addEventListener('click', handleDocumentClick, true);
   }
 
   function ensureMounted() {

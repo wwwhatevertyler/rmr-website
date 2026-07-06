@@ -239,10 +239,11 @@
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  const LOGO_SPIN_DURATION = 540;
-  const LOGO_SPIN_PRESS_OFFSET = 110 / LOGO_SPIN_DURATION;
+  const LOGO_SPIN_DURATION = 640;
+  const LOGO_SPIN_PRESS_OFFSET = 105 / LOGO_SPIN_DURATION;
   const LOGO_PRESS_EASE = 'cubic-bezier(0.23, 1, 0.32, 1)';
   const LOGO_SPIN_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const LOGO_SPRING_EASE = 'cubic-bezier(0.34, 1.24, 0.64, 1)';
 
   function playLogoTransition(link) {
     if (!link || shouldReduceMotion()) return Promise.resolve();
@@ -286,6 +287,16 @@
         {
           transform: 'scale(0.965) rotate(0deg)',
           offset: LOGO_SPIN_PRESS_OFFSET,
+          easing: LOGO_SPIN_EASE
+        },
+        {
+          transform: 'scale(1.006) rotate(363.8deg)',
+          offset: 0.82,
+          easing: LOGO_SPRING_EASE
+        },
+        {
+          transform: 'scale(0.997) rotate(358.7deg)',
+          offset: 0.925,
           easing: LOGO_SPIN_EASE
         },
         {

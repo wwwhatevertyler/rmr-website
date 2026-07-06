@@ -18,7 +18,8 @@ _Production hosting, domains, and deploy workflow._
 ## Domain Targets
 
 - Current Netlify app domain: `https://rollmyretirement.netlify.app`
-- Future custom domain target: `rollmyretirement.com` / `www.rollmyretirement.com`
+- Production custom domains: `https://www.rollmyretirement.com` and `https://rollmyretirement.com`
+- Preferred primary host: `www.rollmyretirement.com`
 
 ## Notes
 
