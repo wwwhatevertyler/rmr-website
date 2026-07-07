@@ -480,7 +480,8 @@
       background: var(--bg-dark);
       transform: scaleY(1);
       transform-origin: top center;
-      z-index: 500;
+      /* Keep the transition sweep above persistent overlays like audio and cursor. */
+      z-index: 1000000;
       pointer-events: none;
     }
   </style>

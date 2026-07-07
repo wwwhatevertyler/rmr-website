@@ -21,6 +21,7 @@
 - [x] Generate static article pages with first-response SEO metadata
 - [x] Add production launch handoff documentation
 - [x] Polish mobile menu CTA styling and advisor arrows
+- [x] Raise page transition curtain above persistent audio and cursor overlays
 
 ## Recent Verification
 
@@ -37,6 +38,7 @@
 - 2026-07-06: Verified the deployed article route through Netlify and the custom domain: `/insights/when-to-roll-over-your-401k` returns `200` with static title/canonical/Open Graph/JSON-LD/H1 in the first HTML response, while the trailing-slash variant returns `301` back to the canonical no-slash URL.
 - 2026-07-06: Added `docs/project/launch-2026-07-06.md` to package the launch, DNS cutover, Search Console, SEO improvements, verification, commits, and follow-up production checklist for future context.
 - 2026-07-07: Fixed mobile menu CTA inheritance so mobile `Let's Talk` and `Apply to Join` buttons render as centered black pill CTAs with white text and arrows; added mobile `For Advisors →` decorative arrow spans. Ran `npm run build`, `node --check website/scripts/router.js`, `node --check website/scripts/audio.js`, inspected generated output, and verified mobile screenshots/computed styles for home/advisors/contact/insights/article routes.
+- 2026-07-07: Raised `#page-curtain` to `z-index: 1000000` across production page templates so the black route-transition sweep covers persistent fixed overlays. Ran `npm run build`, inspected generated `dist` output for the updated curtain layer, and used headless Brave against a local `dist` server to verify soft-navigation transitions through home, advisors, contact, insights, and one article route keep the visible sweep above audio (`z-index: 9990`) and cursor (`z-index: 99999`).
 
 ## Backlog
 
