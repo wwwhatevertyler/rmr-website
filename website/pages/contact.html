@@ -445,13 +445,6 @@
       color: var(--text-light);
       margin-bottom: 16px;
     }
-    .form-section-helper {
-      margin: -8px 0 16px;
-      color: var(--text-muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
     .form-submit-area {
       margin-top: 24px;
       display: flex;
@@ -694,6 +687,8 @@
         <form id="contact-form" name="consumer-contact" method="POST" action="/contact" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
           <input type="hidden" name="form-name" value="consumer-contact" />
           <input type="hidden" name="subject" value="New Roll My Retirement contact request" />
+          <input type="hidden" id="contact-reasons-field" name="reasons" value="" />
+          <input type="hidden" id="contact-call-link-field" name="call_link" value="" />
           <p class="netlify-honeypot">
             <label>Leave this field empty <input name="bot-field" /></label>
           </p>
@@ -721,24 +716,23 @@
 
           <div class="form-divider"></div>
           <div class="form-section-label">Reasons for reaching out</div>
-          <p class="form-section-helper">Select all that apply.</p>
 
           <div class="form-field full">
             <div class="situation-pills">
               <div class="pill-option">
-                <input type="checkbox" id="sit-rollover" name="reason" value="Starting a rollover" />
+                <input type="checkbox" id="sit-rollover" value="Starting a rollover" data-reason-option />
                 <label for="sit-rollover">Starting a rollover</label>
               </div>
               <div class="pill-option">
-                <input type="checkbox" id="sit-old401k" name="reason" value="Have old 401(k)s" />
+                <input type="checkbox" id="sit-old401k" value="Have old 401(k)s" data-reason-option />
                 <label for="sit-old401k">Have old 401(k)s</label>
               </div>
               <div class="pill-option">
-                <input type="checkbox" id="sit-explore" name="reason" value="Just exploring options" />
+                <input type="checkbox" id="sit-explore" value="Just exploring options" data-reason-option />
                 <label for="sit-explore">Just exploring options</label>
               </div>
               <div class="pill-option">
-                <input type="checkbox" id="sit-other" name="reason" value="Something else" />
+                <input type="checkbox" id="sit-other" value="Something else" data-reason-option />
                 <label for="sit-other">Something else</label>
               </div>
             </div>
@@ -899,7 +893,40 @@
   // ──────────────────────────────────────────────────────────────────
   // FORM SUBMIT — show success state
   // ──────────────────────────────────────────────────────────────────
+  function normalizeUsPhone(value) {
+    const digits = value.replace(/\D/g, '');
+    const national = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits;
+
+    if (national.length !== 10) return null;
+
+    return {
+      formatted: `+1 ${national.slice(0, 3)}-${national.slice(3, 6)}-${national.slice(6)}`,
+      callLink: `tel:+1${national}`,
+    };
+  }
+
+  function prepareContactSubmission(form) {
+    const reasonsField = form.querySelector('#contact-reasons-field');
+    const callLinkField = form.querySelector('#contact-call-link-field');
+    const phoneField = form.querySelector('[name="phone"]');
+    const selectedReasons = Array.from(form.querySelectorAll('[data-reason-option]:checked'))
+      .map(input => input.value.trim())
+      .filter(Boolean);
+
+    reasonsField.value = selectedReasons.join(', ');
+    callLinkField.value = '';
+
+    if (phoneField) {
+      const normalizedPhone = normalizeUsPhone(phoneField.value);
+      if (normalizedPhone) {
+        phoneField.value = normalizedPhone.formatted;
+        callLinkField.value = normalizedPhone.callLink;
+      }
+    }
+  }
+
   function encodeForm(form) {
+    prepareContactSubmission(form);
     return new URLSearchParams(new FormData(form)).toString();
   }
 
