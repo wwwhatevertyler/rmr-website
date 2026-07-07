@@ -468,6 +468,18 @@
       opacity: 0.5;
     }
     .netlify-honeypot { display: none; }
+    .netlify-form-proxy {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
     .form-error {
       display: none;
       margin: 0;
@@ -687,8 +699,6 @@
         <form id="contact-form" name="consumer-contact" method="POST" action="/contact" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
           <input type="hidden" name="form-name" value="consumer-contact" />
           <input type="hidden" name="subject" value="New Roll My Retirement contact request" />
-          <input type="hidden" id="contact-reason-field" name="reason" value="" />
-          <input type="hidden" id="contact-call-link-field" name="call_link" value="" />
           <p class="netlify-honeypot">
             <label>Leave this field empty <input name="bot-field" /></label>
           </p>
@@ -709,13 +719,13 @@
               <input type="tel" id="c-phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel" />
             </div>
             <div class="form-field">
-              <label for="c-location">City / State</label>
+              <label for="c-location">City/State</label>
               <input type="text" id="c-location" name="location" placeholder="e.g. Dallas, TX" />
             </div>
           </div>
 
           <div class="form-divider"></div>
-          <div class="form-section-label">Reasons for reaching out</div>
+          <div class="form-section-label">Reasons for Reaching Out</div>
 
           <div class="form-field full">
             <div class="situation-pills">
@@ -736,10 +746,14 @@
                 <label for="sit-other">Something else</label>
               </div>
             </div>
+            <div class="netlify-form-proxy" aria-hidden="true">
+              <label for="contact-reason-field">Reasons for Reaching Out</label>
+              <input type="text" id="contact-reason-field" name="reason" value="" tabindex="-1" readonly />
+            </div>
           </div>
 
           <div class="form-field full" style="margin-top: 32px;">
-            <label for="c-message">Anything else you'd like us to know? <span style="color:var(--text-light); font-weight:400;">(optional)</span></label>
+            <label for="c-message">Anything else you'd like us to know?</label>
             <textarea id="c-message" name="message" placeholder="Tell us about your accounts, timeline, or any questions you have…"></textarea>
           </div>
 
@@ -901,26 +915,22 @@
 
     return {
       formatted: `+1 ${national.slice(0, 3)}-${national.slice(3, 6)}-${national.slice(6)}`,
-      callLink: `tel:+1${national}`,
     };
   }
 
   function prepareContactSubmission(form) {
     const reasonField = form.querySelector('#contact-reason-field');
-    const callLinkField = form.querySelector('#contact-call-link-field');
     const phoneField = form.querySelector('[name="phone"]');
     const selectedReasons = Array.from(form.querySelectorAll('[data-reason-option]:checked'))
       .map(input => input.value.trim())
       .filter(Boolean);
 
     reasonField.value = selectedReasons.join(', ');
-    callLinkField.value = '';
 
     if (phoneField) {
       const normalizedPhone = normalizeUsPhone(phoneField.value);
       if (normalizedPhone) {
         phoneField.value = normalizedPhone.formatted;
-        callLinkField.value = normalizedPhone.callLink;
       }
     }
   }
