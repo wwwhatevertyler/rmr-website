@@ -716,6 +716,40 @@
       color: #8a2f24;
     }
     .form-error.visible { display: block; }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: clamp(72px, 10vw, 140px) 24px;
+    }
+    .form-success.visible { display: block; }
+    .form-success-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .form-success-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+    .form-success h3 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .form-success p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 360px;
+      margin: 0 auto 24px;
+      line-height: 1.7;
+    }
 
     /* ─── FOOTER CTA ───────────────────────────────────────────────── */
     .footer-cta {
@@ -1373,6 +1407,17 @@
         </div>
 
       </form>
+
+      <div class="form-success" id="advisor-form-success" aria-live="polite">
+        <div class="form-success-icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 10l4 4 8-8"/>
+          </svg>
+        </div>
+        <h3>We'll be in touch.</h3>
+        <p>Thanks for reaching out. Someone from our team will follow up with you within one business day.</p>
+        <a href="rmr-home.html" class="btn btn-secondary">Back to Home</a>
+      </div>
     </div>
   </div>
 </section>
@@ -1686,33 +1731,35 @@
 
   document.getElementById('advisor-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const btn = this.querySelector('[type="submit"]');
+    const form = this;
+    const success = document.getElementById('advisor-form-success');
+    const btn = form.querySelector('[type="submit"]');
     const error = document.getElementById('advisor-form-error');
     const originalLabel = btn.innerHTML;
 
     error.textContent = '';
     error.classList.remove('visible');
     btn.disabled = true;
-    btn.innerHTML = 'Submitting...';
+    btn.innerHTML = 'Sending...';
 
     try {
-      const response = await fetch(this.getAttribute('action') || window.location.pathname, {
+      const response = await fetch(form.getAttribute('action') || window.location.pathname, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encodeForm(this),
+        body: encodeForm(form),
       });
 
       if (!response.ok) throw new Error('Form submission failed');
 
-      gsap.to(btn, {
-        scale: 0.96,
-        duration: 0.12,
-        yoyo: true,
-        repeat: 1,
-        ease: 'power2.inOut',
+      gsap.to(form, {
+        opacity: 0,
+        y: -20,
+        duration: 0.35,
+        ease: 'power2.in',
         onComplete() {
-          btn.textContent = 'Application Submitted';
-          gsap.to(btn, { backgroundColor: '#2a5c45', duration: 0.4, ease: 'power2.out' });
+          form.style.display = 'none';
+          success.classList.add('visible');
+          gsap.from(success, { opacity: 0, y: 24, duration: 0.6, ease: 'power3.out' });
         }
       });
     } catch (err) {

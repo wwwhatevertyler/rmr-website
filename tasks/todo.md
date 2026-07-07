@@ -28,6 +28,7 @@
 - [x] Clean up contact form Netlify email fields
 - [x] Restore contact form backend reason field key
 - [x] Align contact form backend field order and labels
+- [x] Polish advisor form success state
 
 ## Recent Verification
 
@@ -52,6 +53,7 @@
 - 2026-07-07: Cleaned up contact form Netlify email fields by replacing repeated submitted reason checkboxes with one hidden `reasons` aggregate and one optional `call_link` field. Ran `npm run build`, inspected `dist/rmr-contact.html` for hidden fields and absence of repeated `name="reason"`, verified the built mobile form POST body in headless Brave produces `reasons=Starting a rollover, Have old 401(k)s`, normalized `phone=+1 817-692-5262`, and `call_link=tel:+18176925262` with no bracketed array output, confirmed production served the new markup, and posted a safe live Netlify test that returned `200`.
 - 2026-07-07: Restored the contact form backend field key from hidden `reasons` to hidden singular `reason` while keeping visible reason checkboxes UI-only. Ran `npm run build`, inspected `dist/rmr-contact.html` for exactly one submitted `name="reason"` field, verified the built mobile form POST body in headless Brave submits one aggregate `reason=Starting a rollover, Have old 401(k)s` value with no bracketed array output, confirmed production served the singular hidden `reason` field, and posted a safe live Netlify test with three aggregated reasons that returned `200`.
 - 2026-07-07: Aligned the contact form backend payload order and labels with the visible form structure. Removed the separate `call_link` backend row, moved the hidden aggregate `reason` field into the Reasons section, changed visible copy to `City/State`, `Reasons for Reaching Out`, and `Anything else you'd like us to know?`, ran `npm run build`, verified the built mobile POST body order in headless Brave (`full_name`, `email`, `phone`, `location`, `reason`, `message`), confirmed production served the revised markup, and posted a safe live Netlify test with three aggregated reasons that returned `200`.
+- 2026-07-07: Replaced the advisor form's green `Application Submitted` button state with the contact-style full success state and unified pending submit copy to `Sending...`. Ran `npm run build`, inspected generated advisor output to confirm the old success text was removed, and verified the built advisor form in headless Brave with a stubbed POST: pending state shows `Sending...`, successful response hides the form, and the black-check success message plus `Back to Home` link appears.
 
 ## Backlog
 
