@@ -228,7 +228,21 @@
     }
     .mobile-link:last-of-type { border-bottom: none; }
     .mobile-link:hover { color: var(--text); }
-    .mobile-menu .btn { margin-top: 16px; width: 100%; justify-content: center; }
+    .mobile-link .arrow {
+      display: inline-flex;
+      transition: transform 0.2s;
+    }
+    .mobile-link:hover .arrow { transform: translateX(3px); }
+    .mobile-menu .btn {
+      margin-top: 16px;
+      width: 100%;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      border-bottom: 0;
+    }
 
     /* ─── ARTICLE HERO ──────────────────────────────────────────────── */
     #article-hero {
@@ -502,8 +516,8 @@
 <!-- ─── MOBILE MENU ───────────────────────────────────────────────────── -->
 <div class="mobile-menu" id="mobile-menu">
   <a href="rmr-home.html" class="mobile-link">Home</a>
-  <a href="rmr-advisors-page.html" class="mobile-link">For Advisors</a>
-  <a href="rmr-contact.html" class="btn btn-primary">Let's Talk</a>
+  <a href="rmr-advisors-page.html" class="mobile-link">For Advisors <span class="arrow">→</span></a>
+  <a href="rmr-contact.html" class="btn btn-primary btn-arrow">Let's Talk <span class="arrow">→</span></a>
 </div>
 
 <!-- ─── ARTICLE CONTENT (rendered by JS) ─────────────────────────────── -->

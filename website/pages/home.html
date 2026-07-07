@@ -696,7 +696,7 @@
       gap: 0;
     }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a {
+    .mobile-link {
       display: block;
       padding: 14px 0;
       font-size: 15px;
@@ -705,11 +705,21 @@
       border-bottom: 1px solid var(--border);
       transition: color 0.2s;
     }
-    .mobile-menu a:hover { color: var(--text); }
+    .mobile-link:hover { color: var(--text); }
+    .mobile-link .arrow {
+      display: inline-flex;
+      transition: transform 0.2s;
+    }
+    .mobile-link:hover .arrow { transform: translateX(3px); }
     .mobile-menu .btn {
       margin-top: 20px;
       width: 100%;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
+      color: #fff;
+      border-bottom: 0;
     }
 
     /* ─── RESPONSIVE ───────────────────────────────────────────────── */
@@ -845,8 +855,8 @@
   <a href="#network" class="mobile-link">Network</a>
   <a href="#faq" class="mobile-link">FAQs</a>
   <a href="rmr-blog.html" class="mobile-link">Insights →</a>
-  <a href="rmr-advisors-page.html" class="mobile-link">For Advisors</a>
-  <a href="rmr-contact.html" class="btn btn-primary">Let's Talk</a>
+  <a href="rmr-advisors-page.html" class="mobile-link">For Advisors <span class="arrow">→</span></a>
+  <a href="rmr-contact.html" class="btn btn-primary btn-arrow">Let's Talk <span class="arrow">→</span></a>
 </div>
 
 <!-- ─── HERO ─────────────────────────────────────────────────────────── -->

@@ -248,7 +248,7 @@
       gap: 0;
     }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a {
+    .mobile-link {
       display: block;
       padding: 14px 0;
       font-size: 15px;
@@ -257,7 +257,12 @@
       border-bottom: 1px solid var(--border);
       transition: color 0.2s;
     }
-    .mobile-menu a:hover { color: var(--text); }
+    .mobile-link:hover { color: var(--text); }
+    .mobile-link .arrow {
+      display: inline-flex;
+      transition: transform 0.2s;
+    }
+    .mobile-link:hover .arrow { transform: translateX(3px); }
 
     /* ─── CONTACT HERO ─────────────────────────────────────────────── */
     #contact-hero {
@@ -647,7 +652,7 @@
 <div class="mobile-menu" id="mobile-menu">
   <a href="rmr-home.html" class="mobile-link">Home</a>
   <a href="rmr-blog.html" class="mobile-link">Insights →</a>
-  <a href="rmr-advisors-page.html" class="mobile-link">For Advisors</a>
+  <a href="rmr-advisors-page.html" class="mobile-link">For Advisors <span class="arrow">→</span></a>
 </div>
 
 <!-- ─── CONTACT HERO ─────────────────────────────────────────────────── -->
