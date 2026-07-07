@@ -19,6 +19,7 @@
 - [x] Point GoDaddy DNS from Framer to Netlify after preview approval
 - [x] Add production sitemap and robots file for Search Console
 - [x] Generate static article pages with first-response SEO metadata
+- [x] Add production launch handoff documentation
 
 ## Recent Verification
 
@@ -33,6 +34,7 @@
 - 2026-07-06: Added generated `sitemap.xml` and `robots.txt`; ran `node --check scripts/build-static.mjs` and `npm run build`, then verified the sitemap contains the homepage, advisors, contact, insights, and all eight article URLs on `https://www.rollmyretirement.com`.
 - 2026-07-06: Added generated static article pages served at `/insights/<slug>` via generated `.html` files, with server-rendered title, description, canonical, Open Graph, Twitter, Article JSON-LD, embedded post data, and visible article body HTML. Verified `node --check scripts/build-static.mjs`, `npm run build`, `xmllint --noout dist/sitemap.xml`, Netlify article routing rules, and representative generated article metadata for `/insights/when-to-roll-over-your-401k`.
 - 2026-07-06: Verified the deployed article route through Netlify and the custom domain: `/insights/when-to-roll-over-your-401k` returns `200` with static title/canonical/Open Graph/JSON-LD/H1 in the first HTML response, while the trailing-slash variant returns `301` back to the canonical no-slash URL.
+- 2026-07-06: Added `docs/project/launch-2026-07-06.md` to package the launch, DNS cutover, Search Console, SEO improvements, verification, commits, and follow-up production checklist for future context.
 
 ## Backlog
 

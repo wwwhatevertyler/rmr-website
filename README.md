@@ -7,6 +7,7 @@ Static marketing site for Roll My Retirement, a retirement rollover platform tha
 - `DESIGN.md` - canonical company, design system, content, motion, and implementation guidance.
 - `CLAUDE.md` - agent-facing project notes and sharp warnings.
 - `docs/project/deployment.md` - Netlify domain, build command, and deploy workflow.
+- `docs/project/launch-2026-07-06.md` - production launch, DNS cutover, Search Console, and SEO handoff notes.
 - `tasks/todo.md` - current project checklist.
 - `tasks/lessons.md` - durable project-specific learnings.
 

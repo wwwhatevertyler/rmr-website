@@ -25,3 +25,4 @@ _Production hosting, domains, and deploy workflow._
 
 - Do not publish the repo root directly. The root contains project docs, tasks, stale Framer exports, and local experiments.
 - If using Netlify CLI, deploy the generated `dist/` folder to the Netlify app domain above.
+- Launch/cutover context from the Framer-to-Netlify switch lives in `docs/project/launch-2026-07-06.md`.
