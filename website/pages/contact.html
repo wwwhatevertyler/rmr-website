@@ -681,7 +681,7 @@
       <!-- Form card -->
       <div class="contact-form-wrap" id="contact-form-wrap">
 
-        <form id="contact-form" name="consumer-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+        <form id="contact-form" name="consumer-contact" method="POST" action="/contact" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
           <input type="hidden" name="form-name" value="consumer-contact" />
           <input type="hidden" name="subject" value="New Roll My Retirement contact request" />
           <p class="netlify-honeypot">
@@ -906,7 +906,7 @@
     btn.innerHTML = 'Sending...';
 
     try {
-      const response = await fetch('/', {
+      const response = await fetch(form.getAttribute('action') || window.location.pathname, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encodeForm(form),

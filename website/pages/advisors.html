@@ -1239,7 +1239,7 @@
     </div>
 
     <div class="apply-form-wrap">
-      <form id="advisor-form" name="advisor-application" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+      <form id="advisor-form" name="advisor-application" method="POST" action="/advisors" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
         <input type="hidden" name="form-name" value="advisor-application" />
         <input type="hidden" name="subject" value="New Roll My Retirement advisor application" />
         <p class="netlify-honeypot">
@@ -1696,7 +1696,7 @@
     btn.innerHTML = 'Submitting...';
 
     try {
-      const response = await fetch('/', {
+      const response = await fetch(this.getAttribute('action') || window.location.pathname, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encodeForm(this),

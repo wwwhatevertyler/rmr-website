@@ -669,7 +669,7 @@
       <span class="eyebrow newsletter-eyebrow">Stay informed</span>
       <h2 class="serif newsletter-h2">Get the next article<br>in your inbox.</h2>
       <p class="newsletter-sub">No noise. One article when it's worth reading.</p>
-      <form class="newsletter-form" name="newsletter-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+      <form class="newsletter-form" name="newsletter-signup" method="POST" action="/insights" data-netlify="true" data-netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="newsletter-signup" />
         <input type="hidden" name="subject" value="New Roll My Retirement newsletter signup" />
         <p class="netlify-honeypot">
@@ -941,7 +941,7 @@
     btn.disabled = true;
 
     try {
-      const response = await fetch('/', {
+      const response = await fetch(e.target.getAttribute('action') || window.location.pathname, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encodeForm(e.target),
