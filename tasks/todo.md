@@ -30,6 +30,7 @@
 - [x] Align contact form backend field order and labels
 - [x] Polish advisor form success state
 - [x] Simplify mobile audio control to play/mute only
+- [x] Remove mobile sampled click audio delay
 
 ## Recent Verification
 
@@ -56,6 +57,7 @@
 - 2026-07-07: Aligned the contact form backend payload order and labels with the visible form structure. Removed the separate `call_link` backend row, moved the hidden aggregate `reason` field into the Reasons section, changed visible copy to `City/State`, `Reasons for Reaching Out`, and `Anything else you'd like us to know?`, ran `npm run build`, verified the built mobile POST body order in headless Brave (`full_name`, `email`, `phone`, `location`, `reason`, `message`), confirmed production served the revised markup, and posted a safe live Netlify test with three aggregated reasons that returned `200`.
 - 2026-07-07: Replaced the advisor form's green `Application Submitted` button state with the contact-style full success state and unified pending submit copy to `Sending...`. Ran `npm run build`, inspected generated advisor output to confirm the old success text was removed, verified the built advisor form in headless Brave with a stubbed POST, confirmed production served the new success block and `Sending...` copy, and posted a safe live Netlify advisor test that returned `200`.
 - 2026-07-07: Simplified the mobile audio control to play/mute only by hiding the volume panel on coarse-pointer/mobile viewports while preserving the desktop hover slider. Ran `node --check website/scripts/audio.js`, `npm run build`, verified generated `dist/audio.js`, used headless Brave to confirm desktop keeps the visible hover slider (`display: flex`) while mobile hides it (`display: none`) with a 44px toggle, confirmed mobile tap toggles active state on/off, and verified soft navigation keeps a single persistent audio control.
+- 2026-07-07: Removed mobile sampled click audio delay by adding a coarse-pointer pointer/touch release path that plays the cue before the follow-up mobile `click`, suppresses duplicate click sounds, cancels on scroll-like movement, and uses a decoded Web Audio buffer on mobile when available with the existing HTML audio pool as fallback. Ran `node --check website/scripts/audio.js`, `npm run build`, inspected generated `dist/audio.js`, verified mobile fallback and Web Audio cue paths in headless Brave, confirmed desktop still fires only on normal click, confirmed remounting does not duplicate listeners, and verified soft navigation keeps one audio control with mobile click cues still working after route swap.
 
 ## Backlog
 

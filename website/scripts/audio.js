@@ -22,6 +22,8 @@
   const TOGGLE_OUT_MS = 600;    // disable via toggle
   const CLICK_VOL    = 0.82;
   const CLICK_POOL_SIZE = 6;
+  const TAP_MOVE_TOLERANCE = 10;
+  const MOBILE_CLICK_SUPPRESS_MS = 450;
 
   let bgMaxVol  = 0.22;         // mutable — slider can update this
   let active    = false;
@@ -32,6 +34,11 @@
   let bgPlayPending = false;
   let clickPool = [];
   let clickPoolIndex = 0;
+  let clickAudioCtx = null;
+  let clickBuffer = null;
+  let clickBufferPromise = null;
+  let mobilePointer = null;
+  let suppressClickUntil = 0;
   let lastLabelControlId = '';
   let lastLabelClickAt = 0;
   let initialized = false;
@@ -46,8 +53,81 @@
     });
   }
 
+  function isCoarsePointerDevice() {
+    return Boolean(window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches);
+  }
+
+  function decodeClickBuffer(ctx, arrayBuffer) {
+    return new Promise((resolve, reject) => {
+      const decoded = ctx.decodeAudioData(arrayBuffer, resolve, reject);
+      if (decoded && typeof decoded.then === 'function') {
+        decoded.then(resolve).catch(reject);
+      }
+    });
+  }
+
+  function primeFastClickSound() {
+    if (!isCoarsePointerDevice() || clickBuffer || clickBufferPromise) return clickBufferPromise;
+
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx || !window.fetch) return null;
+
+    try {
+      if (!clickAudioCtx) clickAudioCtx = new AudioCtx();
+      if (clickAudioCtx.state === 'suspended' && clickAudioCtx.resume) {
+        clickAudioCtx.resume().catch(() => {});
+      }
+
+      clickBufferPromise = fetch(CLICK_SRC)
+        .then(response => {
+          if (!response.ok) throw new Error('Click audio fetch failed');
+          return response.arrayBuffer();
+        })
+        .then(arrayBuffer => decodeClickBuffer(clickAudioCtx, arrayBuffer))
+        .then(buffer => {
+          clickBuffer = buffer;
+          return clickBuffer;
+        })
+        .catch(() => {
+          clickBufferPromise = null;
+          return null;
+        });
+    } catch (_) {
+      clickBufferPromise = null;
+    }
+
+    return clickBufferPromise;
+  }
+
+  function playFastClickSound() {
+    if (!active || !clickAudioCtx || !clickBuffer) {
+      primeFastClickSound();
+      return false;
+    }
+
+    try {
+      if (clickAudioCtx.state === 'suspended' && clickAudioCtx.resume) {
+        clickAudioCtx.resume().catch(() => {});
+        return false;
+      }
+
+      const source = clickAudioCtx.createBufferSource();
+      const gain = clickAudioCtx.createGain();
+      source.buffer = clickBuffer;
+      gain.gain.value = CLICK_VOL;
+      source.connect(gain);
+      gain.connect(clickAudioCtx.destination);
+      source.start(0);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function playClickSound() {
     if (!active || !clickPool.length) return;
+    if (isCoarsePointerDevice() && playFastClickSound()) return;
+
     const click = clickPool[clickPoolIndex];
     clickPoolIndex = (clickPoolIndex + 1) % clickPool.length;
     try {
@@ -124,6 +204,7 @@
   function setActive(state, isAutoStart) {
     active = state;
     if (state) {
+      primeFastClickSound();
       startBg(isAutoStart ? FADE_IN_MS : TOGGLE_IN_MS);
     } else {
       stopBg();
@@ -451,7 +532,92 @@
     lastLabelClickAt = performance.now();
   }
 
+  function isMobilePointerLike(e) {
+    if (!isCoarsePointerDevice()) return false;
+    return !e.pointerType || e.pointerType !== 'mouse';
+  }
+
+  function isPrimaryPointer(e) {
+    return e.isPrimary !== false;
+  }
+
+  function mobilePointerDistanceExceeded(e) {
+    if (!mobilePointer) return false;
+    const dx = e.clientX - mobilePointer.x;
+    const dy = e.clientY - mobilePointer.y;
+    return Math.hypot(dx, dy) > TAP_MOVE_TOLERANCE;
+  }
+
+  function startMobilePointer(target, id, x, y) {
+    if (!isSoundableClickTarget(target)) return;
+    mobilePointer = { id, target, x, y, cancelled: false };
+  }
+
+  function finishMobilePointer(id) {
+    if (!mobilePointer || mobilePointer.id !== id) return;
+
+    const pointer = mobilePointer;
+    mobilePointer = null;
+
+    if (pointer.cancelled || !isSoundableClickTarget(pointer.target)) return;
+
+    rememberLabelControlClick(pointer.target);
+    playClickSound();
+    suppressClickUntil = performance.now() + MOBILE_CLICK_SUPPRESS_MS;
+  }
+
+  function handleDocumentPointerDown(e) {
+    if (!isPrimaryPointer(e) || !isMobilePointerLike(e)) return;
+    startMobilePointer(e.target, e.pointerId, e.clientX, e.clientY);
+  }
+
+  function handleDocumentPointerMove(e) {
+    if (!mobilePointer || mobilePointer.id !== e.pointerId) return;
+    if (mobilePointerDistanceExceeded(e)) mobilePointer.cancelled = true;
+  }
+
+  function handleDocumentPointerUp(e) {
+    if (!isPrimaryPointer(e) || !isMobilePointerLike(e)) return;
+    finishMobilePointer(e.pointerId);
+  }
+
+  function handleDocumentPointerCancel(e) {
+    if (mobilePointer && mobilePointer.id === e.pointerId) mobilePointer = null;
+  }
+
+  function firstChangedTouch(e) {
+    return e.changedTouches && e.changedTouches[0];
+  }
+
+  function handleDocumentTouchStart(e) {
+    if (!isCoarsePointerDevice() || window.PointerEvent) return;
+    const touch = firstChangedTouch(e);
+    if (!touch) return;
+    startMobilePointer(e.target, touch.identifier, touch.clientX, touch.clientY);
+  }
+
+  function handleDocumentTouchMove(e) {
+    if (!mobilePointer || window.PointerEvent) return;
+    const touch = firstChangedTouch(e);
+    if (!touch || mobilePointer.id !== touch.identifier) return;
+    if (mobilePointerDistanceExceeded(touch)) mobilePointer.cancelled = true;
+  }
+
+  function handleDocumentTouchEnd(e) {
+    if (!isCoarsePointerDevice() || window.PointerEvent) return;
+    const touch = firstChangedTouch(e);
+    if (!touch) return;
+    finishMobilePointer(touch.identifier);
+  }
+
+  function handleDocumentTouchCancel(e) {
+    if (!mobilePointer || window.PointerEvent) return;
+    const touch = firstChangedTouch(e);
+    if (!touch || mobilePointer.id === touch.identifier) mobilePointer = null;
+  }
+
   function handleDocumentClick(e) {
+    if (performance.now() < suppressClickUntil) return;
     if (!isSoundableClickTarget(e.target)) return;
     if (isDuplicateLabelControlClick(e.target)) return;
     rememberLabelControlClick(e.target);
@@ -461,6 +627,24 @@
   function attachInteractionListeners() {
     document.removeEventListener('click', handleDocumentClick, true);
     document.addEventListener('click', handleDocumentClick, true);
+
+    document.removeEventListener('pointerdown', handleDocumentPointerDown, true);
+    document.removeEventListener('pointermove', handleDocumentPointerMove, true);
+    document.removeEventListener('pointerup', handleDocumentPointerUp, true);
+    document.removeEventListener('pointercancel', handleDocumentPointerCancel, true);
+    document.removeEventListener('touchstart', handleDocumentTouchStart, true);
+    document.removeEventListener('touchmove', handleDocumentTouchMove, true);
+    document.removeEventListener('touchend', handleDocumentTouchEnd, true);
+    document.removeEventListener('touchcancel', handleDocumentTouchCancel, true);
+
+    document.addEventListener('pointerdown', handleDocumentPointerDown, { capture: true, passive: true });
+    document.addEventListener('pointermove', handleDocumentPointerMove, { capture: true, passive: true });
+    document.addEventListener('pointerup', handleDocumentPointerUp, { capture: true, passive: true });
+    document.addEventListener('pointercancel', handleDocumentPointerCancel, { capture: true, passive: true });
+    document.addEventListener('touchstart', handleDocumentTouchStart, { capture: true, passive: true });
+    document.addEventListener('touchmove', handleDocumentTouchMove, { capture: true, passive: true });
+    document.addEventListener('touchend', handleDocumentTouchEnd, { capture: true, passive: true });
+    document.addEventListener('touchcancel', handleDocumentTouchCancel, { capture: true, passive: true });
   }
 
   function ensureMounted() {
@@ -501,6 +685,7 @@
     bgAudio.play()
       .then(() => {
         active = true;
+        primeFastClickSound();
         updateToggleUI();
         fadeBg(bgMaxVol, FADE_IN_MS);
       })
