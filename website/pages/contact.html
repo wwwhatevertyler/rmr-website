@@ -394,14 +394,14 @@
     }
     .form-field textarea { resize: vertical; min-height: 96px; }
 
-    /* Situation radio pills */
+    /* Reason checkbox pills */
     .situation-pills {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
     .pill-option { position: relative; }
-    .pill-option input[type="radio"] {
+    .pill-option input[type="checkbox"] {
       position: absolute;
       opacity: 0;
       width: 0; height: 0;
@@ -420,12 +420,16 @@
       margin: 0;
       white-space: nowrap;
     }
-    .pill-option input[type="radio"]:checked + label {
+    .pill-option label:hover { background: var(--bg-card); border-color: var(--border-strong); }
+    .pill-option input[type="checkbox"]:checked + label {
       background: var(--bg-dark);
       color: #fff;
       border-color: var(--bg-dark);
     }
-    .pill-option label:hover { background: var(--bg-card); border-color: var(--border-strong); }
+    .pill-option input[type="checkbox"]:focus-visible + label {
+      box-shadow: 0 0 0 3px rgba(17,17,16,0.08);
+      border-color: var(--text);
+    }
 
     /* Divider between sections */
     .form-divider {
@@ -440,6 +444,12 @@
       text-transform: uppercase;
       color: var(--text-light);
       margin-bottom: 16px;
+    }
+    .form-section-helper {
+      margin: -8px 0 16px;
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .form-submit-area {
@@ -710,24 +720,25 @@
           </div>
 
           <div class="form-divider"></div>
-          <div class="form-section-label">What brings you here?</div>
+          <div class="form-section-label">Reasons for reaching out</div>
+          <p class="form-section-helper">Select all that apply.</p>
 
           <div class="form-field full">
             <div class="situation-pills">
               <div class="pill-option">
-                <input type="radio" id="sit-rollover" name="situation" value="starting_rollover" />
+                <input type="checkbox" id="sit-rollover" name="reason" value="Starting a rollover" />
                 <label for="sit-rollover">Starting a rollover</label>
               </div>
               <div class="pill-option">
-                <input type="radio" id="sit-old401k" name="situation" value="old_401k" />
+                <input type="checkbox" id="sit-old401k" name="reason" value="Have old 401(k)s" />
                 <label for="sit-old401k">Have old 401(k)s</label>
               </div>
               <div class="pill-option">
-                <input type="radio" id="sit-explore" name="situation" value="exploring" />
+                <input type="checkbox" id="sit-explore" name="reason" value="Just exploring options" />
                 <label for="sit-explore">Just exploring options</label>
               </div>
               <div class="pill-option">
-                <input type="radio" id="sit-other" name="situation" value="other" />
+                <input type="checkbox" id="sit-other" name="reason" value="Something else" />
                 <label for="sit-other">Something else</label>
               </div>
             </div>

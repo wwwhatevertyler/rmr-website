@@ -24,6 +24,7 @@
 - [x] Polish mobile menu CTA styling and advisor arrows
 - [x] Raise page transition curtain above persistent audio and cursor overlays
 - [x] Point Netlify AJAX form submissions at their owning page routes
+- [x] Polish contact form reason field for multi-select Netlify submissions
 
 ## Recent Verification
 
@@ -44,6 +45,7 @@
 - 2026-07-07: Verified live contact/advisor pages contain Netlify form markup, but live POST tests returned Netlify `404` before dashboard form detection was enabled/confirmed. Updated contact, advisor, and newsletter forms to include explicit `action` routes (`/contact`, `/advisors`, `/insights`) and changed AJAX submits to post to each form's own action. Ran `npm run build` and inspected generated `dist` output for the corrected form actions and submit targets.
 - 2026-07-07: Pushed the corrected form action routes to production and verified the live HTML includes `action="/contact"` and `action="/advisors"`. Follow-up live POST tests still returned Netlify `404`, so Netlify Forms detection/capture must be enabled or confirmed in the Netlify dashboard before submissions will be stored.
 - 2026-07-07: After Netlify Forms detection was enabled, pushed empty commit `288854d` to trigger a fresh Netlify form scan. Live POST tests to `/contact` (`consumer-contact`) and `/advisors` (`advisor-application`) returned `200`, confirming Netlify Forms capture is active for both lead forms. Email notification setup remains a dashboard configuration step.
+- 2026-07-07: Converted the contact form intent pills from single-select `situation` radios to multi-select `reason` checkboxes with readable submitted values. Ran `npm run build`, inspected `dist/rmr-contact.html` for the new field and absence of old tokens, and verified desktop/mobile pill layout plus multi-value `FormData` behavior in headless Brave.
 
 ## Backlog
 
