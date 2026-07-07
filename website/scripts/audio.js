@@ -258,6 +258,21 @@
         filter    var(--panel-open-dur) var(--panel-ease);
     }
 
+    @media (hover: none), (pointer: coarse) {
+      #audio-wrap {
+        gap: 0;
+      }
+
+      #audio-toggle {
+        width: 44px;
+        height: 44px;
+      }
+
+      #audio-vol-panel {
+        display: none !important;
+      }
+    }
+
     /* ── Range input ── */
     #audio-vol {
       -webkit-appearance: none;

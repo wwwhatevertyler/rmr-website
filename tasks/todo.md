@@ -29,6 +29,7 @@
 - [x] Restore contact form backend reason field key
 - [x] Align contact form backend field order and labels
 - [x] Polish advisor form success state
+- [x] Simplify mobile audio control to play/mute only
 
 ## Recent Verification
 
@@ -54,6 +55,7 @@
 - 2026-07-07: Restored the contact form backend field key from hidden `reasons` to hidden singular `reason` while keeping visible reason checkboxes UI-only. Ran `npm run build`, inspected `dist/rmr-contact.html` for exactly one submitted `name="reason"` field, verified the built mobile form POST body in headless Brave submits one aggregate `reason=Starting a rollover, Have old 401(k)s` value with no bracketed array output, confirmed production served the singular hidden `reason` field, and posted a safe live Netlify test with three aggregated reasons that returned `200`.
 - 2026-07-07: Aligned the contact form backend payload order and labels with the visible form structure. Removed the separate `call_link` backend row, moved the hidden aggregate `reason` field into the Reasons section, changed visible copy to `City/State`, `Reasons for Reaching Out`, and `Anything else you'd like us to know?`, ran `npm run build`, verified the built mobile POST body order in headless Brave (`full_name`, `email`, `phone`, `location`, `reason`, `message`), confirmed production served the revised markup, and posted a safe live Netlify test with three aggregated reasons that returned `200`.
 - 2026-07-07: Replaced the advisor form's green `Application Submitted` button state with the contact-style full success state and unified pending submit copy to `Sending...`. Ran `npm run build`, inspected generated advisor output to confirm the old success text was removed, verified the built advisor form in headless Brave with a stubbed POST, confirmed production served the new success block and `Sending...` copy, and posted a safe live Netlify advisor test that returned `200`.
+- 2026-07-07: Simplified the mobile audio control to play/mute only by hiding the volume panel on coarse-pointer/mobile viewports while preserving the desktop hover slider. Ran `node --check website/scripts/audio.js`, `npm run build`, verified generated `dist/audio.js`, used headless Brave to confirm desktop keeps the visible hover slider (`display: flex`) while mobile hides it (`display: none`) with a 44px toggle, confirmed mobile tap toggles active state on/off, and verified soft navigation keeps a single persistent audio control.
 
 ## Backlog
 
