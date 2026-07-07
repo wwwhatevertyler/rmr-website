@@ -2,6 +2,7 @@
 
 ## Current
 
+- [ ] Enable/confirm Netlify Forms detection and form-submission notifications in the Netlify dashboard
 - [x] Polish hero floating image interaction and unify click audio behavior
 - [x] Add Netlify build output and clean route configuration
 - [x] Wire advisor, contact, and newsletter forms to Netlify Forms
@@ -41,6 +42,7 @@
 - 2026-07-07: Fixed mobile menu CTA inheritance so mobile `Let's Talk` and `Apply to Join` buttons render as centered black pill CTAs with white text and arrows; added mobile `For Advisors →` decorative arrow spans. Ran `npm run build`, `node --check website/scripts/router.js`, `node --check website/scripts/audio.js`, inspected generated output, and verified mobile screenshots/computed styles for home/advisors/contact/insights/article routes.
 - 2026-07-07: Raised `#page-curtain` to `z-index: 1000000` across production page templates so the black route-transition sweep covers persistent fixed overlays. Ran `npm run build`, inspected generated `dist` output for the updated curtain layer, and used headless Brave against a local `dist` server to verify soft-navigation transitions through home, advisors, contact, insights, and one article route keep the visible sweep above audio (`z-index: 9990`) and cursor (`z-index: 99999`).
 - 2026-07-07: Verified live contact/advisor pages contain Netlify form markup, but live POST tests returned Netlify `404` before dashboard form detection was enabled/confirmed. Updated contact, advisor, and newsletter forms to include explicit `action` routes (`/contact`, `/advisors`, `/insights`) and changed AJAX submits to post to each form's own action. Ran `npm run build` and inspected generated `dist` output for the corrected form actions and submit targets.
+- 2026-07-07: Pushed the corrected form action routes to production and verified the live HTML includes `action="/contact"` and `action="/advisors"`. Follow-up live POST tests still returned Netlify `404`, so Netlify Forms detection/capture must be enabled or confirmed in the Netlify dashboard before submissions will be stored.
 
 ## Backlog
 
