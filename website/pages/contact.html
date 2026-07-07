@@ -687,7 +687,7 @@
         <form id="contact-form" name="consumer-contact" method="POST" action="/contact" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
           <input type="hidden" name="form-name" value="consumer-contact" />
           <input type="hidden" name="subject" value="New Roll My Retirement contact request" />
-          <input type="hidden" id="contact-reasons-field" name="reasons" value="" />
+          <input type="hidden" id="contact-reason-field" name="reason" value="" />
           <input type="hidden" id="contact-call-link-field" name="call_link" value="" />
           <p class="netlify-honeypot">
             <label>Leave this field empty <input name="bot-field" /></label>
@@ -906,14 +906,14 @@
   }
 
   function prepareContactSubmission(form) {
-    const reasonsField = form.querySelector('#contact-reasons-field');
+    const reasonField = form.querySelector('#contact-reason-field');
     const callLinkField = form.querySelector('#contact-call-link-field');
     const phoneField = form.querySelector('[name="phone"]');
     const selectedReasons = Array.from(form.querySelectorAll('[data-reason-option]:checked'))
       .map(input => input.value.trim())
       .filter(Boolean);
 
-    reasonsField.value = selectedReasons.join(', ');
+    reasonField.value = selectedReasons.join(', ');
     callLinkField.value = '';
 
     if (phoneField) {
