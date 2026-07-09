@@ -20,6 +20,7 @@
   <meta name="twitter:title" content="Roll My Retirement Insights" />
   <meta name="twitter:description" content="Practical perspective on rollovers, planning, and the market from Roll My Retirement." />
   <meta name="twitter:image" content="https://www.rollmyretirement.com/Website%20Images/rmr-social-share-2.png" />
+  <meta name="twitter:image:alt" content="Roll My Retirement website collage social preview image" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -581,6 +582,20 @@
   const SITE_URL = 'https://www.rollmyretirement.com';
   const SOCIAL_IMAGE_URL = `${SITE_URL}/Website%20Images/rmr-social-share-2.png`;
 
+  function absoluteUrl(value) {
+    if (/^https?:\/\//.test(value)) return value;
+    return `${SITE_URL}/${String(value).replace(/^\/+/, '')}`;
+  }
+
+  function escapeAttr(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
   function setMeta(selector, content) {
     const meta = document.querySelector(selector);
     if (meta) meta.content = content;
@@ -588,15 +603,20 @@
 
   function renderPost(post) {
     const postUrl = `${SITE_URL}/insights/${post.slug}`;
+    const postImageUrl = absoluteUrl(post.image);
+    const postImageAlt = post.imageAlt || post.title;
+    const postImageAltAttr = escapeAttr(postImageAlt);
     document.title = `${post.title} — Roll My Retirement`;
     setMeta('meta[name="description"]', post.excerpt);
     setMeta('meta[property="og:title"]', post.title);
     setMeta('meta[property="og:description"]', post.excerpt);
     setMeta('meta[property="og:url"]', postUrl);
-    setMeta('meta[property="og:image"]', SOCIAL_IMAGE_URL);
+    setMeta('meta[property="og:image"]', postImageUrl);
+    setMeta('meta[property="og:image:alt"]', postImageAlt);
     setMeta('meta[name="twitter:title"]', post.title);
     setMeta('meta[name="twitter:description"]', post.excerpt);
-    setMeta('meta[name="twitter:image"]', SOCIAL_IMAGE_URL);
+    setMeta('meta[name="twitter:image"]', postImageUrl);
+    setMeta('meta[name="twitter:image:alt"]', postImageAlt);
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.href = postUrl;
 
@@ -631,7 +651,7 @@
       <!-- COVER IMAGE -->
       <div id="cover-image-wrap">
         <div class="container">
-          <img id="cover-image" class="${post.slug === 'when-to-roll-over-your-401k' ? 'cover-image-focus-lower' : ''}" src="${post.image}" alt="${post.title}" loading="eager"${post.imagePosition ? ` style="--post-image-position: ${post.imagePosition};"` : ''}>
+          <img id="cover-image" class="${post.slug === 'when-to-roll-over-your-401k' ? 'cover-image-focus-lower' : ''}" src="${post.image}" alt="${postImageAltAttr}" loading="eager"${post.imagePosition ? ` style="--post-image-position: ${post.imagePosition};"` : ''}>
         </div>
       </div>
 

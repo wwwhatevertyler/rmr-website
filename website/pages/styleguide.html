@@ -34,6 +34,11 @@
       --radius-sm: 10px;
       --max-w: 1120px;
       --pad-x: clamp(24px, 5vw, 64px);
+      --resize-dur: 500ms;
+      --resize-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --home-loader-dur: 2050ms;
+      --home-loader-end-hold: 320ms;
+      --home-loader-ease: cubic-bezier(0.23, 1, 0.32, 1);
     }
 
     /* ── GUIDE LAYOUT ─────────────────────────────────────────────── */
@@ -53,7 +58,7 @@
     .guide-title {
       font-family: 'Instrument Serif', Georgia, serif;
       font-size: clamp(32px, 5vw, 52px);
-      font-weight: 400;
+      font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.1;
       margin-bottom: 12px;
@@ -110,7 +115,7 @@
     .guide-section-title {
       font-family: 'Instrument Serif', Georgia, serif;
       font-size: 24px;
-      font-weight: 400;
+      font-weight: 600;
       letter-spacing: -0.02em;
       margin-bottom: 8px;
     }
@@ -423,6 +428,274 @@
     .value-item-demo:hover { background: #fff; }
     .value-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
     .value-sub { font-size: 13px; color: var(--text-light); }
+
+    .loader-pattern {
+      padding: 44px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .loader-preview {
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      padding: clamp(28px, 6vw, 56px);
+      border-radius: 12px;
+      background: var(--bg);
+      box-shadow: inset 0 0 0 1px var(--border);
+    }
+    .loader-preview-inner {
+      width: min(404px, 100%);
+      text-align: left;
+      transform: translateY(-16px);
+    }
+    .loader-preview-meta {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .loader-preview-label,
+    .loader-preview-percent {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .loader-preview-percent {
+      min-width: 64px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+    }
+    .loader-preview-symbol {
+      margin-left: 0.06em;
+      font-size: 1em;
+      line-height: 1;
+    }
+    .loader-preview-track {
+      width: 100%;
+      height: 1px;
+      margin: 0;
+      background: var(--border);
+      overflow: hidden;
+      transform: translateZ(0);
+    }
+    .loader-preview-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--text);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .sponsor-pattern {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(32px, 5vw, 48px);
+      align-items: start;
+      padding: 44px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .sponsor-pattern > * { min-width: 0; }
+    .sponsor-pattern-copy {
+      max-width: 620px;
+      min-width: 0;
+    }
+    .sponsor-pattern-copy h3 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      margin-bottom: 16px;
+    }
+    .sponsor-pattern-copy p {
+      max-width: 520px;
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .sponsor-pattern-note {
+      margin: -8px auto 0;
+      max-width: 620px;
+      font-size: 12px;
+      text-align: center;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+    .sponsor-style-gallery {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      height: 320px;
+      margin-left: auto;
+    }
+    .sponsor-style-panel {
+      position: relative;
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: auto;
+      width: 168px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      padding: 0 4px;
+      overflow: visible;
+      transition:
+        width var(--resize-dur) var(--resize-ease),
+        height var(--resize-dur) var(--resize-ease);
+      will-change: width, height;
+    }
+    .sponsor-style-surface {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      overflow: hidden;
+      isolation: isolate;
+      container-type: inline-size;
+      background: var(--bg-dark);
+      transition:
+        transform 220ms cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 220ms cubic-bezier(0.23, 1, 0.32, 1),
+        filter 220ms cubic-bezier(0.23, 1, 0.32, 1),
+        background 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .sponsor-style-surface::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(17,17,16,0.1), rgba(17,17,16,0.52));
+      pointer-events: none;
+      transition:
+        opacity 220ms cubic-bezier(0.23, 1, 0.32, 1),
+        filter 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .sponsor-style-media {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: var(--sponsor-media-width, clamp(500px, 44vw, 560px));
+      height: 100%;
+      max-width: none;
+      object-fit: cover;
+      object-position: var(--sponsor-position, center);
+      filter: grayscale(1) contrast(0.98) brightness(0.66);
+      translate: -50% 0;
+      transition:
+        filter 500ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .sponsor-style-logo {
+      position: relative;
+      z-index: 2;
+      width: clamp(44px, 32cqw, 84px);
+      height: auto;
+      max-width: calc(100% - 24px);
+      max-height: 84px;
+      object-fit: contain;
+      opacity: 0.94;
+      filter: drop-shadow(0 12px 28px rgba(17,17,16,0.3));
+      transition:
+        transform 260ms cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 220ms cubic-bezier(0.23, 1, 0.32, 1),
+        filter 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .sponsor-style-label {
+      position: absolute;
+      left: 14px;
+      bottom: 12px;
+      z-index: 2;
+      max-width: calc(100% - 28px);
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 8.8px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      line-height: 1;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.62);
+      transition:
+        color 220ms cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 220ms cubic-bezier(0.23, 1, 0.32, 1),
+        transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .sponsor-style-label-text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sponsor-style-arrow {
+      display: none;
+      width: 13px;
+      height: 13px;
+      flex: 0 0 auto;
+      opacity: 0.78;
+      transition:
+        opacity 180ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      .sponsor-style-panel:hover,
+      .sponsor-style-gallery:not(:hover) .sponsor-style-panel.is-default-open {
+        width: 100%;
+      }
+      .sponsor-style-panel:hover .sponsor-style-surface::before,
+      .sponsor-style-gallery:not(:hover) .sponsor-style-panel.is-default-open .sponsor-style-surface::before {
+        opacity: 0;
+      }
+      .sponsor-style-panel:hover .sponsor-style-media,
+      .sponsor-style-gallery:not(:hover) .sponsor-style-panel.is-default-open .sponsor-style-media {
+        filter: none;
+      }
+      .sponsor-style-panel:hover .sponsor-style-logo,
+      .sponsor-style-gallery:not(:hover) .sponsor-style-panel.is-default-open .sponsor-style-logo {
+        transform: translateY(-4px);
+        opacity: 1;
+        filter: drop-shadow(0 16px 34px rgba(17,17,16,0.34));
+      }
+      .sponsor-style-panel:hover .sponsor-style-label,
+      .sponsor-style-gallery:not(:hover) .sponsor-style-panel.is-default-open .sponsor-style-label {
+        color: rgba(255,255,255,0.9);
+        transform: translateY(-3px);
+      }
+      .sponsor-style-panel:active .sponsor-style-surface {
+        transform: scale(0.985);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .sponsor-style-panel,
+      .sponsor-style-surface,
+      .sponsor-style-media,
+      .sponsor-style-logo,
+      .sponsor-style-label,
+      .sponsor-style-arrow {
+        transition: none !important;
+      }
+      .sponsor-style-logo,
+      .sponsor-style-label {
+        transform: none !important;
+      }
+    }
 
     /* ── 6. HERO IMAGERY ──────────────────────────────────────────── */
     .hero-float-demo {
@@ -868,6 +1141,20 @@
     @media (max-width: 860px) {
       .cards-showcase { grid-template-columns: 1fr; }
       .value-strip-demo { grid-template-columns: 1fr 1fr; }
+      .sponsor-pattern { gap: 34px; padding: 32px; }
+      .sponsor-style-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        height: auto;
+        margin-left: 0;
+      }
+      .sponsor-style-panel {
+        padding: 0;
+        width: 100%;
+        height: clamp(200px, 34vw, 260px);
+      }
+      .sponsor-style-logo { width: clamp(58px, 19vw, 84px); }
       .hero-float-demo { min-height: 420px; padding: 48px 24px; }
       .hero-float-card {
         width: clamp(112px, 18vw, 132px);
@@ -883,6 +1170,10 @@
     }
     @media (max-width: 560px) {
       .value-strip-demo { grid-template-columns: 1fr; }
+      .sponsor-pattern { gap: 28px; padding: 24px; }
+      .sponsor-pattern-note { margin-top: 0; text-align: left; }
+      .sponsor-style-gallery { grid-template-columns: 1fr; }
+      .sponsor-style-panel { height: 210px; }
       .type-row { grid-template-columns: 1fr; }
       .type-specs { text-align: left; align-items: flex-start; }
       .hero-float-card { display: none; }
@@ -907,6 +1198,8 @@
     <a href="#spacing">Spacing</a>
     <a href="#buttons">Buttons</a>
     <a href="#cards">Cards</a>
+    <a href="#homepage-loader">Homepage Loader</a>
+    <a href="#sponsor-ad-gallery">Sponsor Ad Gallery</a>
     <a href="#hero-imagery">Hero Imagery</a>
     <a href="#blog-assets">Blog & Assets</a>
     <a href="#forms">Forms</a>
@@ -1294,6 +1587,160 @@
   </div>
 </section>
 
+<!-- ══ 6. HOMEPAGE LOADER ═════════════════════════════════════════════ -->
+<section class="guide-section" id="homepage-loader">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Homepage Cold-Entry Loader</h2>
+    <p class="guide-section-desc">A rare homepage prelude for hard entries only. It appears on refresh, direct, search, or external-entry homepage loads, then hands off to the existing dark curtain and hero entrance.</p>
+
+    <div class="loader-pattern">
+      <div class="loader-preview" aria-hidden="true">
+        <div class="loader-preview-inner">
+          <div class="loader-preview-meta">
+            <span class="loader-preview-label">Loading</span>
+            <span class="loader-preview-percent">00<span class="loader-preview-symbol">%</span></span>
+          </div>
+          <div class="loader-preview-track">
+            <div class="loader-preview-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="guide-spec">surface: warm --bg over dark curtain</span>
+      <span class="guide-spec">type: RMR eyebrow token, 11px / 500 / 0.12em / uppercase</span>
+      <span class="guide-spec">duration: 2.05s eased progress</span>
+      <span class="guide-spec">finish: 320ms end hold before exit</span>
+      <span class="guide-spec">progress: smooth 00-100</span>
+      <span class="guide-spec">track: centered 404px / 1px</span>
+      <span class="guide-spec">bar: transform scaleX only</span>
+      <span class="guide-spec">number: 00-99 padded, 100 unpadded</span>
+      <span class="guide-spec">sequence: loader -> curtain -> hero</span>
+      <span class="guide-spec">trigger: hard homepage entries only</span>
+      <span class="guide-spec">skip: internal soft nav and same-page anchors</span>
+      <span class="guide-spec">reduced motion: skip loader</span>
+      <span class="guide-spec">z-index: above #page-curtain</span>
+      <span class="guide-spec">no new dependencies</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. SPONSOR AD GALLERY ══════════════════════════════════════════ -->
+<section class="guide-section" id="sponsor-ad-gallery">
+  <div class="guide-section-inner">
+    <h2 class="guide-section-title">Sponsor Ad Gallery</h2>
+    <p class="guide-section-desc">Homepage partner space sits after FAQ. It uses a quiet image accordion: placeholder imagery behind white abstract partner marks and trusted partner labels.</p>
+
+    <div class="sponsor-pattern">
+      <div class="sponsor-pattern-copy">
+        <p class="guide-label" style="margin-bottom: 14px;">Trusted Partners</p>
+        <h3>A small space for companies that support the retirement journey</h3>
+        <p>A carefully selected group of partners we trust to help people navigate retirement with confidence.</p>
+      </div>
+
+      <div class="sponsor-style-gallery" aria-hidden="true">
+        <div class="sponsor-style-panel" style="--sponsor-position: center;">
+          <div class="sponsor-style-surface">
+            <img class="sponsor-style-media" src="Website%20Images/hands-soft-light-financial-decision.png" alt="Hands held in soft light, suggesting careful financial guidance" loading="lazy" />
+            <img class="sponsor-style-logo" src="Website%20Images/advertising%20partner%20logos/Flow.png" alt="Sponsor logo mark for Sora Bank" loading="lazy" />
+            <span class="sponsor-style-label">
+              <span class="sponsor-style-label-text">Sora Bank</span>
+              <svg class="sponsor-style-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 10L10 4M5 4h5v5"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="sponsor-style-panel" style="--sponsor-position: center top;">
+          <div class="sponsor-style-surface">
+            <img class="sponsor-style-media" src="Website%20Images/winding-path-retirement-journey.jpg" alt="Winding path through open grassland, suggesting a retirement journey" loading="lazy" />
+            <img class="sponsor-style-logo" src="Website%20Images/advertising%20partner%20logos/Eye.png" alt="Sponsor logo mark for Oriel Retirement" loading="lazy" />
+            <span class="sponsor-style-label">
+              <span class="sponsor-style-label-text">Oriel Retirement</span>
+              <svg class="sponsor-style-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 10L10 4M5 4h5v5"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="sponsor-style-panel is-default-open" style="--sponsor-position: center;">
+          <div class="sponsor-style-surface">
+            <img class="sponsor-style-media" src="Website%20Images/401k-job-change-city-crosswalk.webp" alt="Busy city street in motion, representing career transitions" loading="lazy" />
+            <img class="sponsor-style-logo" src="Website%20Images/advertising%20partner%20logos/Hourglass.png" alt="Sponsor logo mark for Axiom Planning" loading="lazy" />
+            <span class="sponsor-style-label">
+              <span class="sponsor-style-label-text">Axiom Planning</span>
+              <svg class="sponsor-style-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 10L10 4M5 4h5v5"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="sponsor-style-panel" style="--sponsor-position: center bottom;">
+          <div class="sponsor-style-surface">
+            <img class="sponsor-style-media" src="Website%20Images/rate-cuts-market-movement-rainy-city.webp" alt="Rainy city avenue with moving traffic" loading="lazy" />
+            <img class="sponsor-style-logo" src="Website%20Images/advertising%20partner%20logos/Circle.png" alt="Sponsor logo mark for Orbis Trust" loading="lazy" />
+            <span class="sponsor-style-label">
+              <span class="sponsor-style-label-text">Orbis Trust</span>
+              <svg class="sponsor-style-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 10L10 4M5 4h5v5"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="sponsor-style-panel" style="--sponsor-position: center;">
+          <div class="sponsor-style-surface">
+            <img class="sponsor-style-media" src="Website%20Images/luminous-sphere-financial-clarity.png" alt="Luminous sphere catching warm light" loading="lazy" />
+            <img class="sponsor-style-logo" src="Website%20Images/advertising%20partner%20logos/N.png" alt="Sponsor logo mark for Northline Financial" loading="lazy" />
+            <span class="sponsor-style-label">
+              <span class="sponsor-style-label-text">Northline Financial</span>
+              <svg class="sponsor-style-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 10L10 4M5 4h5v5"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="sponsor-style-panel" style="--sponsor-position: center;">
+          <div class="sponsor-style-surface">
+            <img class="sponsor-style-media" src="Website%20Images/401k-rollover-decision-sunlit-office.png" alt="Silhouetted people in a sunlit office" loading="lazy" />
+            <img class="sponsor-style-logo" src="Website%20Images/advertising%20partner%20logos/D.png" alt="Sponsor logo mark for Dover Partners" loading="lazy" />
+            <span class="sponsor-style-label">
+              <span class="sponsor-style-label-text">Dover Partners</span>
+              <svg class="sponsor-style-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 10L10 4M5 4h5v5"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <p class="sponsor-pattern-note">Sponsor placements are reviewed for relevance. They do not affect advisor matching, cost, or your obligation to move forward.</p>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="guide-spec">placement: after FAQ</span>
+      <span class="guide-spec">layout: intro above gallery</span>
+      <span class="guide-spec">height: 400px desktop</span>
+      <span class="guide-spec">hover: fine-pointer width accordion</span>
+      <span class="guide-spec">image: expands through panel width, no hover zoom</span>
+      <span class="guide-spec">hitbox: gapless, visual gutter only</span>
+      <span class="guide-spec">entrance: hidden first, then Process-card reveal</span>
+      <span class="guide-spec">initial state: opacity 0 / y 36 via GSAP set</span>
+      <span class="guide-spec">reveal: y 0 / 0.7s / 0.1s stagger / power3.out</span>
+      <span class="guide-spec">hash landing: scroll to anchor, then play same timeline</span>
+      <span class="guide-spec">panel transition: width/height only, GSAP owns entrance</span>
+      <span class="guide-spec">overlay: dark linear image treatment, no radial shimmer</span>
+      <span class="guide-spec">mobile: static stacked panels</span>
+      <span class="guide-spec">labels: short institution roles, not fake names</span>
+      <span class="guide-spec">assets: descriptive Website Images filenames</span>
+      <span class="guide-spec">links: visual arrows only until URLs are approved</span>
+      <span class="guide-spec">future links: rel="sponsored noopener"</span>
+      <span class="guide-spec">excluded marks: unused letter marks</span>
+      <span class="guide-spec">no external 21st/Unsplash assets</span>
+    </div>
+  </div>
+</section>
+
 <!-- ══ 6. HERO IMAGERY ═════════════════════════════════════════════════ -->
 <section class="guide-section" id="hero-imagery">
   <div class="guide-section-inner">
@@ -1302,7 +1749,7 @@
 
     <div class="hero-float-demo">
       <figure class="hero-float-card left" aria-hidden="true">
-        <img src="Website%20Images/Li%20Hui%20-%20Photographer%20License%20image%20-%20Original.png" alt="" loading="lazy" />
+        <img src="Website%20Images/hands-soft-light-financial-decision.png" alt="Hands held in soft light, suggesting careful financial guidance" loading="lazy" />
       </figure>
       <div class="hero-float-copy">
         <p class="guide-label" style="margin-bottom: 16px;">Retirement account rollovers</p>
@@ -1310,7 +1757,7 @@
         <p>Changing jobs or have old 401(k)s with previous employers? We help you take control of your retirement funds.</p>
       </div>
       <figure class="hero-float-card right" aria-hidden="true">
-        <img src="Website%20Images/ariannalago_ari1645-047_Human_S_hero.jpg" alt="" loading="lazy" />
+        <img src="Website%20Images/winding-path-retirement-journey.jpg" alt="Winding path through open grassland, suggesting a retirement journey" loading="lazy" />
       </figure>
     </div>
 
@@ -1320,7 +1767,7 @@
       <span class="guide-spec">GSAP entrance + ScrollTrigger parallax</span>
       <span class="guide-spec">CSS drift on inner wrapper</span>
       <span class="guide-spec">hidden under 700px</span>
-      <span class="guide-spec">alt="" aria-hidden="true"</span>
+      <span class="guide-spec">descriptive alt, wrapper aria-hidden when decorative</span>
     </div>
   </div>
 </section>
@@ -1334,7 +1781,7 @@
     <p class="guide-label" style="margin-bottom: 16px;">Blog card imagery</p>
     <div class="blog-pattern-grid">
       <article class="blog-card-demo">
-        <img src="Website%20Images/13d81bb8-b09e-4533-b356-24dcd240d722.webp" alt="" loading="lazy" />
+        <img src="Website%20Images/401k-job-change-city-crosswalk.webp" alt="Busy city street in motion, representing career transitions and 401k decisions after changing jobs" loading="lazy" />
         <div class="blog-card-demo-body">
           <span class="blog-pill-demo">Rollover Strategy</span>
           <h3>What Happens to Your 401k When You Change Jobs</h3>
@@ -1343,7 +1790,7 @@
         </div>
       </article>
       <article class="blog-card-demo" style="--demo-image-position: center bottom;">
-        <img src="Website%20Images/ae13e405-3520-40cb-a87e-9efe612003c8.webp" alt="" loading="lazy" />
+        <img src="Website%20Images/rate-cuts-market-movement-rainy-city.webp" alt="Rainy city avenue with moving traffic, representing market movement after rate cuts" loading="lazy" />
         <div class="blog-card-demo-body">
           <span class="blog-pill-demo">Market Updates</span>
           <h3>Rate Cuts and Your Retirement: What the Headlines Actually Mean</h3>
@@ -1357,6 +1804,7 @@
       <span class="guide-spec">default object-position: center center</span>
       <span class="guide-spec">car/traffic image: center bottom</span>
       <span class="guide-spec">article cover inherits imagePosition</span>
+      <span class="guide-spec">imageAlt: contextual, not duplicated title text</span>
     </div>
 
     <p class="guide-label" style="margin-top: 40px; margin-bottom: 16px;">Production metadata assets</p>

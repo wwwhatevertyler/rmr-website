@@ -125,9 +125,15 @@
   }
 
   function playClickSound() {
-    if (!active || !clickPool.length) return;
-    if (isCoarsePointerDevice() && playFastClickSound()) return;
+    if (!active) return;
+    if (isCoarsePointerDevice()) {
+      // On mobile, avoid HTMLAudio fallback so tap cues do not steal focus
+      // from the persistent background track.
+      playFastClickSound();
+      return;
+    }
 
+    if (!clickPool.length) return;
     const click = clickPool[clickPoolIndex];
     clickPoolIndex = (clickPoolIndex + 1) % clickPool.length;
     try {
@@ -532,6 +538,10 @@
     lastLabelClickAt = performance.now();
   }
 
+  function isMobileLogoTransitionTarget(target) {
+    return Boolean(target && target.closest('[data-rmr-logo-transition="spin"]'));
+  }
+
   function isMobilePointerLike(e) {
     if (!isCoarsePointerDevice()) return false;
     return !e.pointerType || e.pointerType !== 'mouse';
@@ -560,6 +570,11 @@
     mobilePointer = null;
 
     if (pointer.cancelled || !isSoundableClickTarget(pointer.target)) return;
+
+    if (isMobileLogoTransitionTarget(pointer.target)) {
+      suppressClickUntil = performance.now() + MOBILE_CLICK_SUPPRESS_MS;
+      return;
+    }
 
     rememberLabelControlClick(pointer.target);
     playClickSound();
@@ -619,6 +634,7 @@
   function handleDocumentClick(e) {
     if (performance.now() < suppressClickUntil) return;
     if (!isSoundableClickTarget(e.target)) return;
+    if (isCoarsePointerDevice() && isMobileLogoTransitionTarget(e.target)) return;
     if (isDuplicateLabelControlClick(e.target)) return;
     rememberLabelControlClick(e.target);
     playClickSound();
@@ -656,7 +672,7 @@
       toggleEl = document.getElementById('audio-toggle');
       volInput = document.getElementById('audio-vol');
     }
-    if (!clickPool.length) buildClickPool();
+    if (!clickPool.length && !isCoarsePointerDevice()) buildClickPool();
     attachInteractionListeners();
     if (volInput) volInput.value = String(Math.round(bgMaxVol * 100));
     updateToggleUI();

@@ -748,6 +748,19 @@
     return post.imagePosition ? ` style="--post-image-position: ${post.imagePosition};"` : '';
   }
 
+  function escapeAttr(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function imageAlt(post) {
+    return escapeAttr(post.imageAlt || post.title);
+  }
+
   function navigateToPost(slug) {
     const localHosts = ['localhost', '127.0.0.1', '::1'];
     const target = localHosts.includes(window.location.hostname)
@@ -766,7 +779,7 @@
     el.innerHTML = `
       <article class="featured-card" data-slug="${post.slug}" role="button" tabindex="0" aria-label="Read ${post.title}">
         <div class="featured-img-wrap">
-          <img src="${post.image}" alt="${post.title}" class="featured-img" loading="lazy"${imagePositionStyle(post)}>
+          <img src="${post.image}" alt="${imageAlt(post)}" class="featured-img" loading="lazy"${imagePositionStyle(post)}>
         </div>
         <div class="featured-content">
           <div class="featured-tag-row">
@@ -795,7 +808,7 @@
     return `
       <article class="article-card" data-category="${post.category}" data-slug="${post.slug}" role="button" tabindex="0" aria-label="Read ${post.title}">
         <div class="card-img-wrap">
-          <img src="${post.image}" alt="${post.title}" class="card-img" loading="lazy"${imagePositionStyle(post)}>
+          <img src="${post.image}" alt="${imageAlt(post)}" class="card-img" loading="lazy"${imagePositionStyle(post)}>
         </div>
         <div class="card-body">
           <div class="card-tag-row">
@@ -817,7 +830,7 @@
   function renderRow(post) {
     return `
       <article class="list-row" data-category="${post.category}" data-slug="${post.slug}" role="button" tabindex="0" aria-label="Read ${post.title}">
-        <img src="${post.image}" alt="${post.title}" class="list-thumb" loading="lazy"${imagePositionStyle(post)}>
+        <img src="${post.image}" alt="${imageAlt(post)}" class="list-thumb" loading="lazy"${imagePositionStyle(post)}>
         <div class="list-body">
           <div class="list-tag-row">
             <span class="cat-tag">${post.category}</span>

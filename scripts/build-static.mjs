@@ -30,6 +30,12 @@ const entries = [
   ['website/assets/icons/site.webmanifest', 'site.webmanifest'],
   ['website/data/blog', 'blog'],
   ['website/assets/images', 'Website Images'],
+  ['website/assets/advertisng partner logos/Flow.png', 'Website Images/advertising partner logos/Flow.png'],
+  ['website/assets/advertisng partner logos/Eye.png', 'Website Images/advertising partner logos/Eye.png'],
+  ['website/assets/advertisng partner logos/Hourglass.png', 'Website Images/advertising partner logos/Hourglass.png'],
+  ['website/assets/advertisng partner logos/Circle.png', 'Website Images/advertising partner logos/Circle.png'],
+  ['website/assets/advertisng partner logos/N.png', 'Website Images/advertising partner logos/N.png'],
+  ["website/assets/advertisng partner logos/Isn't this the Doordash logo_.png", 'Website Images/advertising partner logos/D.png'],
 ];
 
 async function copyEntry([source, target = source]) {
@@ -88,12 +94,19 @@ function initials(name) {
     .toUpperCase();
 }
 
-function sitemapUrl({ path: routePath, lastmod, changefreq, priority }) {
+function sitemapUrl({ path: routePath, lastmod, changefreq, priority, images = [] }) {
   const loc = routePath === '/' ? `${siteUrl}/` : `${siteUrl}${routePath}`;
 
   return [
     '  <url>',
     `    <loc>${escapeXml(loc)}</loc>`,
+    ...images.flatMap((image) => [
+      '    <image:image>',
+      `      <image:loc>${escapeXml(image.loc)}</image:loc>`,
+      image.title ? `      <image:title>${escapeXml(image.title)}</image:title>` : '',
+      image.caption ? `      <image:caption>${escapeXml(image.caption)}</image:caption>` : '',
+      '    </image:image>',
+    ].filter(Boolean)),
     `    <lastmod>${escapeXml(lastmod)}</lastmod>`,
     `    <changefreq>${escapeXml(changefreq)}</changefreq>`,
     `    <priority>${priority}</priority>`,
@@ -104,6 +117,7 @@ function sitemapUrl({ path: routePath, lastmod, changefreq, priority }) {
 function articleMarkup(post) {
   const coverClass = post.slug === 'when-to-roll-over-your-401k' ? ' class="cover-image-focus-lower"' : '';
   const imagePosition = post.imagePosition ? ` style="--post-image-position: ${escapeAttr(post.imagePosition)};"` : '';
+  const imageAlt = post.imageAlt || post.title;
 
   return `
   <section id="article-hero">
@@ -133,7 +147,7 @@ function articleMarkup(post) {
 
   <div id="cover-image-wrap">
     <div class="container">
-      <img id="cover-image"${coverClass} src="${escapeAttr(post.image)}" alt="${escapeAttr(post.title)}" loading="eager"${imagePosition}>
+      <img id="cover-image"${coverClass} src="${escapeAttr(post.image)}" alt="${escapeAttr(imageAlt)}" loading="eager"${imagePosition}>
     </div>
   </div>
 
@@ -169,12 +183,25 @@ function articleMarkup(post) {
 }
 
 function articleStructuredData(post) {
+  const imageAlt = post.imageAlt || post.title;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
     description: post.excerpt,
-    image: [absoluteUrl(post.image), socialImageUrl],
+    image: [
+      {
+        '@type': 'ImageObject',
+        url: absoluteUrl(post.image),
+        caption: imageAlt,
+      },
+      {
+        '@type': 'ImageObject',
+        url: socialImageUrl,
+        caption: 'Roll My Retirement website collage social preview image',
+      },
+    ],
     datePublished: post.date,
     dateModified: post.date,
     articleSection: post.category,
@@ -199,6 +226,8 @@ function articleStructuredData(post) {
 
 function articlePage(template, post) {
   const postUrl = `${siteUrl}/insights/${post.slug}`;
+  const postImageUrl = absoluteUrl(post.image);
+  const postImageAlt = post.imageAlt || post.title;
   const jsonLd = escapeScriptJson(articleStructuredData(post));
   const embeddedPost = escapeScriptJson(post);
 
@@ -225,12 +254,28 @@ function articlePage(template, post) {
       `<meta property="og:url" content="${escapeAttr(postUrl)}" />`,
     )
     .replace(
+      /<meta property="og:image" content=".*?" \/>/,
+      `<meta property="og:image" content="${escapeAttr(postImageUrl)}" />`,
+    )
+    .replace(
+      /<meta property="og:image:alt" content=".*?" \/>/,
+      `<meta property="og:image:alt" content="${escapeAttr(postImageAlt)}" />`,
+    )
+    .replace(
       /<meta name="twitter:title" content=".*?" \/>/,
       `<meta name="twitter:title" content="${escapeAttr(post.title)}" />`,
     )
     .replace(
       /<meta name="twitter:description" content=".*?" \/>/,
       `<meta name="twitter:description" content="${escapeAttr(post.excerpt)}" />`,
+    )
+    .replace(
+      /<meta name="twitter:image" content=".*?" \/>/,
+      `<meta name="twitter:image" content="${escapeAttr(postImageUrl)}" />`,
+    )
+    .replace(
+      /<meta name="twitter:image:alt" content=".*?" \/>/,
+      `<meta name="twitter:image:alt" content="${escapeAttr(postImageAlt)}" />`,
     )
     .replace(
       '</head>',
@@ -264,22 +309,40 @@ async function writeSearchFiles() {
   const postsPath = path.join(root, 'website/data/blog/posts.json');
   const postsData = JSON.parse(await readFile(postsPath, 'utf8'));
   const today = new Date().toISOString().slice(0, 10);
+  const imageEntry = (loc, title, caption = title) => ({ loc: absoluteUrl(loc), title, caption });
   const routes = [
-    { path: '/', lastmod: today, changefreq: 'weekly', priority: '1.0' },
-    { path: '/advisors', lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { path: '/contact', lastmod: today, changefreq: 'monthly', priority: '0.7' },
-    { path: '/insights', lastmod: today, changefreq: 'weekly', priority: '0.8' },
+    {
+      path: '/',
+      lastmod: today,
+      changefreq: 'weekly',
+      priority: '1.0',
+      images: [
+        imageEntry(socialImageUrl, 'Roll My Retirement website collage social preview image'),
+        imageEntry(
+          'Website%20Images/hands-soft-light-financial-decision.png',
+          'Hands held in soft light, suggesting careful financial guidance',
+        ),
+        imageEntry(
+          'Website%20Images/winding-path-retirement-journey.jpg',
+          'Winding path through open grassland, suggesting a retirement journey',
+        ),
+      ],
+    },
+    { path: '/advisors', lastmod: today, changefreq: 'monthly', priority: '0.8', images: [imageEntry(socialImageUrl, 'Roll My Retirement website collage social preview image')] },
+    { path: '/contact', lastmod: today, changefreq: 'monthly', priority: '0.7', images: [imageEntry(socialImageUrl, 'Roll My Retirement website collage social preview image')] },
+    { path: '/insights', lastmod: today, changefreq: 'weekly', priority: '0.8', images: [imageEntry(socialImageUrl, 'Roll My Retirement website collage social preview image')] },
     ...postsData.posts.map((post) => ({
       path: `/insights/${post.slug}`,
       lastmod: post.date,
       changefreq: 'monthly',
       priority: post.featured ? '0.7' : '0.6',
+      images: [imageEntry(post.image, post.title, post.imageAlt || post.title)],
     })),
   ];
 
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
     routes.map(sitemapUrl).join('\n'),
     '</urlset>',
     '',

@@ -175,6 +175,7 @@
   function updateDocument(nextDoc) {
     const nextHtml = nextDoc.documentElement;
     document.documentElement.lang = nextHtml.lang || 'en';
+    document.documentElement.removeAttribute('data-home-loader');
 
     document.head.replaceChildren(
       ...Array.from(nextDoc.head.childNodes).map(node => document.importNode(node, true))
