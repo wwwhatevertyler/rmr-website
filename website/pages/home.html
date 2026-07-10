@@ -1046,13 +1046,21 @@
       .nav-links { display: none; }
       .nav-cta { display: none; }
       .nav-mobile-toggle { display: flex; }
-      .hero-float-card {
-        width: 112px;
-        height: 140px;
-        top: 152px;
+      #hero {
+        padding-top: calc(68px + 224px);
       }
-      .hero-float-card--left { left: 18px; }
-      .hero-float-card--right { right: 18px; top: 182px; }
+      .hero-float-card {
+        width: 118px;
+        height: 148px;
+        top: 96px;
+      }
+      .hero-float-card--left {
+        left: min(242px, calc(50% - 142px));
+      }
+      .hero-float-card--right {
+        right: min(242px, calc(50% - 142px));
+        top: 116px;
+      }
     }
 
     @media (max-width: 700px) {
