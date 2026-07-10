@@ -1056,7 +1056,22 @@
     }
 
     @media (max-width: 700px) {
-      .hero-float-card { display: none; }
+      #hero {
+        padding-top: calc(68px + 214px);
+      }
+      .hero-float-card {
+        display: block;
+        width: clamp(90px, 24vw, 112px);
+        height: clamp(114px, 30vw, 138px);
+        top: 86px;
+      }
+      .hero-float-card--left {
+        left: max(34px, calc(50% - 142px));
+      }
+      .hero-float-card--right {
+        right: max(34px, calc(50% - 142px));
+        top: 106px;
+      }
       .sponsor-company-mark { width: clamp(66px, 22vw, 92px); }
     }
 
