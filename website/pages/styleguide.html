@@ -682,6 +682,26 @@
         transform: scale(0.985);
       }
     }
+    @media (hover: none), (pointer: coarse) {
+      .sponsor-style-panel.is-touch-active .sponsor-style-surface::before {
+        opacity: 0;
+      }
+      .sponsor-style-panel.is-touch-active .sponsor-style-media {
+        filter: none;
+      }
+      .sponsor-style-panel.is-touch-active .sponsor-style-logo {
+        transform: translateY(-4px);
+        opacity: 1;
+        filter: drop-shadow(0 16px 34px rgba(17,17,16,0.34));
+      }
+      .sponsor-style-panel.is-touch-active .sponsor-style-label {
+        color: rgba(255,255,255,0.9);
+        transform: translateY(-3px);
+      }
+      .sponsor-style-panel:active .sponsor-style-surface {
+        transform: scale(0.985);
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
       .sponsor-style-panel,
       .sponsor-style-surface,
@@ -2314,6 +2334,28 @@
       }
     });
   });
+
+  // Sponsor preview: tap one card to reveal its color state on coarse pointers.
+  const sponsorTouchMedia = window.matchMedia('(hover: none), (pointer: coarse)');
+  document.querySelectorAll('.sponsor-style-gallery').forEach(gallery => {
+    gallery.querySelectorAll('.sponsor-style-panel').forEach(panel => {
+      panel.addEventListener('click', () => {
+        if (!sponsorTouchMedia.matches) return;
+        gallery.querySelectorAll('.sponsor-style-panel.is-touch-active').forEach(activePanel => {
+          if (activePanel !== panel) activePanel.classList.remove('is-touch-active');
+        });
+        panel.classList.add('is-touch-active');
+      });
+    });
+  });
+  if (sponsorTouchMedia.addEventListener) {
+    sponsorTouchMedia.addEventListener('change', () => {
+      if (sponsorTouchMedia.matches) return;
+      document.querySelectorAll('.sponsor-style-panel.is-touch-active').forEach(panel => {
+        panel.classList.remove('is-touch-active');
+      });
+    });
+  }
 
   // Motion demo button
   const motionTarget = document.getElementById('motion-target');

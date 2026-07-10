@@ -679,6 +679,28 @@
         transform: scale(0.985);
       }
     }
+    @media (hover: none), (pointer: coarse) {
+      .sponsor-ad-panel.is-touch-active .sponsor-ad-surface::before {
+        opacity: 0;
+      }
+      .sponsor-ad-panel.is-touch-active .sponsor-ad-media {
+        filter: none;
+      }
+      .sponsor-ad-panel.is-touch-active .sponsor-ad-overlay {
+        transform: translateY(-4px);
+      }
+      .sponsor-ad-panel.is-touch-active .sponsor-company-mark {
+        opacity: 1;
+        filter: drop-shadow(0 16px 34px rgba(17,17,16,0.34));
+      }
+      .sponsor-ad-panel.is-touch-active .sponsor-panel-label {
+        color: rgba(255,255,255,0.9);
+        transform: translateY(-3px);
+      }
+      .sponsor-ad-panel:active .sponsor-ad-surface {
+        transform: scale(0.985);
+      }
+    }
 
     /* ─── SECTION HEADER ───────────────────────────────────────────── */
     .section-header { margin-bottom: clamp(40px, 5vw, 64px); }
@@ -2184,6 +2206,46 @@
       requestAnimationFrame(() => requestAnimationFrame(revealSponsorHashLanding));
       window.addEventListener('load', revealSponsorHashLanding, { once: true });
     });
+  }
+
+  // Touch/coarse pointer sponsor reveal — tap one card to show its color state.
+  const sponsorTouchMedia = window.matchMedia('(hover: none), (pointer: coarse)');
+  const sponsorTouchGalleries = Array.from(document.querySelectorAll('.sponsor-ad-gallery'));
+  if (sponsorTouchGalleries.length) {
+    const clearSponsorTouchState = () => {
+      sponsorTouchGalleries.forEach((gallery) => {
+        gallery.querySelectorAll('.sponsor-ad-panel.is-touch-active').forEach((panel) => {
+          panel.classList.remove('is-touch-active');
+        });
+      });
+    };
+    const activateSponsorTouchPanel = (event) => {
+      if (!sponsorTouchMedia.matches) return;
+      const panel = event.currentTarget;
+      const gallery = panel.closest('.sponsor-ad-gallery');
+      if (!gallery) return;
+      gallery.querySelectorAll('.sponsor-ad-panel.is-touch-active').forEach((activePanel) => {
+        if (activePanel !== panel) activePanel.classList.remove('is-touch-active');
+      });
+      panel.classList.add('is-touch-active');
+    };
+    const panels = sponsorTouchGalleries.flatMap((gallery) => Array.from(gallery.querySelectorAll('.sponsor-ad-panel')));
+    panels.forEach((panel) => panel.addEventListener('click', activateSponsorTouchPanel));
+    if (sponsorTouchMedia.addEventListener) {
+      sponsorTouchMedia.addEventListener('change', clearSponsorTouchState);
+    } else if (sponsorTouchMedia.addListener) {
+      sponsorTouchMedia.addListener(clearSponsorTouchState);
+    }
+    if (window.RMRPage && window.RMRPage.registerCleanup) {
+      window.RMRPage.registerCleanup(() => {
+        panels.forEach((panel) => panel.removeEventListener('click', activateSponsorTouchPanel));
+        if (sponsorTouchMedia.removeEventListener) {
+          sponsorTouchMedia.removeEventListener('change', clearSponsorTouchState);
+        } else if (sponsorTouchMedia.removeListener) {
+          sponsorTouchMedia.removeListener(clearSponsorTouchState);
+        }
+      });
+    }
   }
 
   // ──────────────────────────────────────────────────────────────────
